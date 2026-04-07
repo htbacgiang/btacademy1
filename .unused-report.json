@@ -1,0 +1,3307 @@
+{
+  "summary": {
+    "codeFiles": 507,
+    "apiRoutes": 96,
+    "components": 203,
+    "hooks": 11,
+    "lib": 6,
+    "emails": 7,
+    "models": 14,
+    "middleware": 1
+  },
+  "api": [
+    {
+      "route": "/api/admin/class-schedules/[id]",
+      "file": "pages/api/admin/class-schedules/[id].js",
+      "hitCount": 0,
+      "keys": [
+        "/api/admin/class-schedules/[id]",
+        "/api/admin/class-schedules/"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/admin/class-schedules/bulk-actions",
+      "file": "pages/api/admin/class-schedules/bulk-actions.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/admin/class-schedules/bulk-actions"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/admin/class-schedules/statistics",
+      "file": "pages/api/admin/class-schedules/statistics.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/admin/class-schedules/statistics"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/analyze",
+      "file": "pages/api/analyze/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/analyze"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/auth/resendVerification",
+      "file": "pages/api/auth/resendVerification.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/auth/resendVerification"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/banks",
+      "file": "pages/api/banks/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/banks"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/cart/clear",
+      "file": "pages/api/cart/clear.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/cart/clear"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/check-sepay-status",
+      "file": "pages/api/check-sepay-status/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/check-sepay-status"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/check-user",
+      "file": "pages/api/check-user.ts",
+      "hitCount": 0,
+      "keys": [
+        "/api/check-user"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/check-user-db",
+      "file": "pages/api/check-user-db.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/check-user-db"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/checkout",
+      "file": "pages/api/checkout/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/checkout"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/checkout/[id]",
+      "file": "pages/api/checkout/[id].js",
+      "hitCount": 0,
+      "keys": [
+        "/api/checkout/[id]",
+        "/api/checkout/"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/courses/[slug]",
+      "file": "pages/api/courses/[slug].js",
+      "hitCount": 0,
+      "keys": [
+        "/api/courses/[slug]",
+        "/api/courses/"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/create-momo-payment",
+      "file": "pages/api/create-momo-payment/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/create-momo-payment"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/create-sepay-payment",
+      "file": "pages/api/create-sepay-payment/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/create-sepay-payment"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/create-sepay-payment-simple",
+      "file": "pages/api/create-sepay-payment-simple/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/create-sepay-payment-simple"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/cron/daily-schedule-email",
+      "file": "pages/api/cron/daily-schedule-email.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/cron/daily-schedule-email"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/crowdfunding-supporters",
+      "file": "pages/api/crowdfunding-supporters.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/crowdfunding-supporters"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/debug-payments",
+      "file": "pages/api/debug-payments/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/debug-payments"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/hello",
+      "file": "pages/api/hello.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/hello"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/images",
+      "file": "pages/api/images.ts",
+      "hitCount": 0,
+      "keys": [
+        "/api/images"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/internal/students",
+      "file": "pages/api/internal/students.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/internal/students"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/momo-callback",
+      "file": "pages/api/momo-callback/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/momo-callback"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/payment/momo-callback",
+      "file": "pages/api/payment/momo-callback.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/payment/momo-callback"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/payment/vnpay-callback",
+      "file": "pages/api/payment/vnpay-callback.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/payment/vnpay-callback"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/posts/drafts-only",
+      "file": "pages/api/posts/drafts-only.ts",
+      "hitCount": 0,
+      "keys": [
+        "/api/posts/drafts-only"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/products/[slug]",
+      "file": "pages/api/products/[slug].js",
+      "hitCount": 0,
+      "keys": [
+        "/api/products/[slug]",
+        "/api/products/"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/refresh-sepay-qr",
+      "file": "pages/api/refresh-sepay-qr/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/refresh-sepay-qr"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/results",
+      "file": "pages/api/results/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/results"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/search",
+      "file": "pages/api/search.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/search"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/sepay-callback",
+      "file": "pages/api/sepay-callback/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/sepay-callback"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/sepay-webhook-real",
+      "file": "pages/api/sepay-webhook-real/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/sepay-webhook-real"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/simple-payments",
+      "file": "pages/api/simple-payments.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/simple-payments"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/socket",
+      "file": "pages/api/socket/index.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/socket"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/test-sepay-payments",
+      "file": "pages/api/test-sepay-payments.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/test-sepay-payments"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/test-students",
+      "file": "pages/api/test-students.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/test-students"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/upload",
+      "file": "pages/api/upload.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/upload"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/user/update-role",
+      "file": "pages/api/user/update-role.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/user/update-role"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/whoami",
+      "file": "pages/api/whoami.js",
+      "hitCount": 0,
+      "keys": [
+        "/api/whoami"
+      ],
+      "hitFiles": []
+    },
+    {
+      "route": "/api/admin/class-schedules",
+      "file": "pages/api/admin/class-schedules/index.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/admin/class-schedules"
+      ],
+      "hitFiles": [
+        "pages/dashboard/lich-hoc-hang-ngay/tao-moi.js"
+      ]
+    },
+    {
+      "route": "/api/admin/schedule-automation",
+      "file": "pages/api/admin/schedule-automation.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/admin/schedule-automation"
+      ],
+      "hitFiles": [
+        "pages/dashboard/email-automation.js"
+      ]
+    },
+    {
+      "route": "/api/admin/seed-admin",
+      "file": "pages/api/admin/seed-admin.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/admin/seed-admin"
+      ],
+      "hitFiles": [
+        "pages/admin/setup.jsx"
+      ]
+    },
+    {
+      "route": "/api/admin/send-student-daily-schedule",
+      "file": "pages/api/admin/send-student-daily-schedule.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/admin/send-student-daily-schedule"
+      ],
+      "hitFiles": [
+        "pages/dashboard/lich-hoc-hang-ngay/index.js"
+      ]
+    },
+    {
+      "route": "/api/auth/activate",
+      "file": "pages/api/auth/activate.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/auth/activate"
+      ],
+      "hitFiles": [
+        "pages/activate.jsx"
+      ]
+    },
+    {
+      "route": "/api/auth/reset-password",
+      "file": "pages/api/auth/reset-password.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/auth/reset-password"
+      ],
+      "hitFiles": [
+        "pages/auth/dat-lai-mat-khau.jsx"
+      ]
+    },
+    {
+      "route": "/api/auth/signup",
+      "file": "pages/api/auth/signup.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/auth/signup"
+      ],
+      "hitFiles": [
+        "pages/dang-ky.jsx"
+      ]
+    },
+    {
+      "route": "/api/class-schedules/opening-list",
+      "file": "pages/api/class-schedules/opening-list.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/class-schedules/opening-list"
+      ],
+      "hitFiles": [
+        "components/common/OpeningScheduleList.jsx"
+      ]
+    },
+    {
+      "route": "/api/coupon",
+      "file": "pages/api/coupon/index.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/coupon"
+      ],
+      "hitFiles": [
+        "components/coupon/CouponForm.jsx"
+      ]
+    },
+    {
+      "route": "/api/course-registration",
+      "file": "pages/api/course-registration/index.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/course-registration"
+      ],
+      "hitFiles": [
+        "components/common/RegistrationPopup.jsx"
+      ]
+    },
+    {
+      "route": "/api/cron/send-daily-emails",
+      "file": "pages/api/cron/send-daily-emails.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/cron/send-daily-emails"
+      ],
+      "hitFiles": [
+        "scripts/daily-email-cron.js"
+      ]
+    },
+    {
+      "route": "/api/crowdfunding-stats",
+      "file": "pages/api/crowdfunding-stats.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/crowdfunding-stats"
+      ],
+      "hitFiles": [
+        "components/header/CrowdfundingSection.jsx"
+      ]
+    },
+    {
+      "route": "/api/favorites",
+      "file": "pages/api/favorites/index.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/favorites"
+      ],
+      "hitFiles": [
+        "components/ecobacgiang/FavoriteProductsList.jsx"
+      ]
+    },
+    {
+      "route": "/api/favorites/[productId]",
+      "file": "pages/api/favorites/[productId].js",
+      "hitCount": 1,
+      "keys": [
+        "/api/favorites/[productId]",
+        "/api/favorites/"
+      ],
+      "hitFiles": [
+        "components/ecobacgiang/FavoriteProductsList.jsx"
+      ]
+    },
+    {
+      "route": "/api/image/alt-text",
+      "file": "pages/api/image/alt-text.ts",
+      "hitCount": 1,
+      "keys": [
+        "/api/image/alt-text"
+      ],
+      "hitFiles": [
+        "components/editor/GalleryModal/index.tsx"
+      ]
+    },
+    {
+      "route": "/api/location",
+      "file": "pages/api/location.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/location"
+      ],
+      "hitFiles": [
+        "components/common/Footer.tsx"
+      ]
+    },
+    {
+      "route": "/api/orders/cancel",
+      "file": "pages/api/orders/cancel.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/orders/cancel"
+      ],
+      "hitFiles": [
+        "components/users/OrdersTab.jsx"
+      ]
+    },
+    {
+      "route": "/api/payment/momo",
+      "file": "pages/api/payment/momo.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/payment/momo"
+      ],
+      "hitFiles": [
+        "components/fontend/common/PaymentOptions.jsx"
+      ]
+    },
+    {
+      "route": "/api/payment/vnpay",
+      "file": "pages/api/payment/vnpay.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/payment/vnpay"
+      ],
+      "hitFiles": [
+        "components/fontend/common/PaymentOptions.jsx"
+      ]
+    },
+    {
+      "route": "/api/students/stats",
+      "file": "pages/api/students/stats.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/students/stats"
+      ],
+      "hitFiles": [
+        "pages/dashboard/lich-hoc-hang-ngay/index.js"
+      ]
+    },
+    {
+      "route": "/api/submit",
+      "file": "pages/api/submit/index.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/submit"
+      ],
+      "hitFiles": [
+        "components/ecobacgiang/SurveyForm.jsx"
+      ]
+    },
+    {
+      "route": "/api/subscription/export",
+      "file": "pages/api/subscription/export.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/subscription/export"
+      ],
+      "hitFiles": [
+        "components/admin/EmailListComponent.jsx"
+      ]
+    },
+    {
+      "route": "/api/subscription/stats",
+      "file": "pages/api/subscription/stats.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/subscription/stats"
+      ],
+      "hitFiles": [
+        "components/admin/EmailListComponent.jsx"
+      ]
+    },
+    {
+      "route": "/api/subscription/unsubscribe",
+      "file": "pages/api/subscription/unsubscribe.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/subscription/unsubscribe"
+      ],
+      "hitFiles": [
+        "pages/unsubscribe.jsx"
+      ]
+    },
+    {
+      "route": "/api/user/[userId]",
+      "file": "pages/api/user/[userId].js",
+      "hitCount": 1,
+      "keys": [
+        "/api/user/[userId]",
+        "/api/user/"
+      ],
+      "hitFiles": [
+        "components/users/AllUsersList.jsx"
+      ]
+    },
+    {
+      "route": "/api/voice-test-submission",
+      "file": "pages/api/voice-test-submission.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/voice-test-submission"
+      ],
+      "hitFiles": [
+        "components/common/VoiceTestPopup.jsx"
+      ]
+    },
+    {
+      "route": "/api/wishlist",
+      "file": "pages/api/wishlist/index.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/wishlist"
+      ],
+      "hitFiles": [
+        "store/wishlistSlice.js"
+      ]
+    },
+    {
+      "route": "/api/wishlist/[productId]",
+      "file": "pages/api/wishlist/[productId].js",
+      "hitCount": 1,
+      "keys": [
+        "/api/wishlist/[productId]",
+        "/api/wishlist/"
+      ],
+      "hitFiles": [
+        "store/wishlistSlice.js"
+      ]
+    },
+    {
+      "route": "/api/wishlist/clear",
+      "file": "pages/api/wishlist/clear.js",
+      "hitCount": 1,
+      "keys": [
+        "/api/wishlist/clear"
+      ],
+      "hitFiles": [
+        "store/wishlistSlice.js"
+      ]
+    },
+    {
+      "route": "/api/address",
+      "file": "pages/api/address/index.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/address"
+      ],
+      "hitFiles": [
+        "components/fontend/common/EditAddressPopup.jsx",
+        "components/users/AddressesTab.jsx"
+      ]
+    },
+    {
+      "route": "/api/admin/send-daily-schedule",
+      "file": "pages/api/admin/send-daily-schedule.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/admin/send-daily-schedule"
+      ],
+      "hitFiles": [
+        "pages/dashboard/lich-hoc-hang-ngay/index.js",
+        "pages/dashboard/lich-hoc-hang-ngay/tao-moi.js"
+      ]
+    },
+    {
+      "route": "/api/auth/change-password",
+      "file": "pages/api/auth/change-password.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/auth/change-password"
+      ],
+      "hitFiles": [
+        "components/users/ChangePassword.jsx",
+        "pages/doi-mat-khau.jsx"
+      ]
+    },
+    {
+      "route": "/api/auth/forgot",
+      "file": "pages/api/auth/forgot.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/auth/forgot"
+      ],
+      "hitFiles": [
+        "pages/auth/quen-mat-khau.jsx",
+        "pages/quen-mat-khau/index.js"
+      ]
+    },
+    {
+      "route": "/api/auth/forgot-password",
+      "file": "pages/api/auth/forgot-password.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/auth/forgot-password"
+      ],
+      "hitFiles": [
+        "pages/auth/quen-mat-khau.jsx",
+        "pages/quen-mat-khau/index.js"
+      ]
+    },
+    {
+      "route": "/api/cart/[userId]",
+      "file": "pages/api/cart/[userId]/index.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/cart/[userId]",
+        "/api/cart/"
+      ],
+      "hitFiles": [
+        "components/ecobacgiang/FavoriteProductsList.jsx",
+        "components/product/ProductCard.jsx"
+      ]
+    },
+    {
+      "route": "/api/cart/[userId]/[productId]",
+      "file": "pages/api/cart/[userId]/[productId].js",
+      "hitCount": 2,
+      "keys": [
+        "/api/cart/[userId]/[productId]",
+        "/api/cart/"
+      ],
+      "hitFiles": [
+        "components/ecobacgiang/FavoriteProductsList.jsx",
+        "components/product/ProductCard.jsx"
+      ]
+    },
+    {
+      "route": "/api/cart/[userId]/apply-coupon",
+      "file": "pages/api/cart/[userId]/apply-coupon.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/cart/[userId]/apply-coupon",
+        "/api/cart/"
+      ],
+      "hitFiles": [
+        "components/ecobacgiang/FavoriteProductsList.jsx",
+        "components/product/ProductCard.jsx"
+      ]
+    },
+    {
+      "route": "/api/cart/[userId]/sync",
+      "file": "pages/api/cart/[userId]/sync.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/cart/[userId]/sync",
+        "/api/cart/"
+      ],
+      "hitFiles": [
+        "components/ecobacgiang/FavoriteProductsList.jsx",
+        "components/product/ProductCard.jsx"
+      ]
+    },
+    {
+      "route": "/api/class-schedules/calendar",
+      "file": "pages/api/class-schedules/calendar.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/class-schedules/calendar"
+      ],
+      "hitFiles": [
+        "components/common/CalendarView.jsx",
+        "pages/dashboard/lich-hoc-hang-ngay/index.js"
+      ]
+    },
+    {
+      "route": "/api/class-schedules/opening",
+      "file": "pages/api/class-schedules/opening.js",
+      "hitCount": 2,
+      "keys": [
+        "/api/class-schedules/opening"
+      ],
+      "hitFiles": [
+        "components/common/OpeningCalendarView.jsx",
+        "components/common/OpeningScheduleList.jsx"
+      ]
+    },
+    {
+      "route": "/api/user",
+      "file": "pages/api/user/index.ts",
+      "hitCount": 2,
+      "keys": [
+        "/api/user"
+      ],
+      "hitFiles": [
+        "components/backend/dashboard/CustomDataTable.jsx",
+        "components/users/AllUsersList.jsx"
+      ]
+    },
+    {
+      "route": "/api/cart",
+      "file": "pages/api/cart/index.js",
+      "hitCount": 3,
+      "keys": [
+        "/api/cart"
+      ],
+      "hitFiles": [
+        "components/ecobacgiang/FavoriteProductsList.jsx",
+        "components/layout/NavbarMobile.jsx",
+        "components/product/ProductCard.jsx"
+      ]
+    },
+    {
+      "route": "/api/orders/bestsellers",
+      "file": "pages/api/orders/bestsellers.js",
+      "hitCount": 3,
+      "keys": [
+        "/api/orders/bestsellers"
+      ],
+      "hitFiles": [
+        "components/backend/dashboard/BestSellingProductsChart.jsx",
+        "hooks/use-bestsellers.js",
+        "pages/dashboard/san-pham-ban-chay/index.js"
+      ]
+    },
+    {
+      "route": "/api/posts/draft",
+      "file": "pages/api/posts/draft.ts",
+      "hitCount": 3,
+      "keys": [
+        "/api/posts/draft"
+      ],
+      "hitFiles": [
+        "components/editor/DraftList.tsx",
+        "components/editor/index.tsx",
+        "pages/dashboard/bai-viet/index.tsx"
+      ]
+    },
+    {
+      "route": "/api/products",
+      "file": "pages/api/products/index.js",
+      "hitCount": 3,
+      "keys": [
+        "/api/products"
+      ],
+      "hitFiles": [
+        "components/ecobacgiang/FeaturedProducts.jsx",
+        "components/product/ProductHot.jsx",
+        "components/product/Products3.jsx"
+      ]
+    },
+    {
+      "route": "/api/subscription",
+      "file": "pages/api/subscription/index.js",
+      "hitCount": 3,
+      "keys": [
+        "/api/subscription"
+      ],
+      "hitFiles": [
+        "components/admin/EmailListComponent.jsx",
+        "components/ecobacgiang/NewsletterSignup.jsx",
+        "pages/unsubscribe.jsx"
+      ]
+    },
+    {
+      "route": "/api/image",
+      "file": "pages/api/image.ts",
+      "hitCount": 4,
+      "keys": [
+        "/api/image"
+      ],
+      "hitFiles": [
+        "components/editor/GalleryModal/index.tsx",
+        "components/editor/index.tsx",
+        "components/univisport/Editor.tsx",
+        "pages/dashboard/them-khoa-hoc/index.js"
+      ]
+    },
+    {
+      "route": "/api/students/[id]",
+      "file": "pages/api/students/[id].js",
+      "hitCount": 4,
+      "keys": [
+        "/api/students/[id]",
+        "/api/students/"
+      ],
+      "hitFiles": [
+        "pages/dashboard/hoc-vien/[id].js",
+        "pages/dashboard/lich-hoc-hang-ngay/index.js",
+        "pages/dashboard/quan-ly-hoc-vien/index.js",
+        "pages/dashboard/sua-hoc-vien/[id].js"
+      ]
+    },
+    {
+      "route": "/api/orders/[id]",
+      "file": "pages/api/orders/[id].js",
+      "hitCount": 5,
+      "keys": [
+        "/api/orders/[id]",
+        "/api/orders/"
+      ],
+      "hitFiles": [
+        "components/backend/dashboard/BestSellingProductsChart.jsx",
+        "components/ecobacgiang/OrderList.jsx",
+        "components/users/OrdersTab.jsx",
+        "hooks/use-bestsellers.js",
+        "pages/dashboard/san-pham-ban-chay/index.js"
+      ]
+    },
+    {
+      "route": "/api/posts/[postId]",
+      "file": "pages/api/posts/[postId].ts",
+      "hitCount": 5,
+      "keys": [
+        "/api/posts/[postId]",
+        "/api/posts/"
+      ],
+      "hitFiles": [
+        "components/common/InfiniteScrollPosts.tsx",
+        "components/editor/DraftList.tsx",
+        "components/editor/index.tsx",
+        "pages/dashboard/bai-viet/index.tsx",
+        "pages/dashboard/bai-viet/update/[slug].tsx"
+      ]
+    },
+    {
+      "route": "/api/students",
+      "file": "pages/api/students/index.js",
+      "hitCount": 5,
+      "keys": [
+        "/api/students"
+      ],
+      "hitFiles": [
+        "pages/dashboard/hoc-vien/[id].js",
+        "pages/dashboard/lich-hoc-hang-ngay/index.js",
+        "pages/dashboard/quan-ly-hoc-vien/index.js",
+        "pages/dashboard/sua-hoc-vien/[id].js",
+        "pages/dashboard/them-hoc-vien/index.js"
+      ]
+    },
+    {
+      "route": "/api/class-schedules/[id]",
+      "file": "pages/api/class-schedules/[id].js",
+      "hitCount": 6,
+      "keys": [
+        "/api/class-schedules/[id]",
+        "/api/class-schedules/"
+      ],
+      "hitFiles": [
+        "components/common/CalendarView.jsx",
+        "components/common/OpeningCalendarView.jsx",
+        "components/common/OpeningScheduleList.jsx",
+        "pages/dashboard/lich-hoc-hang-ngay/index.js",
+        "pages/dashboard/lich-khai-giang/index.js",
+        "pages/dashboard/lich-khai-giang/sua/[id].js"
+      ]
+    },
+    {
+      "route": "/api/posts",
+      "file": "pages/api/posts/index.ts",
+      "hitCount": 6,
+      "keys": [
+        "/api/posts"
+      ],
+      "hitFiles": [
+        "components/common/InfiniteScrollPosts.tsx",
+        "components/editor/DraftList.tsx",
+        "components/editor/index.tsx",
+        "pages/dashboard/bai-viet/index.tsx",
+        "pages/dashboard/bai-viet/update/[slug].tsx",
+        "pages/dashboard/them-bai-viet/index.tsx"
+      ]
+    },
+    {
+      "route": "/api/auth/[...nextauth]",
+      "file": "pages/api/auth/[...nextauth].js",
+      "hitCount": 9,
+      "keys": [
+        "/api/auth/[...nextauth]",
+        "/api/auth/"
+      ],
+      "hitFiles": [
+        "components/users/ChangePassword.jsx",
+        "lib/utils.ts",
+        "pages/activate.jsx",
+        "pages/auth/dat-lai-mat-khau.jsx",
+        "pages/auth/quen-mat-khau.jsx",
+        "pages/dang-ky.jsx",
+        "pages/doi-mat-khau.jsx",
+        "pages/quen-mat-khau/index.js"
+      ]
+    },
+    {
+      "route": "/api/class-schedules",
+      "file": "pages/api/class-schedules/index.js",
+      "hitCount": 9,
+      "keys": [
+        "/api/class-schedules"
+      ],
+      "hitFiles": [
+        "components/common/CalendarView.jsx",
+        "components/common/ClassScheduleList.jsx",
+        "components/common/OpeningCalendarView.jsx",
+        "components/common/OpeningScheduleList.jsx",
+        "pages/dashboard/lich-hoc-hang-ngay/index.js",
+        "pages/dashboard/lich-khai-giang/index.js",
+        "pages/dashboard/lich-khai-giang/sua/[id].js",
+        "pages/dashboard/lich-khai-giang/them-moi.js"
+      ]
+    },
+    {
+      "route": "/api/courses",
+      "file": "pages/api/courses/index.js",
+      "hitCount": 9,
+      "keys": [
+        "/api/courses"
+      ],
+      "hitFiles": [
+        "components/common/FeaturedCourses.jsx",
+        "pages/dashboard/khoa-hoc/index.js",
+        "pages/dashboard/lich-hoc-hang-ngay/tao-moi.js",
+        "pages/dashboard/lich-khai-giang/index.js",
+        "pages/dashboard/lich-khai-giang/sua/[id].js",
+        "pages/dashboard/lich-khai-giang/them-moi.js",
+        "pages/dashboard/them-hoc-vien/index.js",
+        "pages/dashboard/them-khoa-hoc/index.js"
+      ]
+    },
+    {
+      "route": "/api/orders",
+      "file": "pages/api/orders/index.js",
+      "hitCount": 10,
+      "keys": [
+        "/api/orders"
+      ],
+      "hitFiles": [
+        "components/backend/dashboard/BestSellingProductsChart.jsx",
+        "components/backend/dashboard/LargeCards.jsx",
+        "components/ecobacgiang/OrderList.jsx",
+        "components/ecobacgiang/OrderStats.jsx",
+        "components/ecobacgiang/TopCustomers.jsx",
+        "components/ecobacgiang/TopProducts.jsx",
+        "components/users/ListOrders.jsx",
+        "components/users/OrdersTab.jsx"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "file": "components/about/AboutUsSection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/about/AboutUsSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/BusinessPhilosophy .jsx",
+      "refCount": 0,
+      "keys": [
+        "components/about/BusinessPhilosophy "
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/ContactSection.js",
+      "refCount": 0,
+      "keys": [
+        "components/about/ContactSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/HeroBlog.js",
+      "refCount": 0,
+      "keys": [
+        "components/about/HeroBlog"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/HeroProduct.js",
+      "refCount": 0,
+      "keys": [
+        "components/about/HeroProduct"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/Intro.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/about/Intro"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/QualityPolicy.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/about/QualityPolicy"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/Story.js",
+      "refCount": 0,
+      "keys": [
+        "components/about/Story"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/SubscribeSection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/about/SubscribeSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/TeamMember.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/about/TeamMember"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/Testimonials.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/about/Testimonials"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/admin/ContentWrapper.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/admin/ContentWrapper"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/admin/LatestPostListCard.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/admin/LatestPostListCard"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/admin/LatesUserTable.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/admin/LatesUserTable"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/backend/dashboard/BestSellingProductsChart.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/backend/dashboard/BestSellingProductsChart"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/backend/dashboard/DashboardCharts.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/backend/dashboard/DashboardCharts"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/backend/dashboard/LargeCard.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/backend/dashboard/LargeCard"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/backend/dashboard/LargeCards.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/backend/dashboard/LargeCards"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/backend/dashboard/Pagination.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/backend/dashboard/Pagination"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/backend/Navbar.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/backend/Navbar"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/blog/BlogCard.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/blog/BlogCard"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/button/MessengerButton.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/button/MessengerButton"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/AccessDenied.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/AccessDenied"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/ActionButton.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/ActionButton"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/AppHead.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/AppHead"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/Baner.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/Baner"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/CalendarView.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/CalendarView"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/CheckMark.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/CheckMark"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/ClassScheduleCard.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/ClassScheduleCard"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/ClassScheduleList.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/ClassScheduleList"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/ConfirmDialog.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/ConfirmDialog"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/DropdownOptions.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/DropdownOptions"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/FacebookMsg.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/FacebookMsg"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/Footer.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/Footer"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/GoogleAnalytics.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/GoogleAnalytics"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/InfiniteScrollPosts.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/InfiniteScrollPosts"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/LikeHeart.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/LikeHeart"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/Logo.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/Logo"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/MCCoursesSection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/MCCoursesSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/ModalContainer.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/ModalContainer"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/nav/AdminNav.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/nav/AdminNav"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/nav/AdminSecondaryNav.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/nav/AdminSecondaryNav"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/nav/Icon.js",
+      "refCount": 0,
+      "keys": [
+        "components/common/nav/Icon"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/nav/UserNav.js",
+      "refCount": 0,
+      "keys": [
+        "components/common/nav/UserNav"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/PageNavigator.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/PageNavigator"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/ProfileHead.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/ProfileHead"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/ProfileIcon.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/ProfileIcon"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/ProjectSkeleton.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/ProjectSkeleton"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/StudentFeedbackVideos.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/StudentFeedbackVideos"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/common/TeacherCard.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/common/TeacherCard"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/AccountSettingsList.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/AccountSettingsList"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/BannerSale.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/BannerSale"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/BathroomExpertsSection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/BathroomExpertsSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/CarouselComponent.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/CarouselComponent"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/ContactForm.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/ContactForm"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/DealsSection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/DealsSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/FavoriteProductsList.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/FavoriteProductsList"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/FeaturedProducts.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/FeaturedProducts"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/MonthlySales.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/MonthlySales"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/NavbarMobile.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/NavbarMobile"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/ProductCard.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/ProductCard"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/ProductList.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/ProductList"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/products.js",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/products"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/PromoBanner.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/PromoBanner"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/PromoCards.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/PromoCards"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ecobacgiang/SurveyForm.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ecobacgiang/SurveyForm"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/AutoSaveIndicator.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/AutoSaveIndicator"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/DraftList.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/DraftList"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/EditorUtils.ts",
+      "refCount": 0,
+      "keys": [
+        "components/editor/EditorUtils"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/FileAttachment.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/FileAttachment"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/FindReplace.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/FindReplace"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/GalleryModal/Gallery.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/GalleryModal/Gallery"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/GalleryModal/Image.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/GalleryModal/Image"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/GalleryModal/index.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/GalleryModal/index",
+        "components/editor/GalleryModal"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/index-utils.ts",
+      "refCount": 0,
+      "keys": [
+        "components/editor/index-utils"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/Link/EditLink.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/Link/EditLink"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/Link/InsertLink.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/Link/InsertLink"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/Link/LinkForm.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/Link/LinkForm"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/SeoAnalysis.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/SeoAnalysis"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/SeoAnalysisV2.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/SeoAnalysisV2"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/SeoForm.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/SeoForm"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/ThumbnailSelector.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/ThumbnailSelector"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/ToolBar/Button.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/ToolBar/Button"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/ToolBar/EmbedYoutube.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/ToolBar/EmbedYoutube"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/ToolBar/index.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/ToolBar/index",
+        "components/editor/ToolBar"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/editor/WordCount.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/editor/WordCount"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/fontend/common/ConfirmModal.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/fontend/common/ConfirmModal"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/fontend/common/EditAddressPopup.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/fontend/common/EditAddressPopup"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/fontend/common/GoogleAnalytics.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/fontend/common/GoogleAnalytics"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/fontend/common/MessengerButton.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/fontend/common/MessengerButton"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/fontend/common/PaymentOptions.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/fontend/common/PaymentOptions"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/fontend/common/SelectAddressPopup.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/fontend/common/SelectAddressPopup"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/gallery/ScrollingGallery.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/gallery/ScrollingGallery"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/header/ContactForm.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/header/ContactForm"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/header/CrowdfundingSection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/header/CrowdfundingSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/header/Login.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/header/Login"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/header/ModernNavbar.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/header/ModernNavbar"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/header/Navbar2.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/header/Navbar2"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/header/ResponsiveNavbar.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/header/ResponsiveNavbar"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/header/UserDropdown.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/header/UserDropdown"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/layout/BreadCrumbs.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/layout/BreadCrumbs"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/layout/NavbarMobile.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/layout/NavbarMobile"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/layout/StudyLayout.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/layout/StudyLayout"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/Category.tsx",
+      "refCount": 0,
+      "keys": [
+        "components/product/Category"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/PopularItems.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/product/PopularItems"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/ProductCard.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/product/ProductCard"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/ProductDropdown.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/product/ProductDropdown"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/ProductHot.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/product/ProductHot"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/ProductModal.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/product/ProductModal"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/Products2.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/product/Products2"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/Products3.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/product/Products3"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/SEO.js",
+      "refCount": 0,
+      "keys": [
+        "components/product/SEO"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/ShoppingCart.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/product/ShoppingCart"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/product/Spinner.js",
+      "refCount": 0,
+      "keys": [
+        "components/product/Spinner"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/q8design/InfographicCircle.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/q8design/InfographicCircle"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/sections/GallerySection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/sections/GallerySection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/ArticlePage.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/ArticlePage"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/BannerTTG.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/BannerTTG"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/ChungCuPage.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/ChungCuPage"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/ConsultationForm.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/ConsultationForm"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/EmbedLink.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/EmbedLink"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/FeaturedProjectsSection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/FeaturedProjectsSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/FurnitureCategories.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/FurnitureCategories"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/FurnitureViewer.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/FurnitureViewer"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/header/Navbar.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/header/Navbar"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/header/Navbar2.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/header/Navbar2"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/ProjectCard.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/ProjectCard"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/PropertyDetail.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/PropertyDetail"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/ServicesSection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/ServicesSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/StrengthsSection.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/StrengthsSection"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/SumenhTTG.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/SumenhTTG"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/Testimonials.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/Testimonials"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/tantruonggiang/ThicongPage.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/tantruonggiang/ThicongPage"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/ThemeSwitcher.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/ThemeSwitcher"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/BannerSlider.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/BannerSlider"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/BannerSportswear.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/BannerSportswear"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/CategoryGrid.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/CategoryGrid"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/CategoryShop.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/CategoryShop"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/CountdownTimer.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/CountdownTimer"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/HeroSection1.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/HeroSection1"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/HeroSectionBlog.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/HeroSectionBlog"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/HeroSectionProduct.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/HeroSectionProduct"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/NotableCustomers.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/NotableCustomers"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/ProductCard.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/ProductCard"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/ProductList.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/ProductList"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/ProductPage.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/ProductPage"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/univisport/VideoHero.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/univisport/VideoHero"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/users/AddressesTab.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/users/AddressesTab"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/users/AllUsersList.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/users/AllUsersList"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/users/ChangePassword.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/users/ChangePassword"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/users/LoadingSpinner.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/users/LoadingSpinner"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/users/OrderDetailsPopup.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/users/OrderDetailsPopup"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/users/OrdersTab.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/users/OrdersTab"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/users/UserSidebar.jsx",
+      "refCount": 0,
+      "keys": [
+        "components/users/UserSidebar"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "components/about/CoreValues.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/about/CoreValues"
+      ],
+      "refFiles": [
+        "pages/tam-nhin-su-menh/index.jsx"
+      ]
+    },
+    {
+      "file": "components/about/EducationExperience.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/about/EducationExperience"
+      ],
+      "refFiles": [
+        "pages/nha-sang-lap/index.js"
+      ]
+    },
+    {
+      "file": "components/about/FounderProfile.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/about/FounderProfile"
+      ],
+      "refFiles": [
+        "pages/nha-sang-lap/index.js"
+      ]
+    },
+    {
+      "file": "components/about/MediaCoverage.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/about/MediaCoverage"
+      ],
+      "refFiles": [
+        "pages/nha-sang-lap/index.js"
+      ]
+    },
+    {
+      "file": "components/about/OrganicProcess.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/about/OrganicProcess"
+      ],
+      "refFiles": [
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/about/PhotoGallery.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/about/PhotoGallery"
+      ],
+      "refFiles": [
+        "pages/nha-sang-lap/index.js"
+      ]
+    },
+    {
+      "file": "components/about/VisionComponent.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/about/VisionComponent"
+      ],
+      "refFiles": [
+        "pages/tam-nhin-su-menh/index.jsx"
+      ]
+    },
+    {
+      "file": "components/backend/dashboard/CustomDataTable.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/backend/dashboard/CustomDataTable"
+      ],
+      "refFiles": [
+        "pages/dashboard/khach-hang/index.tsx"
+      ]
+    },
+    {
+      "file": "components/backend/Heading.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/backend/Heading"
+      ],
+      "refFiles": [
+        "pages/dashboard/index.tsx"
+      ]
+    },
+    {
+      "file": "components/backend/Slidebar.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/backend/Slidebar"
+      ],
+      "refFiles": [
+        "pages/cai-dat.jsx"
+      ]
+    },
+    {
+      "file": "components/common/AboutSection.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/AboutSection"
+      ],
+      "refFiles": [
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/common/ConfirmModal.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/ConfirmModal"
+      ],
+      "refFiles": [
+        "components/fontend/common/ConfirmModal.tsx"
+      ]
+    },
+    {
+      "file": "components/common/ConfirmModal.tsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/ConfirmModal"
+      ],
+      "refFiles": [
+        "components/fontend/common/ConfirmModal.tsx"
+      ]
+    },
+    {
+      "file": "components/common/ContactPage.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/ContactPage"
+      ],
+      "refFiles": [
+        "pages/lien-he/index.js"
+      ]
+    },
+    {
+      "file": "components/common/DashboardPostCard.tsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/DashboardPostCard"
+      ],
+      "refFiles": [
+        "pages/dashboard/bai-viet/index.tsx"
+      ]
+    },
+    {
+      "file": "components/common/FeaturedCourses.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/FeaturedCourses"
+      ],
+      "refFiles": [
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/common/HeroBanner.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/HeroBanner"
+      ],
+      "refFiles": [
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/common/LocationCard.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/LocationCard"
+      ],
+      "refFiles": [
+        "pages/khoa-hoc/[slug].js"
+      ]
+    },
+    {
+      "file": "components/common/MainCategories.tsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/MainCategories"
+      ],
+      "refFiles": [
+        "pages/bai-viet/index.tsx"
+      ]
+    },
+    {
+      "file": "components/common/nav/useThemeSwitch.js",
+      "refCount": 1,
+      "keys": [
+        "components/common/nav/useThemeSwitch"
+      ],
+      "refFiles": [
+        "components/backend/Navbar.jsx"
+      ]
+    },
+    {
+      "file": "components/common/OpeningCalendarView.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/OpeningCalendarView"
+      ],
+      "refFiles": [
+        "pages/lich-khai-giang.js"
+      ]
+    },
+    {
+      "file": "components/common/OpeningScheduleList.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/OpeningScheduleList"
+      ],
+      "refFiles": [
+        "pages/lich-khai-giang.js"
+      ]
+    },
+    {
+      "file": "components/common/PaginatedPosts.tsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/PaginatedPosts"
+      ],
+      "refFiles": [
+        "pages/bai-viet/index.tsx"
+      ]
+    },
+    {
+      "file": "components/common/Pagination.tsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/Pagination"
+      ],
+      "refFiles": [
+        "pages/dashboard/bai-viet/index.tsx"
+      ]
+    },
+    {
+      "file": "components/common/PostCard.tsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/PostCard"
+      ],
+      "refFiles": [
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/common/Share.tsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/Share"
+      ],
+      "refFiles": [
+        "pages/bai-viet/[slug].tsx"
+      ]
+    },
+    {
+      "file": "components/common/TeachersSection.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/TeachersSection"
+      ],
+      "refFiles": [
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/common/VoiceTestPopup.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/common/VoiceTestPopup"
+      ],
+      "refFiles": [
+        "pages/quy-trinh-test-giong.js"
+      ]
+    },
+    {
+      "file": "components/coupon/CouponForm.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/coupon/CouponForm"
+      ],
+      "refFiles": [
+        "pages/dashboard/ma-giam-gia/index.js"
+      ]
+    },
+    {
+      "file": "components/ecobacgiang/BestSellers.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/ecobacgiang/BestSellers"
+      ],
+      "refFiles": [
+        "pages/dashboard/san-pham-ban-chay/index.js"
+      ]
+    },
+    {
+      "file": "components/ecobacgiang/HeroSectionBlog.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/ecobacgiang/HeroSectionBlog"
+      ],
+      "refFiles": [
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/ecobacgiang/NewsletterSignup.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/ecobacgiang/NewsletterSignup"
+      ],
+      "refFiles": [
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/ecobacgiang/OrderStats.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/ecobacgiang/OrderStats"
+      ],
+      "refFiles": [
+        "pages/dashboard/danh-sach-order/index.js"
+      ]
+    },
+    {
+      "file": "components/ecobacgiang/TopCustomers.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/ecobacgiang/TopCustomers"
+      ],
+      "refFiles": [
+        "pages/dashboard/danh-sach-order/index.js"
+      ]
+    },
+    {
+      "file": "components/ecobacgiang/TopProducts.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/ecobacgiang/TopProducts"
+      ],
+      "refFiles": [
+        "pages/dashboard/danh-sach-order/index.js"
+      ]
+    },
+    {
+      "file": "components/tantruonggiang/data/projects.js",
+      "refCount": 1,
+      "keys": [
+        "components/tantruonggiang/data/projects"
+      ],
+      "refFiles": [
+        "components/tantruonggiang/PropertyDetail.jsx"
+      ]
+    },
+    {
+      "file": "components/tantruonggiang/FAQSection.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/tantruonggiang/FAQSection"
+      ],
+      "refFiles": [
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/tantruonggiang/ServiceSection.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/tantruonggiang/ServiceSection"
+      ],
+      "refFiles": [
+        "components/tantruonggiang/PropertyDetail.jsx"
+      ]
+    },
+    {
+      "file": "components/univisport/Editor.tsx",
+      "refCount": 1,
+      "keys": [
+        "components/univisport/Editor"
+      ],
+      "refFiles": [
+        "pages/dashboard/them-khoa-hoc/index.js"
+      ]
+    },
+    {
+      "file": "components/users/ListOrders.jsx",
+      "refCount": 1,
+      "keys": [
+        "components/users/ListOrders"
+      ],
+      "refFiles": [
+        "pages/dashboard/dat-hang/index.jsx"
+      ]
+    },
+    {
+      "file": "components/admin/EmailListComponent.jsx",
+      "refCount": 2,
+      "keys": [
+        "components/admin/EmailListComponent"
+      ],
+      "refFiles": [
+        "pages/dashboard/danh-sach-email/index.js",
+        "pages/dashboard/index.tsx"
+      ]
+    },
+    {
+      "file": "components/common/CourseCard.jsx",
+      "refCount": 2,
+      "keys": [
+        "components/common/CourseCard"
+      ],
+      "refFiles": [
+        "pages/khoa-hoc/index.js",
+        "pages/khoa-hoc/[slug].js"
+      ]
+    },
+    {
+      "file": "components/common/RegistrationPopup.jsx",
+      "refCount": 2,
+      "keys": [
+        "components/common/RegistrationPopup"
+      ],
+      "refFiles": [
+        "pages/khoa-hoc/[slug].js",
+        "pages/lich-khai-giang.js"
+      ]
+    },
+    {
+      "file": "components/ecobacgiang/OrderList.jsx",
+      "refCount": 2,
+      "keys": [
+        "components/ecobacgiang/OrderList"
+      ],
+      "refFiles": [
+        "pages/dashboard/danh-sach-order/index.js",
+        "pages/dashboard/index.tsx"
+      ]
+    },
+    {
+      "file": "components/gallery/index.js",
+      "refCount": 2,
+      "keys": [
+        "components/gallery/index",
+        "components/gallery"
+      ],
+      "refFiles": [
+        "pages/gallery-demo.jsx",
+        "pages/index.js"
+      ]
+    },
+    {
+      "file": "components/editor/index.tsx",
+      "refCount": 3,
+      "keys": [
+        "components/editor/index",
+        "components/editor"
+      ],
+      "refFiles": [
+        "pages/dashboard/bai-viet/update/[slug].tsx",
+        "pages/dashboard/them-bai-viet/index.tsx",
+        "utils/helper.ts"
+      ]
+    },
+    {
+      "file": "components/layout/DefaultLayout.tsx",
+      "refCount": 14,
+      "keys": [
+        "components/layout/DefaultLayout"
+      ],
+      "refFiles": [
+        "pages/bai-viet/index.tsx",
+        "pages/bai-viet/[slug].tsx",
+        "pages/cau-chuyen-thuong-hieu-bt-academy.js",
+        "pages/chinh-sach-bao-mat.js",
+        "pages/chinh-sach-khoa-hoc-hoc-phi.js",
+        "pages/gioi-thieu-bt-academy.js",
+        "pages/index.js",
+        "pages/khoa-hoc/index.js"
+      ]
+    },
+    {
+      "file": "components/layout/AdminLayout.tsx",
+      "refCount": 22,
+      "keys": [
+        "components/layout/AdminLayout"
+      ],
+      "refFiles": [
+        "pages/dashboard/bai-viet/index.tsx",
+        "pages/dashboard/bai-viet/update/[slug].tsx",
+        "pages/dashboard/danh-sach-email/index.js",
+        "pages/dashboard/danh-sach-order/index.js",
+        "pages/dashboard/dat-hang/index.jsx",
+        "pages/dashboard/email-automation.js",
+        "pages/dashboard/hoc-vien/[id].js",
+        "pages/dashboard/index.tsx"
+      ]
+    },
+    {
+      "file": "components/layout/index.tsx",
+      "refCount": 36,
+      "keys": [
+        "components/layout/index",
+        "components/layout"
+      ],
+      "refFiles": [
+        "pages/bai-viet/index.tsx",
+        "pages/bai-viet/[slug].tsx",
+        "pages/cau-chuyen-thuong-hieu-bt-academy.js",
+        "pages/chinh-sach-bao-mat.js",
+        "pages/chinh-sach-khoa-hoc-hoc-phi.js",
+        "pages/dashboard/bai-viet/index.tsx",
+        "pages/dashboard/bai-viet/update/[slug].tsx",
+        "pages/dashboard/danh-sach-email/index.js"
+      ]
+    }
+  ],
+  "hooks": [
+    {
+      "file": "hooks/use-auth-check.js",
+      "refCount": 0,
+      "keys": [
+        "hooks/use-auth-check"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "hooks/use-checkout-submit.js",
+      "refCount": 0,
+      "keys": [
+        "hooks/use-checkout-submit"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "hooks/use-pagination.js",
+      "refCount": 0,
+      "keys": [
+        "hooks/use-pagination"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "hooks/useAuth.ts",
+      "refCount": 0,
+      "keys": [
+        "hooks/useAuth"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "hooks/useEditorConfig.ts",
+      "refCount": 0,
+      "keys": [
+        "hooks/useEditorConfig"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "hooks/use-cart-info.js",
+      "refCount": 1,
+      "keys": [
+        "hooks/use-cart-info"
+      ],
+      "refFiles": [
+        "components/header/Navbar2.jsx"
+      ]
+    },
+    {
+      "file": "hooks/use-search-form-submit.js",
+      "refCount": 1,
+      "keys": [
+        "hooks/use-search-form-submit"
+      ],
+      "refFiles": [
+        "components/header/Navbar2.jsx"
+      ]
+    },
+    {
+      "file": "hooks/use-sticky.js",
+      "refCount": 1,
+      "keys": [
+        "hooks/use-sticky"
+      ],
+      "refFiles": [
+        "components/header/Navbar2.jsx"
+      ]
+    },
+    {
+      "file": "hooks/useDarkMode.ts",
+      "refCount": 1,
+      "keys": [
+        "hooks/useDarkMode"
+      ],
+      "refFiles": [
+        "components/common/nav/AdminSecondaryNav.tsx"
+      ]
+    },
+    {
+      "file": "hooks/useImageLoader.js",
+      "refCount": 1,
+      "keys": [
+        "hooks/useImageLoader"
+      ],
+      "refFiles": [
+        "components/gallery/ScrollingGallery.jsx"
+      ]
+    },
+    {
+      "file": "hooks/use-bestsellers.js",
+      "refCount": 2,
+      "keys": [
+        "hooks/use-bestsellers"
+      ],
+      "refFiles": [
+        "components/ecobacgiang/MonthlySales.jsx",
+        "components/product/Products3.jsx"
+      ]
+    }
+  ],
+  "lib": [
+    {
+      "file": "lib/productUtils.js",
+      "refCount": 0,
+      "keys": [
+        "lib/productUtils"
+      ],
+      "refFiles": []
+    },
+    {
+      "file": "lib/mongodb.js",
+      "refCount": 1,
+      "keys": [
+        "lib/mongodb"
+      ],
+      "refFiles": [
+        "pages/api/auth/[...nextauth].js"
+      ]
+    },
+    {
+      "file": "lib/mongoose.js",
+      "refCount": 1,
+      "keys": [
+        "lib/mongoose"
+      ],
+      "refFiles": [
+        "pages/api/upload.js"
+      ]
+    },
+    {
+      "file": "lib/validator.ts",
+      "refCount": 2,
+      "keys": [
+        "lib/validator"
+      ],
+      "refFiles": [
+        "pages/api/posts/index.ts",
+        "pages/api/posts/[postId].ts"
+      ]
+    },
+    {
+      "file": "lib/cloudinary.ts",
+      "refCount": 4,
+      "keys": [
+        "lib/cloudinary"
+      ],
+      "refFiles": [
+        "pages/api/image.ts",
+        "pages/api/posts/draft.ts",
+        "pages/api/posts/index.ts",
+        "pages/api/posts/[postId].ts"
+      ]
+    },
+    {
+      "file": "lib/utils.ts",
+      "refCount": 6,
+      "keys": [
+        "lib/utils"
+      ],
+      "refFiles": [
+        "pages/api/posts/drafts-only.ts",
+        "pages/api/posts/index.ts",
+        "pages/api/posts/[postId].ts",
+        "pages/bai-viet/index.tsx",
+        "pages/dashboard/bai-viet/index.tsx",
+        "pages/index.js"
+      ]
+    }
+  ],
+  "emails": [
+    {
+      "file": "emails/activateEmailTemplate.js",
+      "refCount": 1,
+      "keys": [
+        "emails/activateEmailTemplate"
+      ],
+      "refFiles": [
+        "utils/sendEmails.js"
+      ]
+    },
+    {
+      "file": "emails/adminNotificationEmailTemplate.js",
+      "refCount": 1,
+      "keys": [
+        "emails/adminNotificationEmailTemplate"
+      ],
+      "refFiles": [
+        "pages/api/course-registration/index.js"
+      ]
+    },
+    {
+      "file": "emails/courseRegistrationEmailTemplate.js",
+      "refCount": 1,
+      "keys": [
+        "emails/courseRegistrationEmailTemplate"
+      ],
+      "refFiles": [
+        "pages/api/course-registration/index.js"
+      ]
+    },
+    {
+      "file": "emails/forgotPasswordEmailTemplate.js",
+      "refCount": 1,
+      "keys": [
+        "emails/forgotPasswordEmailTemplate"
+      ],
+      "refFiles": [
+        "pages/api/auth/forgot-password.js"
+      ]
+    },
+    {
+      "file": "emails/resetEmailTemplate.js",
+      "refCount": 1,
+      "keys": [
+        "emails/resetEmailTemplate"
+      ],
+      "refFiles": [
+        "pages/api/auth/forgot.js"
+      ]
+    },
+    {
+      "file": "emails/subscriptionEmailTemplate.js",
+      "refCount": 1,
+      "keys": [
+        "emails/subscriptionEmailTemplate"
+      ],
+      "refFiles": [
+        "pages/api/subscription/index.js"
+      ]
+    },
+    {
+      "file": "emails/dailyScheduleEmailTemplate.js",
+      "refCount": 4,
+      "keys": [
+        "emails/dailyScheduleEmailTemplate"
+      ],
+      "refFiles": [
+        "pages/api/admin/send-daily-schedule.js",
+        "pages/api/admin/send-student-daily-schedule.js",
+        "pages/api/cron/daily-schedule-email.js",
+        "pages/api/cron/send-daily-emails.js"
+      ]
+    }
+  ],
+  "models": [
+    {
+      "file": "models/SurveyResponse.js",
+      "refCount": 1,
+      "keys": [
+        "models/SurveyResponse"
+      ],
+      "refFiles": [
+        "pages/api/submit/index.js"
+      ]
+    },
+    {
+      "file": "models/Image.js",
+      "refCount": 2,
+      "keys": [
+        "models/Image"
+      ],
+      "refFiles": [
+        "pages/api/image/alt-text.ts",
+        "pages/api/image.ts"
+      ]
+    },
+    {
+      "file": "models/MomoPayment.js",
+      "refCount": 2,
+      "keys": [
+        "models/MomoPayment"
+      ],
+      "refFiles": [
+        "pages/api/create-momo-payment/index.js",
+        "pages/api/momo-callback/index.js"
+      ]
+    },
+    {
+      "file": "models/Coupon.js",
+      "refCount": 3,
+      "keys": [
+        "models/Coupon"
+      ],
+      "refFiles": [
+        "pages/api/cart/[userId]/sync.js",
+        "pages/api/cart/[userId]/[productId].js",
+        "pages/api/coupon/index.js"
+      ]
+    },
+    {
+      "file": "models/Cart.js",
+      "refCount": 5,
+      "keys": [
+        "models/Cart"
+      ],
+      "refFiles": [
+        "pages/api/cart/clear.js",
+        "pages/api/cart/index.js",
+        "pages/api/cart/[userId]/apply-coupon.js",
+        "pages/api/cart/[userId]/sync.js",
+        "pages/api/cart/[userId]/[productId].js"
+      ]
+    },
+    {
+      "file": "models/Subscription.js",
+      "refCount": 5,
+      "keys": [
+        "models/Subscription"
+      ],
+      "refFiles": [
+        "pages/api/course-registration/index.js",
+        "pages/api/subscription/export.js",
+        "pages/api/subscription/index.js",
+        "pages/api/subscription/stats.js",
+        "pages/api/subscription/unsubscribe.js"
+      ]
+    },
+    {
+      "file": "models/Order.js",
+      "refCount": 6,
+      "keys": [
+        "models/Order"
+      ],
+      "refFiles": [
+        "pages/api/checkout/index.js",
+        "pages/api/checkout/[id].js",
+        "pages/api/orders/bestsellers.js",
+        "pages/api/orders/cancel.js",
+        "pages/api/orders/index.js",
+        "pages/api/orders/[id].js"
+      ]
+    },
+    {
+      "file": "models/Product.js",
+      "refCount": 7,
+      "keys": [
+        "models/Product"
+      ],
+      "refFiles": [
+        "lib/productUtils.js",
+        "pages/api/cart/[userId]/sync.js",
+        "pages/api/favorites/index.js",
+        "pages/api/orders/bestsellers.js",
+        "pages/api/products/index.js",
+        "pages/api/products/[slug].js",
+        "pages/api/search.js"
+      ]
+    },
+    {
+      "file": "models/Post.ts",
+      "refCount": 8,
+      "keys": [
+        "models/Post"
+      ],
+      "refFiles": [
+        "lib/utils.ts",
+        "pages/api/posts/draft.ts",
+        "pages/api/posts/drafts-only.ts",
+        "pages/api/posts/index.ts",
+        "pages/api/posts/[postId].ts",
+        "pages/bai-viet/[slug].tsx",
+        "pages/dashboard/bai-viet/index.tsx",
+        "pages/dashboard/bai-viet/update/[slug].tsx"
+      ]
+    },
+    {
+      "file": "models/Student.js",
+      "refCount": 9,
+      "keys": [
+        "models/Student"
+      ],
+      "refFiles": [
+        "pages/api/admin/send-student-daily-schedule.js",
+        "pages/api/class-schedules/calendar.js",
+        "pages/api/cron/daily-schedule-email.js",
+        "pages/api/cron/send-daily-emails.js",
+        "pages/api/internal/students.js",
+        "pages/api/students/index.js",
+        "pages/api/students/stats.js",
+        "pages/api/students/[id].js"
+      ]
+    },
+    {
+      "file": "models/SepayPayment.js",
+      "refCount": 11,
+      "keys": [
+        "models/SepayPayment"
+      ],
+      "refFiles": [
+        "pages/api/check-sepay-status/index.js",
+        "pages/api/checkout/index.js",
+        "pages/api/create-sepay-payment/index.js",
+        "pages/api/crowdfunding-stats.js",
+        "pages/api/crowdfunding-supporters.js",
+        "pages/api/debug-payments/index.js",
+        "pages/api/refresh-sepay-qr/index.js",
+        "pages/api/sepay-callback/index.js"
+      ]
+    },
+    {
+      "file": "models/ClassSchedule.js",
+      "refCount": 14,
+      "keys": [
+        "models/ClassSchedule"
+      ],
+      "refFiles": [
+        "pages/api/admin/class-schedules/bulk-actions.js",
+        "pages/api/admin/class-schedules/index.js",
+        "pages/api/admin/class-schedules/statistics.js",
+        "pages/api/admin/class-schedules/[id].js",
+        "pages/api/admin/send-daily-schedule.js",
+        "pages/api/admin/send-student-daily-schedule.js",
+        "pages/api/class-schedules/calendar.js",
+        "pages/api/class-schedules/index.js"
+      ]
+    },
+    {
+      "file": "models/Course.js",
+      "refCount": 16,
+      "keys": [
+        "models/Course"
+      ],
+      "refFiles": [
+        "pages/api/admin/class-schedules/index.js",
+        "pages/api/admin/class-schedules/statistics.js",
+        "pages/api/admin/class-schedules/[id].js",
+        "pages/api/admin/send-daily-schedule.js",
+        "pages/api/admin/send-student-daily-schedule.js",
+        "pages/api/class-schedules/calendar.js",
+        "pages/api/class-schedules/index.js",
+        "pages/api/class-schedules/opening-list.js"
+      ]
+    },
+    {
+      "file": "models/User.js",
+      "refCount": 25,
+      "keys": [
+        "models/User"
+      ],
+      "refFiles": [
+        "middleware/auth.js",
+        "pages/api/address/index.js",
+        "pages/api/admin/seed-admin.js",
+        "pages/api/admin/send-daily-schedule.js",
+        "pages/api/admin/send-student-daily-schedule.js",
+        "pages/api/auth/activate.js",
+        "pages/api/auth/change-password.js",
+        "pages/api/auth/forgot-password.js"
+      ]
+    }
+  ],
+  "middleware": [
+    {
+      "file": "middleware/auth.js",
+      "refCount": 0,
+      "keys": [
+        "middleware/auth"
+      ],
+      "refFiles": []
+    }
+  ]
+}

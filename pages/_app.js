@@ -1,0 +1,71 @@
+import "../styles/globals.css";
+import "../styles/toast.css";
+import "../styles/dashboard.css";
+import { SessionProvider } from "next-auth/react"
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Head from "next/head";
+
+// Font Rajdhani được load qua CSS trong globals.css để tránh lỗi build trên VPS
+// Nếu cần sử dụng next/font, có thể uncomment code bên dưới và cấu hình network cho VPS
+/*
+import { Rajdhani } from "next/font/google";
+const rajdhani = Rajdhani({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--ltn__heading-font",
+  fallback: ["Arial", "Helvetica", "sans-serif"],
+});
+*/
+  function MyApp({ Component, pageProps: { session, meta, ...pageProps } }) {
+  
+  return (
+      <>
+          <Head>
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+          </Head>
+          {meta && (
+            <Head>
+              <title>{meta.title}</title>
+              <meta name="description" content={meta.description} />
+              <meta name="keywords" content={meta.keywords} />
+              <meta name="robots" content={meta.robots} />
+              <meta name="author" content={meta.author} />
+              <link rel="canonical" href={meta.canonical} />
+              <meta property="og:title" content={meta.og.title} />
+              <meta property="og:description" content={meta.og.description} />
+              <meta property="og:type" content={meta.og.type} />
+              <meta property="og:image" content={meta.og.image} />
+              <meta property="og:image:width" content={meta.og.imageWidth} />
+              <meta property="og:image:height" content={meta.og.imageHeight} />
+              <meta property="og:url" content={meta.og.url} />
+              <meta name="twitter:card" content={meta.twitter.card} />
+              <meta name="twitter:title" content={meta.twitter.title} />
+              <meta name="twitter:description" content={meta.twitter.description} />
+              <meta name="twitter:image" content={meta.twitter.image} />
+            </Head>
+          )}
+          <SessionProvider session={session}>
+            <div className="font-arial">
+              <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                style={{ zIndex: 10001 }}
+              />
+              <Component {...pageProps} />
+            </div>
+          </SessionProvider>
+        </>
+  );
+}
+
+export default MyApp;
