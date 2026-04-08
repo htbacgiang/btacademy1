@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
-import { FaChevronDown } from "react-icons/fa";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import ResponsiveMenu from "./ResponsiveNavbar";
 import RegistrationPopup from "../common/RegistrationPopup";
@@ -146,7 +145,7 @@ const ModernNavbar = () => {
                         ) : item.name === "Khóa học" ? (
                           <>
                             <Link 
-                              href="/khoa-hoc/lam-chu-giong-noi" 
+                              href="/khoa-hoc/khoa-hoc-mc-co-ban" 
                               className="group/item dropdown-item flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 hover:text-red-700 transition-all duration-200 relative overflow-hidden"
                             >
                               <div className="w-2 h-2 rounded-full bg-gradient-to-r from-red-400 to-pink-500 mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>

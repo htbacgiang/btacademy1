@@ -169,7 +169,7 @@ export default function ContactPage() {
       {/* Tabs Navigation */}
       <div className="h-[70px]"></div>
       {/* Contact Information */}
-      <section className="py-20 ">
+      <section className="py-10 md:py-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Info */}

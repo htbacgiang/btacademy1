@@ -58,7 +58,7 @@ export default function Home({ posts, meta }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </Head>
-      <BirthdayPopup />
+      {/* <BirthdayPopup /> */}
       <h1 className="sr-only">
         BT Academy - Trung tâm đào tạo MC chuyên nghiệp - Khóa học dẫn chương trình, phát thanh viên, luyện giọng nói hàng đầu tại Hà Nội và Thái Nguyên
       </h1>

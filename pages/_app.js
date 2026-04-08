@@ -18,12 +18,106 @@ const rajdhani = Rajdhani({
   fallback: ["Arial", "Helvetica", "sans-serif"],
 });
 */
-  function MyApp({ Component, pageProps: { session, meta, ...pageProps } }) {
+const createSiteNavigation = () => {
+  return [
+    { name: "Trang chủ", url: "https://btacademy.com.vn/" },
+    { name: "Khóa học", url: "https://btacademy.com.vn/khoa-hoc" },
+    { name: "Lịch khai giảng", url: "https://btacademy.com.vn/lich-khai-giang" },
+    { name: "Bài viết", url: "https://btacademy.com.vn/bai-viet" },
+    { name: "Liên hệ", url: "https://btacademy.com.vn/lien-he" },
+    { name: "Giới thiệu", url: "https://btacademy.com.vn/gioi-thieu-bt-academy" },
+    { name: "Nhà sáng lập", url: "https://btacademy.com.vn/nha-sang-lap" },
+  ].map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.name,
+    item: item.url,
+  }));
+};
+
+function MyApp({ Component, pageProps: { session, meta, ...pageProps } }) {
   
   return (
       <>
           <Head>
+            <meta name="google-site-verification" content="fin_gC4hp_byDr3YGtl7p-2e6vpAElFKA7SYQDseOQ8" />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify([
+                  {
+                    "@context": "https://schema.org",
+                    "@type": "Organization",
+                    "@id": "https://btacademy.com.vn/#organization",
+                    name: "BT Academy",
+                    alternateName: "Trung tâm đào tạo MC BT Academy",
+                    url: "https://btacademy.com.vn",
+                    logo: {
+                      "@type": "ImageObject",
+                      url: "https://btacademy.com.vn/logobtacademy.png",
+                      width: 512,
+                      height: 512,
+                    },
+                    image: "https://btacademy.com.vn/logobtacademy.png",
+                    description:
+                      "BT Academy - Trung tâm đào tạo MC, dẫn chương trình, phát thanh viên, luyện giọng nói và kỹ năng giao tiếp.",
+                    sameAs: [
+                      "https://www.facebook.com/btacademy",
+                      "https://www.youtube.com/btacademy",
+                      "https://www.instagram.com/btacademy",
+                    ],
+                    contactPoint: [
+                      {
+                        "@type": "ContactPoint",
+                        telephone: "+84-988-027-494",
+                        contactType: "customer service",
+                        areaServed: "VN",
+                        availableLanguage: "Vietnamese",
+                      },
+                    ],
+                    address: {
+                      "@type": "PostalAddress",
+                      addressLocality: "Hà Nội",
+                      addressCountry: "VN",
+                    },
+                  },
+                  {
+                    "@context": "https://schema.org",
+                    "@type": "WebSite",
+                    "@id": "https://btacademy.com.vn/#website",
+                    url: "https://btacademy.com.vn",
+                    name: "BT Academy",
+                    description:
+                      "BT Academy chuyên đào tạo MC, luyện giọng nói, kỹ năng giao tiếp và thuyết trình.",
+                    publisher: {
+                      "@id": "https://btacademy.com.vn/#organization",
+                    },
+                    potentialAction: [
+                      {
+                        "@type": "SearchAction",
+                        target: {
+                          "@type": "EntryPoint",
+                          urlTemplate: "https://btacademy.com.vn/search?q={search_term_string}",
+                        },
+                        "query-input": "required name=search_term_string",
+                      },
+                    ],
+                    mainEntity: {
+                      "@type": "ItemList",
+                      itemListElement: createSiteNavigation(),
+                    },
+                    inLanguage: "vi-VN",
+                    copyrightYear: String(new Date().getFullYear()),
+                    isPartOf: {
+                      "@type": "WebSite",
+                      name: "BT Academy",
+                      url: "https://btacademy.com.vn",
+                    },
+                  },
+                ]),
+              }}
+            />
           </Head>
           {meta && (
             <Head>

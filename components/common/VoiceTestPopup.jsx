@@ -275,7 +275,7 @@ LƯU Ý:
           {/* Left side - MC Script */}
           <div className="w-full sm:w-1/2 p-3 sm:p-6 border-r-0 sm:border-r border-gray-200 overflow-y-auto">
             <h3 className="text-base sm:text-xl font-bold text-gray-800 mb-2 sm:mb-4">Kịch bản MC</h3>
-            <div className="bg-gray-50 rounded-lg p-2 sm:p-4 text-xs sm:text-sm leading-relaxed whitespace-pre-line max-h-48 md:max-h-screen overflow-y-auto">
+            <div className="bg-gray-50 rounded-lg p-2 sm:p-4 text-xs sm:text-sm leading-relaxed whitespace-pre-line max-h-64 md:max-h-screen overflow-y-auto">
               {mcScript}
             </div>
           </div>

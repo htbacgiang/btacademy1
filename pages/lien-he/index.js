@@ -73,7 +73,7 @@ export default function LienHe({ meta }) {
         />
       </Head>
 
-      <h1 className="visually-hidden">
+      <h1 className="sr-only">
         Liên hệ BT Academy - Tư vấn khóa học và chương trình đào tạo
       </h1>
       

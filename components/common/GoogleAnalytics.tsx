@@ -4,13 +4,13 @@ import Script from "next/script";
 const GoogleAnalytics = () => {
   return (
     <>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-L0CHT26L87"></script>
+      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-BWYWQ6Y21C" strategy="afterInteractive" />
       <Script id="google-analytics" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag() { dataLayer.push(arguments); }
           gtag('js', new Date());
-          gtag('config', 'G-L0CHT26L87');
+          gtag('config', 'G-BWYWQ6Y21C');
         `}
       </Script>
     </>
