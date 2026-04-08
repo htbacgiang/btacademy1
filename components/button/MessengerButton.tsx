@@ -9,7 +9,7 @@ import Zalo from "../../public/zalo-icon.png";
 
 const MessengerButton: FC = () => {
   const openMessenger = () => {
-    window.open('https://m.me/147995528391633', '_blank');
+    window.open('https://m.me/61564432965502', '_blank');
   };
 
   return (
