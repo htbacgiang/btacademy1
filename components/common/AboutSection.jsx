@@ -102,7 +102,7 @@ const AboutSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex mx-auto sm:flex-row gap-4 pt-2">
-              <Link href="/gioi-thieu-bt-academy">
+              <Link href="/gioi-thieu">
                 <button className="text-white px-5 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
                   Tìm hiểu thêm
                 </button>

@@ -127,7 +127,7 @@ const createCourse = async (req, res) => {
       cleanedData.slug = cleanedData.slug.trim().toLowerCase();
     }
 
-    // Normalize and validate locations for Q&K Bắc Giang
+    // Normalize and validate locations for BT Academy
     if (cleanedData.locations) {
       const normalizedLocations = Array.isArray(cleanedData.locations)
         ? cleanedData.locations
@@ -197,8 +197,7 @@ const updateCourse = async (req, res) => {
     if (cleanedData.slug) {
       cleanedData.slug = cleanedData.slug.trim().toLowerCase();
     }
-
-    // Normalize and validate locations for Q&K Bắc Giang
+    // Normalize and validate locations for BT Academy
     if (cleanedData.locations !== undefined) {
       const normalizedLocations = Array.isArray(cleanedData.locations)
         ? cleanedData.locations

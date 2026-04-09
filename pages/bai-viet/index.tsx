@@ -47,16 +47,16 @@ const meta: MetaData = {
     "BT Academy, bài viết MC, luyện giọng, sửa ngọng, thuyết trình, kỹ năng giao tiếp, kỹ năng mềm, đào tạo MC, học MC",
   author: "BT Academy",
   robots: "index, follow",
-  canonical: "https://btacademy.vn/bai-viet",
+  canonical: "https://btacademy.com.vn/bai-viet",
   og: {
     title: "Bài viết - BT Academy | Kiến thức MC, giọng nói & giao tiếp",
     description:
       "Cập nhật bài viết về MC, luyện giọng, thuyết trình, giao tiếp và kỹ năng mềm từ BT Academy.",
     type: "website",
-    image: "https://btacademy.vn/logo.png",
+    image: "https://btacademy.com.vn/banner-bta.jpg",
     imageWidth: "1200",
     imageHeight: "630",
-    url: "https://btacademy.vn/bai-viet",
+    url: "https://btacademy.com.vn/bai-viet",
     siteName: "BT Academy",
   },
   twitter: {
@@ -64,7 +64,7 @@ const meta: MetaData = {
     title: "Bài viết - BT Academy | Kiến thức MC, giọng nói & giao tiếp",
     description:
       "Cập nhật bài viết về MC, luyện giọng, thuyết trình, giao tiếp và kỹ năng mềm từ BT Academy.",
-    image: "https://btacademy.vn/logo.png",
+    image: "https://btacademy.com.vn/banner-bta.jpg",
   },
 };
 

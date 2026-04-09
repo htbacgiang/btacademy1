@@ -429,7 +429,7 @@ const AboutBTAcademyPage = () => {
                     <li className="flex items-start">
                       <span className="text-green-600 mr-2 font-bold">•</span>
                       <span><strong className="text-gray-800">Thành tích thực chiến:</strong>
-                        <ul className="list-disc list-inside mt-2 ml-4 space-y-1">
+                        <ul className="list-disc list-inside mt-2 ml-1 space-y-1">
                           <li>10 năm kinh nghiệm dẫn dắt & sản xuất: Trực tiếp tham gia sản xuất và dẫn các bản tin thời sự, phóng sự điều tra, chương trình tọa đàm và talkshow chuyên sâu.</li>
                           <li>Chuyên gia huấn luyện phong thái: Đã đào tạo thành công cho hàng nghìn học viên là trẻ em, người đi làm và lãnh đạo doanh nghiệp, giúp họ làm chủ sân khấu và tỏa sáng trước ống kính.</li>
                           <li>Trình độ chuyên môn: Thạc sĩ chuyên ngành Báo chí, đảm bảo nền tảng kiến thức lý luận và thực hành chuẩn mực nhất.</li>
@@ -660,7 +660,7 @@ const AboutBTAcademyPage = () => {
                 <div className="bg-white p-4 rounded-lg border-l-4 border-green-600">
                   <h4 className="mb-2">Cảm nhận từ Phụ huynh có con học MC Nhí</h4>
                   <p className="italic mb-1">
-                    &quot;Bé nhà tôi 7 tuổi, trước đây rất nhút nhát và sợ nói trước lớp. Sau Khóa MC Nhí Cơ Bản tại Q&K, bé đã biết cách kể chuyện cuốn hút, tự tin lên sân khấu tổng kết cuối năm và thậm chí còn đòi quay video giới thiệu sách. Sự thay đổi này thật sự ngoài mong đợi!&quot;
+                    &quot;Bé nhà tôi 7 tuổi, trước đây rất nhút nhát và sợ nói trước lớp. Sau Khóa MC Nhí Cơ Bản BT Academy của cô Bích Thủy, bé đã biết cách kể chuyện cuốn hút, tự tin lên sân khấu tổng kết cuối năm và thậm chí còn đòi quay video giới thiệu sách. Sự thay đổi này thật sự ngoài mong đợi!&quot;
                   </p>
                   <p>— Chị Lan Anh (Phụ huynh bé Minh Đức, Thái Nguyên)</p>
                 </div>

@@ -86,7 +86,7 @@ export async function getServerSideProps() {
   const meta = {
     title: "Liên hệ BT Academy - Tư vấn khóa học và chương trình đào tạo",
     description:
-      "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline: 024.3333.4444. Email: contact@btacademy.com.vn. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
+      "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline 0988027494. Email: contact@btacademy.com.vn. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
     keywords:
       "liên hệ BT Academy, tư vấn khóa học, hotline BT Academy, địa chỉ BT Academy, email BT Academy, đào tạo lập trình, khóa học công nghệ, học lập trình",
     robots: "index, follow",
@@ -95,7 +95,7 @@ export async function getServerSideProps() {
     og: {
       title: "Liên hệ BT Academy - Tư vấn khóa học và chương trình đào tạo",
       description:
-        "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline: 024.3333.4444. Email: contact@btacademy.com.vn. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
+        "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline: 0988027494. Email: contact@btacademy.com.vn. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
       type: "website",
       image: "https://btacademy.com.vn/images/banner-bta.jpg",
       imageWidth: "1200",

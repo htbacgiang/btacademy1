@@ -34,6 +34,7 @@ const ModernNavbar = () => {
     { name: "Trang chủ", href: "/", hasDropdown: false },
     { name: "Về chúng tôi", href: "#", hasDropdown: true },
     { name: "Khóa học", href: "/khoa-hoc", hasDropdown: true },
+    { name: "Video", href: "/video-hoc-vien", hasDropdown: false },
     { name: "Lịch khai giảng", href: "/lich-khai-giang", hasDropdown: false },
     { name: "Bài viết", href: "/bai-viet", hasDropdown: false },
     { name: "Liên hệ", href: "/lien-he", hasDropdown: false },
@@ -48,7 +49,7 @@ const ModernNavbar = () => {
           ? "bg-white/90 backdrop-blur-lg shadow-lg" 
           : "bg-white"
       }`}>
-        <div className="container mx-auto px-10">
+        <div className="container mx-auto px-6 md:px-0">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
             <div className="flex-shrink-0">
@@ -67,7 +68,7 @@ const ModernNavbar = () => {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-8 uppercase">
+            <div className="hidden lg:flex items-center space-x-6 uppercase">
               {navigationItems.map((item) => (
                 <div
                   key={item.name}

@@ -4,8 +4,8 @@ import Image from "next/image";
 import { AiOutlineClose } from "react-icons/ai";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { FaRegUser, FaHeart, FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
-import { HiOutlineSearch, HiOutlineHome, HiOutlineBookOpen, HiOutlineDocumentText, HiOutlinePhone, HiOutlineCalendar } from "react-icons/hi";
-import logo from "../../public/logobtacademy.png";
+import { HiOutlineSearch, HiOutlineHome, HiOutlineBookOpen, HiOutlineDocumentText, HiOutlinePhone, HiOutlineCalendar, HiOutlinePlay } from "react-icons/hi";
+import logo from "../../public/logobt.png";
 
 const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -18,6 +18,7 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
     { name: "Trang chủ", link: "/", icon: HiOutlineHome, hasDropdown: false },
     { name: "Về chúng tôi", link: "#", icon: FaRegUser, hasDropdown: true },
     { name: "Khóa học", link: "/khoa-hoc", icon: HiOutlineBookOpen, hasDropdown: true },
+    { name: "Video", link: "/video-hoc-vien", icon: HiOutlinePlay, hasDropdown: false },
     { name: "Lịch khai giảng", link: "/lich-khai-giang", icon: HiOutlineCalendar, hasDropdown: false },
     { name: "Bài viết", link: "/bai-viet", icon: HiOutlineDocumentText, hasDropdown: false },
     { name: "Liên hệ", link: "/lien-he", icon: HiOutlinePhone, hasDropdown: false },
@@ -43,12 +44,18 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
         <div className="relative bg-gradient-to-r from-green-700 via-green-600 to-emerald-600 p-6 shadow-xl">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-xl gradient-histudy-logo flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">BT</span>
+              <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-lg p-1">
+                <Image 
+                  src="/logobt.png" 
+                  alt="BT Academy Logo" 
+                  width={40} 
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <div>
-                <span className="text-white font-bold text-xl">Academy</span>
-                <p className="text-white/80 text-xs">Học tập thông minh</p>
+                <span className="text-white font-bold text-xl uppercase">BT Academy</span>
+                <p className="text-white/80 text-[10px] uppercase tracking-wider">Học tập thông minh</p>
               </div>
             </div>
             <button
@@ -64,7 +71,7 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
         </div>
 
         {/* Modern Search with BT Academy styling */}
-        <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+        <div className="px-6 py-3 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
           <div className="relative">
             <input
               type="text"
@@ -218,7 +225,7 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
         {/* Modern Social Media & CTA Section */}
         <div className="p-6 border-t border-gray-100 bg-gradient-to-r from-gray-50 to-white">
           {/* Call to Action Button */}
-          <div className="mb-6">
+          <div className="mb-3">
             <button 
               onClick={() => {
                 onRegisterClick();
@@ -232,7 +239,7 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
           
           {/* Social Media Links */}
           <div className="text-center">
-            <h3 className="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wider">
+            <h3 className="text-sm font-semibold text-gray-600 mb-2 uppercase tracking-wider">
               Theo dõi chúng tôi
             </h3>
             <div className="flex justify-center space-x-4">

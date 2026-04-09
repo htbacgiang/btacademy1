@@ -122,7 +122,7 @@ async function sendEmailNotification({ email, phone, fileName, filePath, origina
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: adminEmails, // Gửi đến nhiều email
-      subject: `Bài Test Giọng MC Mới từ ${email || phone} - Trung tâm MC Q&K Bắc Giang`,
+      subject: `Bài Test Giọng MC Mới từ ${email || phone} - BT Academy`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #2563eb;">Bài Test Giọng MC Mới</h2>

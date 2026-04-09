@@ -14,7 +14,6 @@ import TeachersSection from '../components/common/TeachersSection';
 import teachersData from '../data/teachers.json';
 import { ScrollingGallery } from '../components/gallery';
 import VideoGallery from '../components/common/VideoGallery';
-import BirthdayPopup from '../components/common/BirthdayPopup';
 
 export default function Home({ posts, meta }) {
   // JSON-LD Schema.org cho BT Academy
@@ -121,7 +120,7 @@ export async function getServerSideProps() {
       title: "BT Academy – Trung tâm đào tạo MC, Thuyết trình, Giọng nói hàng đầu tại Hà Nội và Thái Nguyên",
       description:
         "BT Academy - Trung tâm đào tạo MC, dẫn chương trình, phát thanh viên chuyên nghiệp với đội ngũ giảng  viên giàu kinh nghiệm.",
-      image: "https://btacademy.com.vn/logobtacademy.png",
+      image: "https://btacademy.com.vn/banner-bta.png",
     },
   };
 

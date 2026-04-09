@@ -28,7 +28,7 @@ export const adminNotificationEmailTemplate = (registrationData) => {
       overflow: hidden;
     }
     .header {
-      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      background: #006128ff;
       color: white;
       padding: 30px 20px;
       text-align: center;

@@ -18,21 +18,32 @@ interface VideoGalleryProps {
   maxVideos?: number;
   showTitle?: boolean;
   showDescription?: boolean;
+  showPagination?: boolean;
+  videosPerPage?: number;
+  mobileScrollable?: boolean;
 }
 
 const VideoGallery: React.FC<VideoGalleryProps> = ({
-  maxVideos = 6,
+  maxVideos,
   showTitle = true,
   showDescription = false,
+  showPagination = false,
+  videosPerPage = 9,
+  mobileScrollable = true,
 }) => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchVideos();
-  }, []);
+  }, [maxVideos]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [videos.length, showPagination, videosPerPage]);
 
   const fetchVideos = async () => {
     try {
@@ -40,10 +51,15 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
       const data = await response.json();
 
       if (data.success) {
-        const sortedVideos = data.videos
-          .sort((a: Video, b: Video) => (a.order || 0) - (b.order || 0))
-          .slice(0, maxVideos);
-        setVideos(sortedVideos);
+        const sortedVideos = [...data.videos].sort(
+          (a: Video, b: Video) => (a.order || 0) - (b.order || 0)
+        );
+        const limitedVideos =
+          typeof maxVideos === "number"
+            ? sortedVideos.slice(0, maxVideos)
+            : sortedVideos;
+
+        setVideos(limitedVideos);
       }
     } catch (error) {
       console.error("Error fetching videos:", error);
@@ -85,9 +101,107 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
     return video.thumbnail || "/images/placeholder-video.jpg";
   };
 
+  const totalPages = showPagination
+    ? Math.ceil(videos.length / videosPerPage)
+    : 1;
+
+  const displayedVideos = showPagination
+    ? videos.slice(
+        (currentPage - 1) * videosPerPage,
+        currentPage * videosPerPage
+      )
+    : videos;
+
+  const renderPaginationButton = (
+    label: React.ReactNode,
+    page: number,
+    isActive = false,
+    isDisabled = false
+  ) => (
+    <button
+      type="button"
+      onClick={() => !isDisabled && setCurrentPage(page)}
+      disabled={isDisabled}
+      className={`flex h-10 min-w-10 items-center justify-center rounded-full border px-4 text-sm font-semibold transition-colors ${
+        isActive
+          ? "border-green-600 bg-green-600 text-white"
+          : "border-gray-200 bg-white text-gray-700 hover:border-green-600 hover:text-green-600"
+      } ${isDisabled ? "cursor-not-allowed opacity-50 hover:border-gray-200 hover:text-gray-700" : ""}`}
+    >
+      {label}
+    </button>
+  );
+
+  const renderVideoCard = (video: Video, compact = false) => (
+    <div
+      key={video._id}
+      className={`group relative bg-white overflow-hidden cursor-pointer transition-all duration-300 ${
+        compact
+          ? "rounded-lg shadow-md hover:shadow-xl flex-shrink-0"
+          : "rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2"
+      }`}
+      style={compact ? { width: "280px" } : undefined}
+      onClick={() => handleVideoClick(video)}
+    >
+      <div className="relative aspect-video overflow-hidden bg-gray-200">
+        <Image
+          src={getThumbnailUrl(video)}
+          alt={video.title}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-300"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = "/images/placeholder-video.jpg";
+          }}
+        />
+
+        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
+          <div
+            className={`bg-white/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${
+              compact ? "w-12 h-12" : "w-12 h-12 md:w-16 md:h-16"
+            }`}
+          >
+            <FaPlay className="text-green-600 ml-1" size={18} />
+          </div>
+        </div>
+
+        <div className={`absolute ${compact ? "top-1.5 right-1.5" : "top-1.5 right-1.5 md:top-3 md:right-3"}`}>
+          <span
+            className={`bg-black/70 text-white backdrop-blur-sm ${
+              compact
+                ? "px-1.5 py-0.5 text-[12px] rounded"
+                : "px-1.5 py-0.5 md:px-2 md:py-1 text-[12px] md:text-sm rounded md:rounded-md"
+            }`}
+          >
+            {video.videoType === "youtube" ? "Youtube" : "Facebook"}
+          </span>
+        </div>
+      </div>
+
+      <div className={compact ? "p-1.5" : "p-2"}>
+        <h3
+          className={`font-semibold px-2 text-gray-900 mb-1 md:mb-2 line-clamp-2 group-hover:text-green-600 transition-colors ${
+            compact ? "text-sm" : "text-base"
+          }`}
+        >
+          {video.title}
+        </h3>
+        {showDescription && video.description && (
+          <p
+            className={`px-2 pb-2 text-gray-600 line-clamp-3 ${
+              compact ? "text-xs" : "text-sm"
+            }`}
+          >
+            {video.description}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
-      <div className="py-16">
+      <div className="py-8">
         <div className="container mx-auto px-4">
           <div className="flex justify-center items-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
@@ -120,101 +234,39 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
             </div>
           )}
 
-          {/* Video Grid - Desktop: 6 videos (3x2), Mobile: Horizontal Scroll */}
-          <div className="hidden lg:grid lg:grid-cols-3 gap-4 px-2">
-            {videos.map((video) => (
-              <div
-                key={video._id}
-                className="group relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2"
-                onClick={() => handleVideoClick(video)}
-              >
-                {/* Thumbnail */}
-                <div className="relative aspect-video overflow-hidden bg-gray-200">
-                  <Image
-                    src={getThumbnailUrl(video)}
-                    alt={video.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/images/placeholder-video.jpg";
-                    }}
-                  />
-                  
-                  {/* Play Button Overlay */}
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
-                    <div className="w-12 h-12 md:w-16 md:h-16 bg-white/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <FaPlay className="text-green-600 ml-1" size={18} />
-                    </div>
-                  </div>
+          {mobileScrollable ? (
+            <>
+              <div className="hidden lg:grid lg:grid-cols-3 gap-4 px-2">
+                {displayedVideos.map((video) => renderVideoCard(video))}
+              </div>
 
-                  {/* Video Type Badge */}
-                  <div className="absolute top-1.5 right-1.5 md:top-3 md:right-3">
-                    <span className="px-1.5 py-0.5 md:px-2 md:py-1 bg-black/70 text-white text-[12px] md:text-sm rounded md:rounded-md backdrop-blur-sm">
-                      {video.videoType === "youtube" ? "Youtube" : "Facebook"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Video Info */}
-                <div className="p-2">
-                  <h3 className="font-semibold px-2 text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-green-600 transition-colors">
-                    {video.title}
-                  </h3>
-               
+              <div className="lg:hidden overflow-x-auto pb-4 px-2 scrollbar-hide">
+                <div className="flex gap-3" style={{ width: "max-content" }}>
+                  {displayedVideos.map((video) => renderVideoCard(video, true))}
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Mobile Horizontal Scroll */}
-          <div className="lg:hidden overflow-x-auto pb-4 px-2 scrollbar-hide">
-            <div className="flex gap-3" style={{ width: 'max-content' }}>
-              {videos.map((video) => (
-                <div
-                  key={video._id}
-                  className="group relative bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer flex-shrink-0"
-                  style={{ width: '280px' }}
-                  onClick={() => handleVideoClick(video)}
-                >
-                  {/* Thumbnail */}
-                  <div className="relative aspect-video overflow-hidden bg-gray-200">
-                    <Image
-                      src={getThumbnailUrl(video)}
-                      alt={video.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-300"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = "/images/placeholder-video.jpg";
-                      }}
-                    />
-                    
-                    {/* Play Button Overlay */}
-                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
-                      <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <FaPlay className="text-green-600 ml-1" size={18} />
-                      </div>
-                    </div>
-
-                    {/* Video Type Badge */}
-                    <div className="absolute top-1.5 right-1.5">
-                      <span className="px-1.5 py-0.5 bg-black/70 text-white text-[12px] rounded backdrop-blur-sm">
-                        {video.videoType === "youtube" ? "Youtube" : "Facebook"}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Video Info */}
-                  <div className="p-1.5">
-                    <h3 className="font-semibold px-2 text-sm text-gray-900 mb-1 line-clamp-2 group-hover:text-green-600 transition-colors">
-                      {video.title}
-                    </h3>
-                  </div>
-                </div>
-              ))}
+            </>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
+              {displayedVideos.map((video) => renderVideoCard(video))}
             </div>
-          </div>
+          )}
+
+          {showPagination && totalPages > 1 && (
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-2 px-2">
+              {renderPaginationButton("Trước", currentPage - 1, false, currentPage === 1)}
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (page) =>
+                  renderPaginationButton(page, page, currentPage === page)
+              )}
+              {renderPaginationButton(
+                "Sau",
+                currentPage + 1,
+                false,
+                currentPage === totalPages
+              )}
+            </div>
+          )}
 
       
         </div>

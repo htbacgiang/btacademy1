@@ -1,203 +1,330 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaGraduationCap, FaBookOpen, FaUsers, FaAward, FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
+import { 
+  FaMapMarkerAlt, 
+  FaPhone, 
+  FaEnvelope, 
+  FaFacebookF, 
+  FaInstagram, 
+  FaYoutube, 
+  FaClock,
+  FaAward,
+  FaArrowRight
+} from "react-icons/fa";
+import { SiZalo } from "react-icons/si";
 
-const Footer = () => {
-  const [location, setLocation] = useState({ ip: "", city: "", country: "" });
-  useEffect(() => {
-    fetch("/api/location")
-      .then((res) => res.json())
-      .then((data) => setLocation(data))
-      .catch(() => setLocation({ ip: "Không xác định", city: "N/A", country: "N/A" }));
-  }, []);
+const Footer: React.FC = () => {
+  const currentYear = new Date().getFullYear();
 
-  const features = [
-    {
-      title: "Giáo dục chất lượng cao",
-      description: "Đào tạo chuyên nghiệp",
-      icon: <FaGraduationCap className="text-blue-600" />,
+  const footerLinks = {
+    company: [
+      { name: "Giới thiệu", href: "/gioi-thieu" },
+      { name: "Lịch khai giảng", href: "/lich-khai-giang" },
+      { name: "Đội ngũ giảng viên", href: "/nha-sang-lap" },
+      { name: "Tin tức & Sự kiện", href: "/bai-viet" }
+    ],
+    courses: [
+      { name: "Đào tạo MC Nhí", href: "/khoa-hoc/mc-nhi" },
+      { name: "Khóa học MC Cơ bản", href: "/khoa-hoc/mc-co-ban" },
+      { name: "MC Nâng cao", href: "/khoa-hoc/mc-nang-cao" },
+      { name: "Kỹ năng Thuyết trình", href: "/khoa-hoc/giao-tiep-thuyet-trinh" }
+    ],
+    support: [
+      { name: "Liên hệ", href: "/lien-he" },
+      { name: "Quy định học phí", href: "/chinh-sach-khoa-hoc-hoc-phi" },
+      { name: "Điều khoản khóa học", href: "/dieu-khoan-khoa-hoc" },
+
+    ]
+  };
+
+  const socialLinks = [
+    { 
+      name: "Facebook", 
+      icon: FaFacebookF, 
+      href: "https://www.facebook.com/profile.php?id=61564432965502",
+      color: "hover:bg-blue-600"
     },
-    {
-      title: "Chương trình đa dạng",
-      description: "Từ cơ bản đến nâng cao",
-      icon: <FaBookOpen className="text-blue-600" />,
+    { 
+      name: "Zalo", 
+      icon: SiZalo, 
+      href: "https://zalo.me/0988027494",
+      color: "hover:bg-blue-500"
     },
-    {
-      title: "Giảng viên kinh nghiệm",
-      description: "Đội ngũ chuyên gia",
-      icon: <FaUsers className="text-blue-600" />,
+    { 
+      name: "Instagram", 
+      icon: FaInstagram, 
+      href: "https://www.instagram.com/daotaomc",
+      color: "hover:bg-pink-600"
     },
-    {
-      title: "Chứng chỉ uy tín",
-      description: "Được công nhận rộng rãi",
-      icon: <FaAward className="text-blue-600" />,
+    { 
+      name: "YouTube", 
+      icon: FaYoutube, 
+      href: "https://www.youtube.com/@BíchThủy-h2r",
+      color: "hover:bg-red-600"
     },
   ];
 
   return (
-    <div className="bg-white">
+    <footer className="bg-black/90 text-white relative overflow-hidden mt-10">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/images/mc-co-ban-thai-nguyen.jpg"
+          alt="Footer background"
+          fill
+          className="object-cover opacity-30"
+          priority={false}
+        />
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/80"></div>
+      </div>
+      
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-green-600 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+      </div>
+      
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Floating geometric shapes */}
+        <div className="absolute top-20 left-10 w-2 h-2 bg-white/20 rounded-full animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-1 h-1 bg-white/30 rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute bottom-32 left-1/4 w-1.5 h-1.5 bg-white/25 rounded-full animate-pulse delay-2000"></div>
+        <div className="absolute bottom-20 right-1/3 w-1 h-1 bg-white/35 rounded-full animate-pulse delay-3000"></div>
+        
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 opacity-[0.02]" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M20 20c0-11.046-8.954-20-20-20v20h20z'/%3E%3C/g%3E%3C/svg%3E")`
+        }}></div>
+      </div>
 
-      {/* Main Footer */}
-      <footer className="bg-gradient-to-br from-blue-50 to-blue-100">
-        <div className="container mx-auto  px-6 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Company Info */}
-            <div className="space-y-3">
-              <Link href="/" className="inline-block mb-2">
-                <div className="flex items-center">
-                <Image 
-                    src="/logobtacademy.png" 
-                    alt="BT Academy Logo" 
-                    width={120} 
-                    height={80}
-                    className="object-contain"
-                  />
+      <div className="relative z-10">
+        {/* Main Footer Content */}
+        <div className="py-16">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+              {/* Company Info */}
+              <div className="lg:col-span-1">
+                <div className="mb-2 group">
+                  <Link href="/" className="inline-block">
+                    <div className="flex items-center group-hover:scale-105 transition-transform duration-300">
+                      <div className="w-20 h-20  p-2">
+                        <Image
+                          src="/logobt.png"
+                          alt="BT Academy Logo"
+                          width={80}
+                          height={80}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="ml-3">
+                        <div className="text-2xl font-bold group-hover:text-green-400 transition-colors duration-300">BT Academy</div>
+                        <div className="text-gray-300 text-sm group-hover:text-gray-200 transition-colors duration-300">Khai phóng giọng nói</div>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-              <p className="text-gray-700 leading-relaxed text-base">
-                BT Academy là trung tâm đào tạo hàng đầu với các khóa học chất lượng cao, giúp học viên phát triển kỹ năng và nâng cao trình độ chuyên môn
-              </p>
-              
+                
+                <p className="text-gray-300 leading-relaxed mb-6">
+                  BT Academy là trung tâm đào tạo MC chuyên nghiệp, giúp học viên phát triển kỹ năng giao tiếp, tự tin và bản lĩnh sân khấu để tự tin tỏa sáng.
+                </p>
+
+                {/* Awards & Certifications */}
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <FaAward className="text-green-500" />
+                    <span className="text-sm text-gray-300">Đơn vị đào tạo MC uy tín hàng đầu</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <FaAward className="text-green-500" />
+                    <span className="text-sm text-gray-300">Hàng nghìn học viên đã tốt nghiệp</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Links */}
+              <div className="lg:col-span-2">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+                  {/* Company */}
+                  <div>
+                    <p className="text-lg font-bold mb-6 text-white hover:text-green-400 transition-colors duration-300 border-b border-gray-800 pb-2">Thông tin</p>
+                    <ul className="space-y-3">
+                      {footerLinks.company.map((link, index) => (
+                        <li key={index}>
+                          <Link 
+                            href={link.href}
+                            className="text-gray-300 hover:text-green-400 transition-colors duration-300 flex items-center group"
+                          >
+                            <FaArrowRight className="w-2 h-2 mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                            {link.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Courses */}
+                  <div>
+                    <p className="text-lg font-bold mb-6 text-white hover:text-green-400 transition-colors duration-300 border-b border-gray-800 pb-2">Khóa học</p>
+                    <ul className="space-y-3">
+                      {footerLinks.courses.map((link, index) => (
+                        <li key={index}>
+                          <Link 
+                            href={link.href}
+                            className="text-gray-300 hover:text-green-400 transition-colors duration-300 flex items-center group"
+                          >
+                            <FaArrowRight className="w-2 h-2 mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                            {link.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Support */}
+                  <div>
+                    <p className="text-lg font-bold mb-6 text-white hover:text-green-400 transition-colors duration-300 border-b border-gray-800 pb-2">Hỗ trợ</p>
+                    <ul className="space-y-3">
+                      {footerLinks.support.map((link, index) => (
+                        <li key={index}>
+                          <Link 
+                            href={link.href}
+                            className="text-gray-300 hover:text-green-400 transition-colors duration-300 flex items-center group"
+                          >
+                            <FaArrowRight className="w-2 h-2 mr-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                            {link.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
               {/* Contact Info */}
-              <div className="space-y-4">
-            
-                {/* Hotline chung */}
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-orange-600 rounded-full flex items-center justify-center">
-                    <FaPhone className="text-white text-base" />
+              <div className="lg:col-span-1">
+                <p className="text-lg font-bold mb-6 text-white hover:text-green-400 transition-colors duration-300 border-b border-gray-800 pb-2">Liên hệ</p>
+                
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-start space-x-3">
+                    <FaMapMarkerAlt className="text-green-500 mt-1 flex-shrink-0" />
+                    <div className="text-sm">
+                      <p className="text-gray-100 font-semibold mb-1">CS1 - Hà Nội:</p>
+                      <p className="text-gray-300">19 Nguyễn Gia Thiều, Hoàn Kiếm</p>
+                    </div>
                   </div>
-                  <span className="text-gray-700 text-base font-medium">0988 02 7494</span>
+
+                  <div className="flex items-start space-x-3">
+                    <FaMapMarkerAlt className="text-green-500 mt-1 flex-shrink-0" />
+                    <div className="text-sm">
+                      <p className="text-gray-100 font-semibold mb-1">CS2 - Thái Nguyên:</p>
+                      <p className="text-gray-300">Tòa nhà Viettel, 4 Hoàng Văn Thụ</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <FaPhone className="text-green-500 flex-shrink-0" />
+                    <div>
+                      <a 
+                        href="tel:0988027494" 
+                        className="text-gray-300 hover:text-green-400 transition-colors"
+                      >
+                        0988 02 7494
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <FaEnvelope className="text-green-500 flex-shrink-0" />
+                    <div>
+                      <a 
+                        href="mailto:contact@btacademy.com.vn" 
+                        className="text-gray-300 hover:text-green-400 transition-colors text-sm"
+                      >
+                        contact@btacademy.com.vn
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <FaClock className="text-green-500 flex-shrink-0" />
+                    <div>
+                      <p className="text-gray-300 text-sm">
+                        T2-T7: 8:00 - 20:00<br />
+                        CN: 9:00 - 20:00
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Email chung */}
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                    <FaEnvelope className="text-white text-base" />
+                {/* Social Media */}
+                <div>
+                  <p className="font-bold mb-4 text-white">Kết nối với chúng tôi</p>
+                  <div className="flex space-x-3">
+                    {socialLinks.map((social, index) => {
+                      const Icon = social.icon;
+                      return (
+                        <a
+                          key={index}
+                          href={social.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-full flex items-center justify-center transition-all duration-300 hover:transform hover:scale-110 hover:shadow-lg group ${social.color}`}
+                          aria-label={social.name}
+                        >
+                          <Icon className="text-white transition-colors duration-300" size={18} />
+                        </a>
+                      );
+                    })}
                   </div>
-                  <span className="text-gray-700 text-base font-medium">contact@btacademy.com.vn</span>
                 </div>
               </div>
-{/* 
-              <div className="pt-4">
-                <Image
-                  src="/thongbaoBCT.png"
-                  alt="Bộ Công Thương Logo"
-                  width={120}
-                  height={40}
-                  className="opacity-80 hover:opacity-100 transition-opacity duration-300"
-                />
-              </div> */}
             </div>
+          </div>
+        </div>
 
-            {/* About Us */}
-            <div className="space-y-6">
-              <p className="text-xl font-bold text-gray-800 border-b-2 border-blue-600 pb-2 inline-block">
-                Về chúng tôi
-              </p>
-              <ul className="space-y-3">
-                {[
-                  { href: "/gioi-thieu", label: "Về BT Academy" },
-                  { href: "/khoa-hoc", label: "Khóa học" },
-                  { href: "/lich-khai-giang", label: "Lịch khai giảng" },
-                  { href: "/lien-he", label: "Liên hệ" }
-                ].map((item, index) => (
-                  <li key={index}>
-                    <Link 
-                      href={item.href}
-                      className="text-gray-700 hover:text-blue-600 font-medium text-base transition-colors duration-300 flex items-center group"
-                    >
-                      <span className="w-2 h-2 bg-blue-600 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-   
-            {/* Policies */}
-            <div className="space-y-6">
-              <p className="text-xl font-bold text-gray-800 border-b-2 border-blue-600 pb-2 inline-block">
-                Chính sách
-              </p>
-              <ul className="space-y-3">
-                {[
-                  { href: "/chinh-sach-bao-mat", label: "Chính sách bảo mật" },
-                  { href: "/chinh-sach-khoa-hoc-hoc-phi", label: "Khóa học & học phí" },
-             
-                ].map((item, index) => (
-                  <li key={index}>
-                    <Link 
-                      href={item.href}
-                      className="text-gray-700 hover:text-blue-600 font-medium text-base transition-colors duration-300 flex items-center group"
-                    >
-                      <span className="w-2 h-2 bg-blue-600 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Google Maps */}
-            <div className="space-y-6">
-              <h2 className="text-xl font-bold text-gray-800 border-b-2 border-blue-600 pb-2 inline-block">
-                Vị trí các cơ sở
-              </h2>
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-800 py-6">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col md:flex-row items-center justify-between">
+              <div className="text-center md:text-left mb-4 md:mb-0">
+                <p className="text-gray-400 text-sm">
+                  © {currentYear} BT Academy. Tất cả quyền được bảo lưu.
+                </p>
+              </div>
               
-              {/* CS1 - Hà Nội Map */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-blue-800">CS1 - Hà Nội: <br /> 19 Nguyễn Gia Thiều, Hoàn Kiếm</h3>
-                <div className="w-full">
-                  <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.309861592884!2d105.84330317559623!3d21.020284180626888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab9a62f8ad67%3A0xc0d673a4940ea1d6!2zQlQgQWNhZGVteSAtIMSQw6BvIHThuqFvIGdp4buNbmcgbsOzaSB2w6AgdGjhuqduIHRow6FpIGRvYW5oIG5naGnhu4dw!5e0!3m2!1svi!2s!4v1757508252499!5m2!1svi!2s" 
-                    width="100%" 
-                    height="150" 
-                    style={{border:0}} 
-                    allowFullScreen={true}
-                    loading="lazy" 
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="rounded-lg shadow-md"
-                  ></iframe>
-                </div>
-              </div>
-
-              {/* CS2 - Thái Nguyên Map */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-green-800">CS2 - Thái Nguyên: <br /> Toa nhà Viettel, Số 4 Hoàng Văn Thụ</h3>
-                <div className="w-full">
-                  <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3709.7792792051196!2d105.8367287!3d21.594537100000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135271ea3d9bd6b%3A0xfaa8f55caebc0043!2zVmlldHRlbCBUaMOhaSBOZ3V5w6puIC0gQ2hpIG5ow6FuaCBU4bqtcCDEkW_DoG4gQ8O0bmcgbmdoaeG7h3AgLSBWaeG7hW4gdGjhu5FuZyBRdcOibiDEkeG7mWk!5e0!3m2!1svi!2s!4v1758653790741!5m2!1svi!2s" 
-                    width="100%" 
-                    height="150" 
-                    style={{border:0}} 
-                    allowFullScreen={true}
-                    loading="lazy" 
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="rounded-lg shadow-md"
-                  ></iframe>
-                </div>
+              <div className="flex flex-wrap items-center justify-center md:justify-end space-x-6">
+                <Link 
+                  href="/chinh-sach-bao-mat" 
+                  className="text-gray-400 hover:text-green-400 transition-colors text-xs"
+                >
+                  Chính sách bảo mật
+                </Link>
+                <Link 
+                  href="/api/sitemap.xml" 
+                  className="text-gray-400 hover:text-green-400 transition-colors text-xs"
+                >
+                  Sơ đồ trang web
+                </Link>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="border-t border-blue-200 bg-white">
-          <div className="container mx-auto  px-6 py-6">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <div className="flex items-center space-x-4 text-base text-gray-600">
-                <span>Vị trí: <span className="font-semibold text-blue-600">{location.city}, {location.country}</span></span>
-              </div>
-              <div className="text-base text-gray-600">
-                © 2026 <span className="font-semibold text-blue-600">btacademy.com.vn</span>. All rights reserved.
-              </div>
+        {/* Company Brand Statement */}
+        <div className="border-t border-gray-800 py-4 bg-gray-950">
+          <div className="container mx-auto px-4">
+            <div className="text-center">
+              <p className="text-gray-600 text-xs">
+                BT Academy - Trung tâm đào tạo MC, Thuyết trình, Giọng nói chuyên nghiệp
+              </p>
             </div>
           </div>
         </div>
-      </footer>
-    </div>
+      </div>
+    </footer>
   );
 };
 
