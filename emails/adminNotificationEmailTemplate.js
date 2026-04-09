@@ -120,7 +120,7 @@ export const adminNotificationEmailTemplate = (registrationData) => {
       ${courseSlug ? `<div class="info-row">
         <div class="info-label">📚 Khóa học:</div>
         <div class="info-value">
-          <a href="https://btacademy.vn/khoa-hoc/${courseSlug}" style="color:#2563eb;text-decoration:none;" target="_blank">
+          <a href="https://btacademy.com.vn/khoa-hoc/${courseSlug}" style="color:#2563eb;text-decoration:none;" target="_blank">
             Xem chi tiết khóa học →
           </a>
         </div>
@@ -139,7 +139,7 @@ export const adminNotificationEmailTemplate = (registrationData) => {
       </div>
       
       <div style="text-align:center;margin-top:30px;">
-        <a href="https://btacademy.vn/dashboard" class="btn" target="_blank">
+        <a href="https://btacademy.com.vn/dashboard" class="btn" target="_blank">
           Xem trong Dashboard
         </a>
       </div>

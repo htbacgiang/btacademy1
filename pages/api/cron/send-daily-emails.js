@@ -386,7 +386,7 @@ function createPersonalizedEmailTemplate(date, schedules, student) {
     <div class="footer">
       <p>Email tự động từ BT Academy<br>
       Thời gian gửi: ${new Date().toLocaleString('vi-VN')}</p>
-      <p><a href="https://btacademy.vn">Trang chủ</a> | <a href="https://btacademy.vn/lien-he">Liên hệ</a></p>
+      <p><a href="https://btacademy.com.vn">Trang chủ</a> | <a href="https://btacademy.com.vn/lien-he">Liên hệ</a></p>
     </div>
   </div>
 </body>

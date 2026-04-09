@@ -749,7 +749,7 @@ const AboutBTAcademyPage = () => {
                 <p><strong>Trung Tâm Đào Tạo MC BT Academy</strong> – Đào tạo MC, Luyện Giọng & Kỹ năng giao tiếp</p>
                 <p><strong>📍 Trụ sở chính:</strong> 19 Nguyễn Gia Thiều, Quận Hoàn Kiếm, Hà Nội.</p>
                 <p><strong>📞 Hotline tư vấn:</strong> <a href="tel:0988027494">098 802 7494</a></p>
-                <p><strong>📧 Email:</strong> <a href="mailto:lienhe@mcbacgiang.com">lienhe@btacademy.com.vn</a></p>
+                <p><strong>📧 Email:</strong> <a href="mailto:lienhe@btacademy.com.vn">lienhe@btacademy.com.vn</a></p>
               </div>
             </div>
           </section>

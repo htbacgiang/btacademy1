@@ -504,7 +504,7 @@ export async function getServerSideProps(context) {
       title: `${course.title} - BT Academy`,
       description: course.description || course.subtitle || 'Khóa học chất lượng tại BT Academy',
       author: 'BT Academy',
-      canonical: `https://btacademy.vn/khoa-hoc/${slug}`,
+      canonical: `https://btacademy.com.vn/khoa-hoc/${slug}`,
       og: {
         title: `${course.title} - BT Academy`,
         description: course.description || course.subtitle || 'Khóa học chất lượng tại BT Academy',
@@ -512,7 +512,7 @@ export async function getServerSideProps(context) {
         image: course.image,
         imageWidth: '1200',
         imageHeight: '630',
-        url: `https://btacademy.vn/khoa-hoc/${slug}`,
+        url: `https://btacademy.com.vn/khoa-hoc/${slug}`,
         siteName: 'BT Academy',
       },
       twitter: {

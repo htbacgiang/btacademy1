@@ -1,5 +1,5 @@
 export const courseRegistrationEmailTemplate = (name, courseName, courseSlug) => {
-  const courseLink = courseSlug ? `https://btacademy.vn/khoa-hoc/${courseSlug}` : 'https://btacademy.vn/khoa-hoc';
+  const courseLink = courseSlug ? `https://btacademy.com.vn/khoa-hoc/${courseSlug}` : 'https://btacademy.com.vn/khoa-hoc';
   
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="vi">
@@ -201,7 +201,7 @@ export const courseRegistrationEmailTemplate = (name, courseName, courseSlug) =>
                       <td align="center" class="es-m-p0r es-m-p0l" style="Margin:0;padding-top:20px;padding-right:40px;padding-bottom:5px;padding-left:40px">
                         <p style="Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;color:#333333;font-size:14px">
                           Trân trọng,<br>
-                          <strong>Đội ngũ <a target="_blank" href="https://btacademy.vn" style="mso-line-height-rule:exactly;text-decoration:underline;color:#2563eb;font-size:14px">BT Academy</a></strong>
+                          <strong>Đội ngũ <a target="_blank" href="https://btacademy.com.vn" style="mso-line-height-rule:exactly;text-decoration:underline;color:#2563eb;font-size:14px">BT Academy</a></strong>
                         </p>
                       </td>
                      </tr>

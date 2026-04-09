@@ -366,9 +366,9 @@ export const dailyScheduleEmailTemplate = (date, schedules) => {
       </p>
       
       <div class="footer-links">
-        <a href="https://btacademy.vn">Trang chủ</a>
-        <a href="https://btacademy.vn/lich-khai-giang">Lịch khai giảng</a>
-        <a href="https://btacademy.vn/lien-he">Liên hệ</a>
+        <a href="https://btacademy.com.vn">Trang chủ</a>
+        <a href="https://btacademy.com.vn/lich-khai-giang">Lịch khai giảng</a>
+        <a href="https://btacademy.com.vn/lien-he">Liên hệ</a>
       </div>
     </div>
   </div>
