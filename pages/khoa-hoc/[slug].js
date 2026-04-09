@@ -161,13 +161,54 @@ const CourseDetail = ({ course, relatedCourses, meta }) => {
             <div className="lg:col-span-2 space-y-6">
               {/* Course Overview */}
               <div className="bg-white rounded-xl shadow-sm">
-                <div className="p-6">
+                <div className="px-3 py-1">
                   <div className="">
                     {/* Course Info */}
-                    <div className="mb-8">
-                      <h1 className="text-3xl font-bold text-gray-900 mb-2 leading-tight">
+                    <div className="">
+                      <h1 className="text-3xl font-bold text-gray-900 mb-2 leading-tight mt-0 md:mt-2">
                         {course.title}
                       </h1>
+                      {/* Course Meta Info */}
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <div className="flex items-center space-x-2">
+                          <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                          </svg>
+                          <span className="text-gray-700">
+                            <span className="font-semibold">{course.students || 0}</span> học viên
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                          </svg>
+                          <span className="text-gray-700">
+                            <span className="font-semibold">{course.sessions || 0}</span> buổi học
+                          </span>
+                        </div>
+
+                        {course.rating > 0 && (
+                          <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-1">
+                              {renderStars(course.rating)}
+                              <span className="font-semibold text-gray-700 ml-1">{course.rating}</span>
+                              <span className="text-gray-500">({course.reviews || 0} đánh giá)</span>
+                            </div>
+                          </div>
+                        )}
+                        <div className="flex items-center space-x-2">
+                          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          <span className="text-gray-700">
+                            <span className="font-semibold">
+                              {formatLocationsForDisplay(course.locations)}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Course Description */}
@@ -430,8 +471,8 @@ const CourseDetail = ({ course, relatedCourses, meta }) => {
       </div>
 
       {/* Registration Popup */}
-      <RegistrationPopup 
-        isOpen={isPopupOpen} 
+      <RegistrationPopup
+        isOpen={isPopupOpen}
         onClose={handleClosePopup}
         courseSlug={slug}
       />
@@ -443,14 +484,14 @@ export default CourseDetail;
 
 export async function getServerSideProps(context) {
   const { slug } = context.params;
-  
+
   try {
     await db.connectDb();
-    
+
     // Fetch course data directly from database
     const course = await Course.findOne({ slug, isDeleted: { $ne: true } })
       .select('-instructor -instructorRole -category -targetAge -price -discount -badge -isActive');
-    
+
     if (!course) {
       return { notFound: true };
     }
@@ -463,7 +504,7 @@ export async function getServerSideProps(context) {
       isDeleted: { $ne: true }
     })
       .select('title slug image level students sessions rating reviews maKhoaHoc duration schedule location');
-    
+
     // Shuffle and take first 3 courses
     const shuffled = allCourses.sort(() => 0.5 - Math.random());
     const relatedCourses = shuffled.slice(0, 3);

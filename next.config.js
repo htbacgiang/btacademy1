@@ -67,7 +67,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "btacademy.vn",
+        hostname: "btacademy.com.vn",
       },
       {
         protocol: "https",

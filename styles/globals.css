@@ -1029,13 +1029,11 @@ html, body {
 }
 
 .blog h2 strong {
-  font-weight: 500 !important;
-  font-size: 1.2em !important;
   margin-top: 5px !important;
   margin-bottom: 5px !important;
   line-height: 1.5rem !important;
   margin-top: 10px !important;
-
+  font-weight: 600 !important;
  }
  .blog img{
   margin-bottom: 10px !important;
@@ -1057,7 +1055,7 @@ html, body {
   margin-top: 6px !important;
  }
  .blog h3 strong {
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   margin-top: 0 !important;
   margin-bottom: 5px !important;
   margin-top: 6px !important;
