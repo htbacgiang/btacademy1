@@ -2,18 +2,19 @@ import { ChangeEventHandler, FC, useEffect, useState, useCallback } from "react"
 import { useEditor, EditorContent, getMarkRange, Range } from "@tiptap/react";
 
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Placeholder from "@tiptap/extension-placeholder";
-import Link from "@tiptap/extension-link";
-import Youtube from "@tiptap/extension-youtube";
-import TipTapImage from "@tiptap/extension-image";
 import { TextStyle } from "@tiptap/extension-text-style";
-import Color from "@tiptap/extension-color";
-import TextAlign from "@tiptap/extension-text-align";
+import { Color } from "@tiptap/extension-color";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { Underline } from "@tiptap/extension-underline";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import { Link } from "@tiptap/extension-link";
+import { Youtube } from "@tiptap/extension-youtube";
+import { Image as TipTapImage } from "@tiptap/extension-image";
 import { Table } from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
-import TableHeader from "@tiptap/extension-table-header";
-import TableCell from "@tiptap/extension-table-cell";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { BubbleMenu as BubbleMenuExtension } from "@tiptap/extension-bubble-menu";
 
 import ToolBar from "./ToolBar";
 import EditLink from "./Link/EditLink";
@@ -71,6 +72,14 @@ const Editor: FC<Props> = ({
   // Kiểm tra xem có phải đang tạo bài viết mới không
   const isCreatingNewPost = !initialValue?.id;
   
+  // Debug để kiểm tra giá trị
+  console.log("Editor debug:", { 
+    initialValue, 
+    hasId: !!initialValue?.id, 
+    isCreatingNewPost,
+    btnTitle 
+  });
+
   const fetchImages = async (retryCount = 0) => {
     const maxRetries = 3;
     setLoadingImages(true);
@@ -208,6 +217,7 @@ const Editor: FC<Props> = ({
       TableRow,
       TableHeader,
       TableCell,
+      BubbleMenuExtension,
     ],
     
     editorProps: {

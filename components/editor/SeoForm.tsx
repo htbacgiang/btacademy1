@@ -249,15 +249,14 @@ const SEOForm: FC<Props> = ({
               Chọn một danh mục
             </option>
             <option value="Kỹ năng MC">Kỹ năng MC</option>
-            <option value="Nghề nghiệp MC">Nghề nghiệp MC</option>
             <option value="Thuyết trình & Giao tiếp">
               Thuyết trình & Giao tiếp
             </option>
-            <option value="Giọng nói & Phát âm">
-              Giọng nói & Phát âm
+            <option value="Góc MC Nhí">
+              Góc MC Nhí
             </option>
-            <option value="Câu chuyện học viên">
-              Câu chuyện học viên
+            <option value="Tin tức & Sự kiện">
+              Tin tức & Sự kiện
             </option>
           </select>
         </div>

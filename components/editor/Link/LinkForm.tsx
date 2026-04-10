@@ -45,7 +45,7 @@ const LinkForm: FC<Props> = ({
         autoFocus
         type="text"
         className="bg-white dark:bg-gray-800 rounded border-2 border-secondary-dark focus:border-primary-dark dark:focus:border-primary transition p-2 text-primary-dark dark:text-primary"
-        placeholder="https://btacademy.com.vn"
+        placeholder="https://mcbacgiang.com"
         value={link.url}
         onChange={({ target }) => setLink({ ...link, url: target.value })}
       />

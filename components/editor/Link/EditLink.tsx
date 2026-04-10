@@ -1,9 +1,10 @@
 import { FC, useCallback, useState } from "react";
 import { BsBoxArrowUpRight, BsPencilSquare } from "react-icons/bs";
 import { BiUnlink } from "react-icons/bi";
-import { Editor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
-import LinkForm, { linkOption } from "./LinkForm";
+import type { Editor } from "@tiptap/react";
+import LinkForm from "./LinkForm";
+import type { linkOption } from "./LinkForm";
 
 interface Props {
   editor: Editor;

@@ -1,14 +1,15 @@
 import { FC, useEffect, useState } from "react";
 import { useEditor, EditorContent, getMarkRange, Range } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Placeholder from "@tiptap/extension-placeholder";
-import Link from "@tiptap/extension-link";
-import Youtube from "@tiptap/extension-youtube";
-import TipTapImage from "@tiptap/extension-image";
+import { Underline } from "@tiptap/extension-underline";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import { Link } from "@tiptap/extension-link";
+import { Youtube } from "@tiptap/extension-youtube";
+import { Image as TipTapImage } from "@tiptap/extension-image";
 import { TextStyle } from "@tiptap/extension-text-style";
-import Color from "@tiptap/extension-color";
-import TextAlign from "@tiptap/extension-text-align";
+import { Color } from "@tiptap/extension-color";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { BubbleMenu as BubbleMenuExtension } from "@tiptap/extension-bubble-menu";
 import ToolBar from "../editor/ToolBar";
 import EditLink from "../editor/Link/EditLink";
 import GalleryModal, { ImageSelectionResult } from "../editor/GalleryModal";
@@ -81,6 +82,7 @@ const Editor: FC<Props> = ({ content, onChange }): JSX.Element => {
           class: "mx-auto",
         },
       }),
+      BubbleMenuExtension,
     ],
     editorProps: {
       handleClick(view, pos, event) {

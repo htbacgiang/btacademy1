@@ -35,16 +35,7 @@ const MainCategories: FC<Props> = ({ onCategorySelect }) => {
         >
           Kỹ năng MC
         </button>
-        <button
-          onClick={() => handleCategoryClick("Nghề nghiệp MC")}
-          className={`rounded-full px-4 py-2 text-sm sm:text-base transition duration-300 ${
-            activeCategory === "Nghề nghiệp MC"
-              ? "bg-blue-800 text-white"
-              : "hover:bg-blue-50"
-          }`}
-        >
-          Nghề nghiệp MC
-        </button>
+
         <button
           onClick={() => handleCategoryClick("Thuyết trình & Giao tiếp")}
           className={`rounded-full px-4 py-2 text-sm sm:text-base transition duration-300 ${
@@ -56,35 +47,26 @@ const MainCategories: FC<Props> = ({ onCategorySelect }) => {
           Thuyết trình & Giao tiếp
         </button>
         <button
-          onClick={() => handleCategoryClick("Giọng nói & Phát âm")}
+          onClick={() => handleCategoryClick("Góc MC Nhí")}
           className={`rounded-full px-4 py-2 text-sm sm:text-base transition duration-300 ${
-            activeCategory === "Giọng nói & Phát âm"
+            activeCategory === "Góc MC Nhí"
               ? "bg-blue-800 text-white"
               : "hover:bg-blue-50"
           }`}
         >
-          Giọng nói & Phát âm
+          Góc MC Nhí
         </button>
         <button
-          onClick={() => handleCategoryClick("Câu chuyện học viên")}
+          onClick={() => handleCategoryClick("Tin tức & Sự kiện")}
           className={`rounded-full px-4 py-2 text-sm sm:text-base transition duration-300 ${
-            activeCategory === "Câu chuyện học viên"
+            activeCategory === "Tin tức & Sự kiện"
               ? "bg-blue-800 text-white"
               : "hover:bg-blue-50"
           }`}
         >
-          Câu chuyện học viên
+            Tin tức & Sự kiện
         </button>
-        <button
-          onClick={() => handleCategoryClick("Tin tức ngành")}
-          className={`rounded-full px-4 py-2 text-sm sm:text-base transition duration-300 ${
-            activeCategory === "Tin tức ngành"
-              ? "bg-blue-800 text-white"
-              : "hover:bg-blue-50"
-          }`}
-        >
-          Tin tức ngành
-        </button>
+      
       </div>
     </div>
   );

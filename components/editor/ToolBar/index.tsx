@@ -20,7 +20,7 @@ import Button from "./Button";
 import { getFocusedEditor } from "../EditorUtils";
 import DropdownOptions from "../../common/DropdownOptions";
 import InsertLink from "../Link/InsertLink";
-import { linkOption } from "../Link/LinkForm";
+import type { linkOption } from "../Link/LinkForm";
 import EmbedYoutube from "./EmbedYoutube";
 import EmbedFacebookReels from "./EmbedFacebookReels";
 import EmbedImage from "./EmbedImage";

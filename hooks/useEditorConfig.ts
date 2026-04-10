@@ -1,11 +1,12 @@
 import { getMarkRange, Range, useEditor } from "@tiptap/react";
 
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Placeholder from "@tiptap/extension-placeholder";
-import Link from "@tiptap/extension-link";
-import Youtube from "@tiptap/extension-youtube";
-import TipTapImage from "@tiptap/extension-image";
+import { Underline } from "@tiptap/extension-underline";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import { Link } from "@tiptap/extension-link";
+import { Youtube } from "@tiptap/extension-youtube";
+import { Image as TipTapImage } from "@tiptap/extension-image";
+import { BubbleMenu as BubbleMenuExtension } from "@tiptap/extension-bubble-menu";
 import { useState } from "react";
 
 interface Options {
@@ -16,6 +17,7 @@ const useEditorConfig = (options?: Options) => {
   const [selectionRange, setSelectionRange] = useState<Range>();
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       Underline,
@@ -42,6 +44,7 @@ const useEditorConfig = (options?: Options) => {
           class: "mx-auto",
         },
       }),
+      BubbleMenuExtension,
     ],
     editorProps: {
       handleClick(view, pos, event) {
