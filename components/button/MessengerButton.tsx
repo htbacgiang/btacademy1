@@ -16,17 +16,6 @@ const MessengerButton: FC = () => {
 
         <div className={styles.helpContainer}>
 
-      <div className={styles.phoneRing}>
-        <div className={styles.phoneRingCircle}></div>
-        <div className={styles.phoneRingCircleFill}>
-        <button
-      onClick={openMessenger}
-    >
-        <Image src={FbMess} alt="face-book icon" width={60} height={60} />
-        </button>
-
-        </div>
-      </div>
       <div className={styles.zaloRing}>
         <div className={styles.zaloRingCircle}></div>
         <div className={styles.zaloRingCircleFill}>

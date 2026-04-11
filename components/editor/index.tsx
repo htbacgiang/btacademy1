@@ -72,14 +72,6 @@ const Editor: FC<Props> = ({
   // Kiểm tra xem có phải đang tạo bài viết mới không
   const isCreatingNewPost = !initialValue?.id;
   
-  // Debug để kiểm tra giá trị
-  console.log("Editor debug:", { 
-    initialValue, 
-    hasId: !!initialValue?.id, 
-    isCreatingNewPost,
-    btnTitle 
-  });
-
   const fetchImages = async (retryCount = 0) => {
     const maxRetries = 3;
     setLoadingImages(true);

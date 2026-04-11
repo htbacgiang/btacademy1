@@ -54,7 +54,7 @@ const AboutBTAcademyPage = () => {
       }
     ],
     "telephone": "0988027494",
-    "email": "lienhe@btacademy.com.vn"
+    "email": "contacts@btacademy.com.vn"
   };
 
 
@@ -622,10 +622,7 @@ const AboutBTAcademyPage = () => {
                 </Link>
               </div>
             </div>
-
           </section>
-
-    
 
           {/* Section V: Proof and Achievements */}
           <section className="">
@@ -739,8 +736,6 @@ const AboutBTAcademyPage = () => {
             </div>
           </section>
 
-      
-
           {/* Contact Information Section */}
           <section className="mt-4 mb-4">
                 <div className="bg-white p-4 rounded-lg">
@@ -749,7 +744,7 @@ const AboutBTAcademyPage = () => {
                 <p><strong>Trung Tâm Đào Tạo MC BT Academy</strong> – Đào tạo MC, Luyện Giọng & Kỹ năng giao tiếp</p>
                 <p><strong>📍 Trụ sở chính:</strong> 19 Nguyễn Gia Thiều, Quận Hoàn Kiếm, Hà Nội.</p>
                 <p><strong>📞 Hotline tư vấn:</strong> <a href="tel:0988027494">098 802 7494</a></p>
-                <p><strong>📧 Email:</strong> <a href="mailto:lienhe@btacademy.com.vn">lienhe@btacademy.com.vn</a></p>
+                <p><strong>📧 Email:</strong> <a href="mailto:contacts@btacademy.com.vn">contacts@btacademy.com.vn</a></p>
               </div>
             </div>
           </section>

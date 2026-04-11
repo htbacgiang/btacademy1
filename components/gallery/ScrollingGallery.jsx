@@ -17,125 +17,49 @@ const ScrollingGallery = () => {
   const { preloadImage } = useImageLoader();
 
   // Dữ liệu ảnh cho BT Academy
-  const galleryImages = useMemo(
-    () => [
-      {
-        id: 1,
-        src: "/images/gallery/hoc-vien-bt-01.jpg",
-        alt: "Học viên BT Academy 01"
-      },
-      {
-        id: 2,
-        src: "/images/gallery/hoc-vien-bt-02.jpg",
-        alt: "Học viên BT Academy 02"
-      },
-      {
-        id: 3,
-        src: "/images/gallery/hoc-vien-bt-03.jpg",
-        alt: "Học viên BT Academy 03"
-      },
-      {
-        id: 4,
-        src: "/images/gallery/hoc-vien-bt-04.jpg",
-        alt: "Học viên BT Academy 04"
-      },
-      {
-        id: 5,
-        src: "/images/gallery/hoc-vien-bt-05.jpg",
-        alt: "Học viên BT Academy 05"
-      },
-      {
-        id: 6,
-        src: "/images/gallery/hoc-vien-bt-06.jpg",
-        alt: "Học viên BT Academy 06"
-      },
-      {
-        id: 7,
-        src: "/images/gallery/hoc-vien-bt-07.jpg",
-        alt: "Học viên BT Academy 07"
-      },
-      {
-        id: 8,
-        src: "/images/gallery/hoc-vien-bt-08.jpg",
-        alt: "Học viên BT Academy 08"
-      },
-      {
-        id: 9,
-        src: "/images/gallery/hoc-vien-bt-09.jpg",
-        alt: "Học viên BT Academy 09"
-      },
-      {
-        id: 10,
-        src: "/images/gallery/hoc-vien-bt-10.jpg",
-        alt: "Học viên BT Academy 10"
-      },
-      {
-        id: 11,
-        src: "/images/gallery/hoc-vien-bt-11.jpg",
-        alt: "Học viên BT Academy 11"
-      },
-      {
-        id: 12,
-        src: "/images/gallery/hoc-vien-bt-12.jpg",
-        alt: "Học viên BT Academy 12"
-      },
-      {
-        id: 13,
-        src: "/images/gallery/hoc-vien-bt-13.jpg",
-        alt: "Học viên BT Academy 13"
-      },
-      {
-        id: 14,
-        src: "/images/gallery/hoc-vien-bt-14.jpg",
-        alt: "Học viên BT Academy 14"
-      },
-      {
-        id: 15,
-        src: "/images/gallery/hoc-vien-bt-15.jpg",
-        alt: "Học viên BT Academy 15"
-      },
-      {
-        id: 16,
-        src: "/images/gallery/hoc-vien-bt-16.jpg",
-        alt: "Học viên BT Academy 16"
-      },
-      {
-        id: 17,
-        src: "/images/gallery/hoc-vien-bt-17.jpg",
-        alt: "Học viên BT Academy 17"
-      },
-      {
-        id: 18,
-        src: "/images/gallery/hoc-vien-bt-18.jpg",
-        alt: "Học viên BT Academy 18"
-      },
-      {
-        id: 19,
-        src: "/images/gallery/hoc-vien-bt-19.jpg",
-        alt: "Học viên BT Academy 19"
-      },
-      {
-        id: 20,
-        src: "/images/gallery/hoc-vien-bt-20.jpg",
-        alt: "Học viên BT Academy 20"
-      },
-      {
-        id: 21,
-        src: "/images/gallery/hoc-vien-bt-21.jpg",
-        alt: "Học viên BT Academy 21"
-      },
-      {
-        id: 22,
-        src: "/images/gallery/hoc-vien-bt-22.jpg",
-        alt: "Học viên BT Academy 22"
-      }
-    ],
-    []
-  );
+const galleryImages = useMemo(
+  () => [
+    { id: 1, src: "/images/gallery/hoc-vien-bt-01.jpg", alt: "Lớp học MC Nhí tự tin thuyết trình tại BT Academy Hà Nội" },
+    { id: 2, src: "/images/gallery/hoc-vien-bt-02.jpg", alt: "Học viên thực hành luyện giọng nói truyền cảm Thái Nguyên" },
+    { id: 3, src: "/images/gallery/hoc-vien-bt-03.jpg", alt: "Đào tạo MC chuyên nghiệp chuẩn truyền hình tại 19 Nguyễn Gia Thiều" },
+    { id: 4, src: "/images/gallery/hoc-vien-bt-04.jpg", alt: "Khóa học chữa ngọng dứt điểm cho người đi làm tại Hà Nội" },
+    { id: 5, src: "/images/gallery/hoc-vien-bt-05.jpg", alt: "Bé tự tin tỏa sáng trong lớp MC Nhí BT Kids Thái Nguyên" },
+    { id: 6, src: "/images/gallery/hoc-vien-bt-06.jpg", alt: "Học viên thực hành dẫn chương trình tại Studio BT Academy" },
+    { id: 7, src: "/images/gallery/hoc-vien-bt-07.jpg", alt: "Kỹ năng thuyết trình và giao tiếp đỉnh cao cho lãnh đạo Hà Nội" },
+    { id: 8, src: "/images/gallery/hoc-vien-bt-08.jpg", alt: "Lớp MC Nhí thực hành ghi hình tại Tòa nhà Viettel Thái Nguyên" },
+    { id: 9, src: "/images/gallery/hoc-vien-bt-09.jpg", alt: "Luyện giọng đọc Voice-over chuyên nghiệp tại BT Academy" },
+    { id: 10, src: "/images/gallery/hoc-vien-bt-10.jpg", alt: "Học viên lớp MC Pro thực hành đọc kịch bản bản tin thời sự" },
+    { id: 11, src: "/images/gallery/hoc-vien-bt-11.jpg", alt: "Khóa học kỹ năng sống và tự tin giao tiếp cho trẻ em Hà Nội" },
+    { id: 12, src: "/images/gallery/hoc-vien-bt-12.jpg", alt: "Địa chỉ học MC uy tín hàng đầu tại thành phố Thái Nguyên" },
+    { id: 13, src: "/images/gallery/hoc-vien-bt-13.jpg", alt: "Học viên nhận chứng chỉ tốt nghiệp khóa MC tại BT Academy" },
+    { id: 14, src: "/images/gallery/hoc-vien-bt-14.jpg", alt: "Thực hành kỹ năng phỏng vấn hiện trường cho học viên MC" },
+    { id: 15, src: "/images/gallery/hoc-vien-bt-15.jpg", alt: "Lớp học sửa giọng địa phương và luyện giọng ấm áp Hà Nội" },
+    { id: 16, src: "/images/gallery/hoc-vien-bt-16.jpg", alt: "Các bạn nhỏ hào hứng trong giờ học MC Nhí tại Thái Nguyên" },
+    { id: 17, src: "/images/gallery/hoc-vien-bt-17.jpg", alt: "Kỹ thuật giải phóng hình thể và làm chủ sân khấu sự kiện" },
+    { id: 18, src: "/images/gallery/hoc-vien-bt-18.jpg", alt: "BTV Bích Thủy trực tiếp hướng dẫn học viên tại cơ sở Hà Nội" },
+    { id: 19, src: "/images/gallery/hoc-vien-bt-19.jpg", alt: "Học viên thực hành sử dụng máy nhắc chữ Teleprompter chuyên nghiệp" },
+    { id: 20, src: "/images/gallery/hoc-vien-bt-20.jpg", alt: "Workshop kỹ năng giao tiếp doanh nghiệp tại BT Academy" },
+    { id: 21, src: "/images/gallery/hoc-vien-bt-21.jpg", alt: "Không gian học tập hiện đại chuẩn trường quay tại Thái Nguyên" },
+    { id: 22, src: "/images/gallery/hoc-vien-bt-22.jpg", alt: "MC Bích Thủy chia sẻ kinh nghiệm làm nghề cho học viên MC Pro" },
+    { id: 23, src: "/images/gallery/hoc-vien-bt-23.jpg", alt: "Hành trình thay đổi giọng nói của học viên sau 10 buổi học" },
+    { id: 24, src: "/images/gallery/hoc-vien-bt-24.jpg", alt: "Lớp học MC song ngữ nhí phát triển tư duy ngôn ngữ toàn diện" },
+    { id: 25, src: "/images/gallery/hoc-vien-bt-25.jpg", alt: "Khóa đào tạo phát thanh viên chuyên nghiệp tại Hà Nội" },
+    { id: 26, src: "/images/gallery/hoc-vien-bt-26.jpg", alt: "Học viên Thái Nguyên thực hành dẫn Gala Dinner cuối khóa" },
+    { id: 27, src: "/images/gallery/hoc-vien-bt-27.jpg", alt: "Kỹ năng xây dựng kịch bản và biên tập nội dung sáng tạo" },
+    { id: 28, src: "/images/gallery/hoc-vien-bt-28.jpg", alt: "BT Academy - Nơi khai phóng sức mạnh giọng nói của bạn" },
+    { id: 29, src: "/images/gallery/hoc-vien-bt-29.jpg", alt: "Học viên nhí tự tin phỏng vấn khách mời tại Studio Hà Nội" },
+    { id: 30, src: "/images/gallery/hoc-vien-bt-30.jpg", alt: "Luyện cách nhấn nhá và biểu cảm cảm xúc qua giọng nói" },
+    { id: 31, src: "/images/gallery/hoc-vien-bt-31.jpg", alt: "Cộng đồng học viên thành công sau khóa học tại BT Academy" },
+    { id: 32, src: "/images/gallery/hoc-vien-bt-32.jpg", alt: "Kỹ năng điều phối hội thảo và tọa đàm cho người đi làm" },
+    { id: 33, src: "/images/gallery/hoc-vien-bt-33.jpg", alt: "Hình ảnh thực tế lớp học MC chuyên nghiệp tại cơ sở Nguyễn Gia Thiều" }
+  ],
+  []
+);
 
   // Chia ảnh thành 2 hàng
-  const topRowImages = useMemo(() => galleryImages.slice(0, 6), [galleryImages]);
-  const bottomRowImages = useMemo(() => galleryImages.slice(6, 12), [galleryImages]);
+// Hàng 1 lấy 17 ảnh, hàng 2 lấy 16 ảnh còn lại
+const topRowImages = useMemo(() => galleryImages.slice(0, 17), [galleryImages]);
+const bottomRowImages = useMemo(() => galleryImages.slice(17), [galleryImages]);
 
   const openLightbox = useCallback((image, index) => {
     setSelectedImage(image);
@@ -223,11 +147,11 @@ const ScrollingGallery = () => {
           100% { transform: translateX(0); }
         }
         .animate-scroll-right-to-left {
-          animation: scroll-right-to-left 40s linear infinite;
+          animation: scroll-right-to-left 80s linear infinite;
           animation-play-state: running;
         }
         .animate-scroll-left-to-right {
-          animation: scroll-left-to-right 40s linear infinite;
+          animation: scroll-left-to-right 80s linear infinite;
           animation-play-state: running;
         }
         .gallery-row {
@@ -290,6 +214,7 @@ const ScrollingGallery = () => {
                 >
                   <div className="w-64 h-40 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-2xl gallery-item flex-shrink-0">
                     <img
+                      loading="lazy"  
                       src={image.src}
                       alt={image.alt}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"

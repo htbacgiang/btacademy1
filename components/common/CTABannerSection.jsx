@@ -101,14 +101,14 @@ export default function CTABannerSection() {
                 </span>
               </a>
               <a
-                href="mailto:lienhe@btacademy.com.vn"
+                href="mailto:contacts@btacademy.com.vn"
                 className="flex items-center gap-4 group"
               >
                 <span className="flex-shrink-0 w-12 h-12 rounded-full bg-green-600 flex items-center justify-center text-white group-hover:bg-green-700 transition-colors shadow-lg">
                   <FaEnvelope className="w-5 h-5" />
                 </span>
                 <span className="block">
-                  <span className="block text-white font-bold text-lg">lienhe@btacademy.com.vn</span>
+                  <span className="block text-white font-bold text-lg">contacts@btacademy.com.vn</span>
                   <span className="block text-gray-300 text-sm">Liên hệ email</span>
                 </span>
               </a>
