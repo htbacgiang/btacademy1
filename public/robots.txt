@@ -6,4 +6,4 @@ Allow: /
 Host: https://btacademy.com.vn/
 
 # Sitemaps
-Sitemap: https://btacademy.com.vn/sitemap.xml
+Sitemap: https://btacademy.com.vn/api/sitemap.xml

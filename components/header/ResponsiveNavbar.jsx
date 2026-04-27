@@ -28,27 +28,25 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
     <>
       {/* Modern Overlay with BT Academy styling */}
       <div
-        className={`fixed inset-0 bg-gradient-to-br from-green-950/35 via-emerald-950/30 to-green-950/25 backdrop-blur-md z-[99999] transition-all duration-700 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 bg-gradient-to-br from-green-950/35 via-emerald-950/30 to-green-950/25 backdrop-blur-md z-[99999] transition-all duration-700 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
         onClick={toggleMenu}
       ></div>
 
       {/* Modern Sidebar Menu with BT Academy design */}
       <div
-        className={`fixed top-0 left-0 w-[80%] max-w-md h-full bg-white/95 backdrop-blur-xl shadow-2xl z-[999999] transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-all duration-700 ease-out overflow-hidden border-r border-gray-100`}
+        className={`fixed top-0 left-0 w-[80%] max-w-md h-full bg-white/95 backdrop-blur-xl shadow-2xl z-[999999] transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-all duration-700 ease-out overflow-hidden border-r border-gray-100`}
       >
         {/* BT Academy Header with gradient */}
         <div className="relative bg-gradient-to-r from-green-700 via-green-600 to-emerald-600 p-6 shadow-xl">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-lg p-1">
-                <Image 
-                  src="/logobt.png" 
-                  alt="BT Academy Logo" 
-                  width={40} 
+                <Image
+                  src="/logobt.png"
+                  alt="BT Academy Logo"
+                  width={40}
                   height={40}
                   className="object-contain"
                 />
@@ -96,13 +94,13 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
               <li key={index} className="group">
                 <div className="flex items-center">
                   {item.hasDropdown ? (
-                    <button 
+                    <button
                       className="flex items-center px-4 py-2 rounded-2xl text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 font-semibold transition-all duration-300 group-hover:translate-x-2 group-hover:shadow-lg border border-transparent hover:border-emerald-100 flex-1"
                     >
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-100 to-emerald-100 flex items-center justify-center mr-4 group-hover:from-green-600 group-hover:to-emerald-600 transition-all duration-300">
-                        <item.icon 
-                          size={20} 
-                          className="text-green-700 group-hover:text-white transition-colors duration-300" 
+                        <item.icon
+                          size={20}
+                          className="text-green-700 group-hover:text-white transition-colors duration-300"
                         />
                       </div>
                       <span className="text-lg uppercase">{item.name}</span>
@@ -111,15 +109,15 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
                       </div>
                     </button>
                   ) : (
-                    <Link 
-                      href={item.link} 
+                    <Link
+                      href={item.link}
                       className="flex items-center px-4 py-2 rounded-2xl text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 font-semibold transition-all duration-300 group-hover:translate-x-2 group-hover:shadow-lg border border-transparent hover:border-emerald-100 flex-1"
                       onClick={toggleMenu}
                     >
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-100 to-emerald-100 flex items-center justify-center mr-4 group-hover:from-green-600 group-hover:to-emerald-600 transition-all duration-300">
-                        <item.icon 
-                          size={20} 
-                          className="text-green-700 group-hover:text-white transition-colors duration-300" 
+                        <item.icon
+                          size={20}
+                          className="text-green-700 group-hover:text-white transition-colors duration-300"
                         />
                       </div>
                       <span className="text-lg uppercase">{item.name}</span>
@@ -128,7 +126,7 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
                       </div>
                     </Link>
                   )}
-                  
+
                   {/* Dropdown Toggle Button */}
                   {item.hasDropdown && (
                     <button
@@ -143,70 +141,70 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
                     </button>
                   )}
                 </div>
-                
+
                 {/* Dropdown Menu */}
                 {item.hasDropdown && activeDropdown === index && (
                   <div className="ml-4 mt-2 space-y-1 animate-in slide-in-from-top-2 duration-300">
                     {item.name === "Về chúng tôi" ? (
                       <>
-                        <Link 
-                          href="/gioi-thieu-bt-academy" 
+                        <Link
+                          href="/gioi-thieu"
                           className="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 transition-all duration-200 group/item"
                           onClick={toggleMenu}
                         >
                           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>
                           <span className="font-bold text-sm uppercase">Giới thiệu BT Academy</span>
                         </Link>
-                        <Link 
-                          href="/nha-sang-lap" 
+                        <Link
+                          href="/nha-sang-lap"
                           className="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 transition-all duration-200 group/item"
                           onClick={toggleMenu}
                         >
                           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>
                           <span className="font-bold text-sm uppercase">Nhà sáng lập</span>
                         </Link>
-                     
+
                       </>
                     ) : item.name === "Khóa học" ? (
                       <>
-                        <Link 
-                          href="/khoa-hoc/khoa-hoc-mc-co-ban" 
+                        <Link
+                          href="/khoa-hoc/khoa-hoc-mc-co-ban"
                           className="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 transition-all duration-200 group/item"
                           onClick={toggleMenu}
                         >
                           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>
                           <span className="font-bold text-sm uppercase">Làm chủ giọng nói</span>
                         </Link>
-                        
-                        <Link 
-                          href="/khoa-hoc/mc-nang-cao" 
+
+                        <Link
+                          href="/khoa-hoc/mc-nang-cao"
                           className="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 transition-all duration-200 group/item"
                           onClick={toggleMenu}
                         >
                           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>
                           <span className="font-bold text-sm uppercase">MC Nâng cao</span>
                         </Link>
-                        
-                        <Link 
-                          href="/khoa-hoc/giao-tiep-thuyet-trinh" 
+
+                        <Link
+                          href="/khoa-hoc/giao-tiep-thuyet-trinh"
                           className="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 transition-all duration-200 group/item"
                           onClick={toggleMenu}
                         >
                           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>
                           <span className="font-bold text-sm uppercase">Giao tiếp & Thuyết trình</span>
                         </Link>
-                        
-                        <Link 
-                          href="/khoa-hoc/mc-nhi-co-ban" 
+
+                        <Link
+                          href="/khoa-hoc/mc-nhi-co-ban"
                           className="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 transition-all duration-200 group/item"
                           onClick={toggleMenu}
                         >
                           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-400 to-emerald-500 mr-3 group-hover/item:scale-125 transition-transform duration-200"></div>
                           <span className="font-bold text-sm uppercase">MC Nhí Cơ bản</span>
                         </Link>
-                        
-                        <Link 
-                          href="/khoa-hoc/mc-nhi-nang-cao" 
+
+                        <Link
+                          href="/khoa-hoc/mc-nhi-nang-cao"
                           className="flex items-center px-4 py-3 rounded-xl text-gray-600 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 transition-all duration-200 group/item"
                           onClick={toggleMenu}
                         >
@@ -226,7 +224,7 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
         <div className="p-6 border-t border-gray-100 bg-gradient-to-r from-gray-50 to-white">
           {/* Call to Action Button */}
           <div className="mb-3">
-            <button 
+            <button
               onClick={() => {
                 onRegisterClick();
                 toggleMenu();
@@ -236,7 +234,7 @@ const ResponsiveMenu = ({ isOpen, toggleMenu, onRegisterClick }) => {
               Đăng ký ngay
             </button>
           </div>
-          
+
           {/* Social Media Links */}
           <div className="text-center">
             <h3 className="text-sm font-semibold text-gray-600 mb-2 uppercase tracking-wider">

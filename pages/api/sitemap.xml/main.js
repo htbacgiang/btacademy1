@@ -12,7 +12,7 @@ const staticPages = [
   { url: '/nha-sang-lap', changefreq: 'monthly', priority: '0.9' },
   { url: '/khoa-hoc', changefreq: 'daily', priority: '0.9' },
   { url: '/lich-khai-giang', changefreq: 'weekly', priority: '0.9' },
-  { url: '/tin-tuc', changefreq: 'daily', priority: '0.8' },
+  { url: '/bai-viet', changefreq: 'daily', priority: '0.8' },
   { url: '/lien-he', changefreq: 'monthly', priority: '0.8' },
   
   // Trang tư vấn và đăng ký
@@ -65,7 +65,7 @@ const generateSitemap = (posts, courses = []) => {
   const postUrls = posts
     .map((post) => `
     <url>
-      <loc>${encodeUrl(baseUrl + '/tin-tuc/' + encodeURIComponent(post.slug))}</loc>
+      <loc>${encodeUrl(baseUrl + '/bai-viet/' + encodeURIComponent(post.slug))}</loc>
       <lastmod>${new Date(post.updatedAt || post.createdAt).toISOString()}</lastmod>
       <changefreq>daily</changefreq>
       <priority>0.7</priority>
@@ -139,7 +139,7 @@ const handler = async (req, res) => {
       getCoursesForSitemap()
     ]);
 
-    console.log(`MCBacGiang Main Sitemap generated: ${staticPages.length} static pages, ${courses.length} courses, ${posts.length} posts`);
+    console.log(`BTAcademy Main Sitemap generated: ${staticPages.length} static pages, ${courses.length} courses, ${posts.length} posts`);
 
     const sitemap = generateSitemap(posts, courses);
 

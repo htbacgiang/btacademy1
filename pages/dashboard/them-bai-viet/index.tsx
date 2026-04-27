@@ -1,12 +1,14 @@
 import axios from "axios";
-import { NextPage } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
+import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import Editor, { FinalPost } from "../../../components/editor";
 import AdminLayout from "../../../components/layout/AdminLayout";
 import { generateFormData } from "../../../utils/helper";
-interface Props {}
+
+interface Props { }
 
 const Create: NextPage<Props> = () => {
   const [creating, setCreating] = useState(false);
@@ -30,8 +32,9 @@ const Create: NextPage<Props> = () => {
   };
   return (
     <AdminLayout title="Thêm bài viết mới">
-      <div className="add-post-container">
-        <div className="add-post-content">
+      <div style={{ minHeight: "100vh", padding: "1.5rem" }}>
+        {/* Editor */}
+        <div className="w-full">
           <Editor onSubmit={handleSubmit} busy={creating} />
         </div>
       </div>
@@ -40,3 +43,15 @@ const Create: NextPage<Props> = () => {
 };
 
 export default Create;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getSession(context);
+
+  if (!session || !session.user || (session.user as { role?: string }).role !== "admin") {
+    return {
+      redirect: { destination: "/dang-nhap", permanent: false },
+    };
+  }
+
+  return { props: {} };
+}

@@ -37,7 +37,7 @@ const PostCard: FC<Props> = ({
     <>
       {/* Responsive design - Mobile & Desktop optimized */}
       <div className="group bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 ease-out transform hover:-translate-y-3 hover:scale-[1.02] border border-gray-100/50 dark:border-gray-700/50 hover:border-blue-300/60 dark:hover:border-blue-500/60 backdrop-blur-sm">
-        
+
         {/* Responsive layout: Mobile horizontal, Desktop vertical */}
         <div className="flex flex-col sm:flex-row lg:flex-col">
           {/* Thumbnail - Responsive sizing */}
@@ -64,13 +64,6 @@ const PostCard: FC<Props> = ({
             )}
             {/* Enhanced overlay gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-            
-            {/* Desktop: Category badge overlay */}
-            <div className="absolute top-4 left-4 hidden lg:block">
-              <span className="inline-flex items-center px-4 py-2 rounded-2xl text-xs font-bold bg-white/95 backdrop-blur-md text-gray-800 border border-white/30 shadow-2xl transform group-hover:scale-105 transition-all duration-300">
-                {category || "Tin tức"}
-              </span>
-            </div>
           </div>
 
           {/* Content - Enhanced responsive layout */}
@@ -81,7 +74,7 @@ const PostCard: FC<Props> = ({
               <span className="lg:hidden inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                 {category || "Tin tức"}
               </span>
-              
+
               {/* Date - Always visible on desktop, responsive on mobile */}
               <div className="flex items-center text-gray-500 dark:text-gray-400 text-xs lg:text-sm">
                 <svg className="w-3 h-3 lg:w-4 lg:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

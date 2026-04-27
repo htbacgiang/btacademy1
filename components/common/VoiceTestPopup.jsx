@@ -16,7 +16,7 @@ const VoiceTestPopup = ({ isOpen, onClose }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [recordingSupported, setRecordingSupported] = useState(true);
-  
+
   const audioRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -65,6 +65,33 @@ LƯU Ý:
     }
   }, []);
 
+  // Prevent body scroll when popup is open (works on iOS Safari too)
+  useEffect(() => {
+    if (isOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    };
+  }, [isOpen]);
+
   // Cleanup audio URL when component unmounts
   useEffect(() => {
     return () => {
@@ -87,14 +114,14 @@ LƯU Ý:
         throw new Error('Thu âm chỉ hoạt động trên HTTPS. Vui lòng sử dụng file upload thay thế.');
       }
 
-      const stream = await navigator.mediaDevices.getUserMedia({ 
+      const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
           sampleRate: 44100
-        } 
+        }
       });
-      
+
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: 'audio/webm;codecs=opus'
       });
@@ -197,28 +224,28 @@ LƯU Ý:
   // Submit form
   const handleSubmit = async () => {
     setErrorMessage('');
-    
+
     if (!isContactInfoValid()) {
       setErrorMessage('Vui lòng nhập email hoặc số điện thoại để chúng tôi có thể liên hệ lại!');
       return;
     }
-    
+
     if (!audioBlob && !selectedFile) {
       setErrorMessage('Vui lòng thu âm hoặc tải lên file audio!');
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       const formData = new FormData();
       formData.append('email', email);
       formData.append('phone', phone);
-      
+
       if (audioBlob) {
         formData.append('audioFile', audioBlob, 'voice-test.wav');
       }
-      
+
       if (selectedFile) {
         formData.append('audioFile', selectedFile);
       }
@@ -256,17 +283,27 @@ LƯU Ý:
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center popup-voice-test p-2 sm:p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center popup-voice-test p-2 sm:p-4" style={{ zIndex: 2147483647 }}>
+      {/* Nút đóng cố định - luôn hiển thị trên mobile */}
+      <button
+        onClick={onClose}
+        className="fixed top-3 right-3 sm:hidden w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-colors"
+        aria-label="Đóng"
+      >
+        <X size={20} />
+      </button>
+
       <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4 sm:p-6">
           <div className="flex justify-between items-center">
             <h2 className="text-lg sm:text-2xl font-bold">Test Giọng MC - BT Academy</h2>
+            {/* Nút đóng trong header - chỉ desktop */}
             <button
               onClick={onClose}
-              className="text-white hover:text-gray-200 transition-colors"
+              className="text-white hover:text-gray-200 transition-colors hidden sm:block"
             >
-              <X size={20} className="sm:w-6 sm:h-6" />
+              <X size={24} />
             </button>
           </div>
         </div>
@@ -283,7 +320,7 @@ LƯU Ý:
           {/* Right side - Recording/Upload */}
           <div className="w-full sm:w-1/2 p-3 sm:p-6 flex flex-col">
             <h3 className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3">Thu âm hoặc tải file</h3>
-            
+
             {/* Recording Section */}
             <div className="mb-2 sm:mb-4">
               <div className="bg-gray-50 rounded-lg p-2 sm:p-3 mb-2 sm:mb-3">
@@ -364,7 +401,7 @@ LƯU Ý:
                             Xóa
                           </button>
                         </div>
-                        
+
                         {/* Play Button - Only show when audio is ready */}
                         <div className="flex items-center justify-between">
                           <button
@@ -379,8 +416,8 @@ LƯU Ý:
                             <span>{isPlaying ? 'Đang phát...' : 'Phát'}</span>
                           </button>
                           <span className="text-xs text-gray-600">
-                            {audioBlob ? `${Math.round(audioBlob.size / 1024)} KB` : 
-                             selectedFile ? `${Math.round(selectedFile.size / 1024)} KB` : ''}
+                            {audioBlob ? `${Math.round(audioBlob.size / 1024)} KB` :
+                              selectedFile ? `${Math.round(selectedFile.size / 1024)} KB` : ''}
                           </span>
                         </div>
                         <audio
@@ -421,7 +458,7 @@ LƯU Ý:
                     {selectedFile.name}
                   </p>
                 )}
-                
+
                 {/* Hướng dẫn */}
                 <div className="mt-2 text-xs text-gray-500">
                   <p><strong>Hỗ trợ:</strong> MP3, WAV, M4A, OGG (max 50MB)</p>
@@ -451,9 +488,8 @@ LƯU Ý:
                     }
                     if (errorMessage) setErrorMessage('');
                   }}
-                  className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                    !email && !phone ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 ${!email && !phone ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    }`}
                   placeholder="Nhập email hoặc số điện thoại"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -483,11 +519,10 @@ LƯU Ý:
                 <button
                   onClick={handleSubmit}
                   disabled={!isFormValid() || isSubmitting}
-                  className={`w-full px-3 sm:px-4 py-2 sm:py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 text-xs sm:text-sm ${
-                    isFormValid() && !isSubmitting
-                      ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
+                  className={`w-full px-3 sm:px-4 py-2 sm:py-2 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-2 text-xs sm:text-sm ${isFormValid() && !isSubmitting
+                    ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
                 >
                   {isSubmitting ? (
                     <>

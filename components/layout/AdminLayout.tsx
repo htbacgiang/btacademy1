@@ -21,23 +21,31 @@ interface Props {
 
 const AdminLayout: FC<Props> = ({ title, children }): JSX.Element => {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <>
       <AppHead title={title} />
-      <div className="flex overflow-x-hidden admin-layout">
-        <Slidebar />
-        <div className={`lg:ml-60 ml-0 flex-grow bg-slate-100 min-h-screen overflow-x-hidden main-content`}>
-        {/* Correctly pass setShowSidebar to Navbar */}
-        <main className="p-2 bg-white dark:bg-slate-900 min-h-screen mt-16 overflow-x-hidden dashboard-content">
-          {children}
-        </main>
-      </div>
-        {/* create button */}
-        {/* <Link href="/admin/posts/create" legacyBehavior>
-          <a className="bg-secondary-dark dark:bg-secondary-light text-primary dark:text-primary-dark fixed z-10 right-10 bottom-10 p-3 rounded-full hover:scale-90 shadow-sm transition">
-            <AiOutlineFileAdd size={24} />
-          </a>
-        </Link> */}
+      <div className="flex">
+        <Slidebar 
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
+
+        {/* Main content: ml-60 khi mở rộng, ml-16 khi thu gọn */}
+        <div
+          className={`
+            ml-0 flex-grow bg-slate-100 min-h-screen
+            transition-all duration-300
+            ${collapsed ? 'lg:ml-16' : 'lg:ml-60'}
+          `}
+        >
+          <main className="bg-white dark:bg-slate-900 min-h-screen">
+            {children}
+          </main>
+        </div>
       </div>
     </>
   );

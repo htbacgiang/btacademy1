@@ -66,7 +66,7 @@ const ThumbnailSelector: FC<Props> = ({
         id="thumbnail"
         onChange={handleChange}
       />
-      
+
       {/* Thumbnail display and Gallery button - Same row */}
       <div className="flex items-center gap-3">
         {/* Thumbnail display - Click to upload */}

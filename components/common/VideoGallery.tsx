@@ -96,12 +96,12 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
         return `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`;
       }
     }
-    
+
     // Facebook video - sử dụng thumbnail đã lưu nếu có
     if (video.videoType === "facebook" && video.thumbnail) {
       return video.thumbnail;
     }
-    
+
     // Fallback: dùng thumbnail đã lưu hoặc placeholder
     return video.thumbnail || "/images/placeholder-video.jpg";
   };
@@ -112,9 +112,9 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
 
   const displayedVideos = showPagination
     ? videos.slice(
-        (currentPage - 1) * videosPerPage,
-        currentPage * videosPerPage
-      )
+      (currentPage - 1) * videosPerPage,
+      currentPage * videosPerPage
+    )
     : videos;
 
   const scrollToGalleryTop = () => {
@@ -146,11 +146,10 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
       type="button"
       onClick={() => !isDisabled && handlePageChange(page)}
       disabled={isDisabled}
-      className={`flex h-10 min-w-10 items-center justify-center rounded-full border px-4 text-sm font-semibold transition-colors ${
-        isActive
-          ? "border-green-600 bg-green-600 text-white"
-          : "border-gray-200 bg-white text-gray-700 hover:border-green-600 hover:text-green-600"
-      } ${isDisabled ? "cursor-not-allowed opacity-50 hover:border-gray-200 hover:text-gray-700" : ""}`}
+      className={`flex h-10 min-w-10 items-center justify-center rounded-full border px-4 text-sm font-semibold transition-colors ${isActive
+        ? "border-green-600 bg-green-600 text-white"
+        : "border-gray-200 bg-white text-gray-700 hover:border-green-600 hover:text-green-600"
+        } ${isDisabled ? "cursor-not-allowed opacity-50 hover:border-gray-200 hover:text-gray-700" : ""}`}
     >
       {label}
     </button>
@@ -159,11 +158,10 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
   const renderVideoCard = (video: Video, compact = false) => (
     <div
       key={video._id}
-      className={`group relative bg-white overflow-hidden cursor-pointer transition-all duration-300 ${
-        compact
-          ? "rounded-lg shadow-md hover:shadow-xl flex-shrink-0"
-          : "rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2"
-      }`}
+      className={`group relative bg-white overflow-hidden cursor-pointer transition-all duration-300 ${compact
+        ? "rounded-lg shadow-md hover:shadow-xl flex-shrink-0"
+        : "rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2"
+        }`}
       style={compact ? { width: "280px" } : undefined}
       onClick={() => handleVideoClick(video)}
     >
@@ -181,9 +179,8 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
 
         <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
           <div
-            className={`bg-white/70 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${
-              compact ? "w-10 h-10" : "w-10 h-10 md:w-12 md:h-12"
-            }`}
+            className={`bg-white/70 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${compact ? "w-10 h-10" : "w-10 h-10 md:w-12 md:h-12"
+              }`}
           >
             <FaPlay className="text-green-600 ml-1" size={14} />
           </div>
@@ -191,11 +188,10 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
 
         <div className={`absolute ${compact ? "top-1.5 right-1.5" : "top-1.5 right-1.5 md:top-3 md:right-3"}`}>
           <span
-            className={`bg-black/70 text-white backdrop-blur-sm ${
-              compact
-                ? "px-1.5 py-0.5 text-[12px] rounded"
-                : "px-1.5 py-0.5 md:px-2 md:py-1 text-[12px] md:text-sm rounded md:rounded-md"
-            }`}
+            className={`bg-black/70 text-white backdrop-blur-sm ${compact
+              ? "px-1.5 py-0.5 text-[12px] rounded"
+              : "px-1.5 py-0.5 md:px-2 md:py-1 text-[12px] md:text-sm rounded md:rounded-md"
+              }`}
           >
             {video.videoType === "youtube" ? "Youtube" : "Facebook"}
           </span>
@@ -204,17 +200,15 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
 
       <div className={compact ? "p-1.5" : "p-2"}>
         <h3
-          className={`font-semibold px-2 text-gray-900 mb-1 md:mb-2 line-clamp-2 group-hover:text-green-600 transition-colors ${
-            compact ? "text-sm" : "text-base"
-          }`}
+          className={`font-semibold px-2 text-gray-900 mb-1 md:mb-2 line-clamp-2 group-hover:text-green-600 transition-colors ${compact ? "text-sm" : "text-base"
+            }`}
         >
           {video.title}
         </h3>
         {showDescription && video.description && (
           <p
-            className={`px-2 pb-2 text-gray-600 line-clamp-3 ${
-              compact ? "text-xs" : "text-sm"
-            }`}
+            className={`px-2 pb-2 text-gray-600 line-clamp-3 ${compact ? "text-xs" : "text-sm"
+              }`}
           >
             {video.description}
           </p>
@@ -258,7 +252,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
             </div>
           )}
 
-          <div className="mx-auto w-full max-w-6xl">
+          <div className="mx-auto w-full">
             {mobileScrollable ? (
               <>
                 <div className="hidden lg:grid lg:grid-cols-3 gap-4 px-2">
@@ -294,7 +288,7 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({
             )}
           </div>
 
-      
+
         </div>
       </section>
 

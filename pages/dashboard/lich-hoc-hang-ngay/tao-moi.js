@@ -433,7 +433,7 @@ export default function CreateDailySchedulePage() {
     return (
       <AdminLayout title="Xem trước lịch học">
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800">
-          <div className="p-6 max-w-4xl mx-auto">
+          <div className="p-6 w-full mx-auto">
             {/* Preview Header */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-100 dark:border-slate-700">
               <div className="flex items-center justify-between">
@@ -590,7 +590,7 @@ export default function CreateDailySchedulePage() {
   return (
     <AdminLayout title="Tạo lịch học mới">
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800">
-        <div className="p-6 max-w-5xl mx-auto">
+        <div className="p-6 w-full mx-auto">
           {/* Header */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-100 dark:border-slate-700">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">

@@ -13,6 +13,7 @@ export interface PostModelSchema {
   author: ObjectId;
   isDraft: boolean;
   isFeatured?: boolean;
+  featuredOrder?: number; // Thứ tự hiển thị trong section nổi bật (1-4)
   deletedAt?: Date | null;
   createdAt: Date;
 }
@@ -62,6 +63,10 @@ const PostSchema = new Schema<PostModelSchema>(
     isFeatured: {
       type: Boolean,
       default: false,
+    },
+    featuredOrder: {
+      type: Number,
+      default: null,
     },
     deletedAt: {
       type: Date,

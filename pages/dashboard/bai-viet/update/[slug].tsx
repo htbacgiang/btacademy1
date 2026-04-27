@@ -42,13 +42,16 @@ const Update: NextPage<Props> = ({ post }) => {
 
   return (
     <AdminLayout title="Cập nhật bài viết">
-      <div className="max-w-10/12 mx-auto">
-        <Editor
-          initialValue={post}
-          onSubmit={handleSubmit}
-          busy={updating}
-          btnTitle="Cập nhật"
-        />
+      <div style={{ minHeight: "100vh", padding: "1.5rem" }}>
+        {/* Editor */}
+        <div className="w-full">
+          <Editor
+            initialValue={post}
+            onSubmit={handleSubmit}
+            busy={updating}
+            btnTitle="Cập nhật"
+          />
+        </div>
       </div>
     </AdminLayout>
   );

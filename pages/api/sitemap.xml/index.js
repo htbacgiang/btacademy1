@@ -19,7 +19,7 @@ const staticPages = [
   { url: '/khoa-hoc', changefreq: 'daily', priority: '0.9' },
 
   { url: '/lich-khai-giang', changefreq: 'weekly', priority: '0.9' },
-  { url: '/tin-tuc', changefreq: 'daily', priority: '0.8' },
+  { url: '/bai-viet', changefreq: 'daily', priority: '0.8' },
   { url: '/lien-he', changefreq: 'monthly', priority: '0.8' },
   
   // Trang tư vấn và đăng ký
@@ -129,7 +129,7 @@ const handler = async (req, res) => {
     posts.forEach(post => {
       const lastmod = post.updatedAt ? new Date(post.updatedAt).toISOString() : currentDate;
       sitemapXml += `
-<url><loc>${baseUrl}/tin-tuc/${post.slug}</loc><lastmod>${lastmod}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>`;
+<url><loc>${baseUrl}/bai-viet/${post.slug}</loc><lastmod>${lastmod}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>`;
     });
 
     sitemapXml += `

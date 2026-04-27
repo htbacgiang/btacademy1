@@ -43,8 +43,8 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="min-h-screen bg-white flex items-center " aria-labelledby="faq-heading">
-      <div className="container mx-auto px-6 w-full">
+    <section className="py-12 bg-white flex items-center " aria-labelledby="faq-heading">
+      <div className="container mx-auto px-4 md:px-0 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left: FAQ Section */}
           <div className="space-y-8">
@@ -57,14 +57,14 @@ export default function FAQSection() {
                 <span className="relative">
                   Thường Gặp
                   <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 200 12" fill="none">
-                    <path d="M2 8C20 4 40 2 60 6C80 10 100 8 120 4C140 0 160 2 180 6C198 10" stroke="#22C55E" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                    <path d="M2 8C20 4 40 2 60 6C80 10 100 8 120 4C140 0 160 2 180 6C198 10" stroke="#22C55E" strokeWidth="3" fill="none" strokeLinecap="round" />
                   </svg>
                 </span>{' '}
                 Về BT Academy
-            </h2>
-             
+              </h2>
+
             </div>
-            
+
             <div className="space-y-4">
               {faqs.map((faq, index) => (
                 <div
@@ -133,7 +133,7 @@ export default function FAQSection() {
             {/* Wavy line decoration */}
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-8">
               <svg width="80" height="16" viewBox="0 0 80 16" fill="none">
-                <path d="M2 8C8 4 16 12 24 8C32 4 40 12 48 8C56 4 64 12 72 8C76 6 78 8" stroke="#374151" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                <path d="M2 8C8 4 16 12 24 8C32 4 40 12 48 8C56 4 64 12 72 8C76 6 78 8" stroke="#374151" strokeWidth="2" fill="none" strokeLinecap="round" />
               </svg>
             </div>
           </div>

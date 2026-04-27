@@ -240,7 +240,7 @@ export default function ClassScheduleListPage() {
   return (
     <AdminLayout title="Quản lý lịch khai giảng">
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800">
-        <div className="p-6 max-w-7xl mx-auto">
+        <div className="p-6 w-full mx-auto">
           {/* Header Section */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 mb-6 border border-gray-100 dark:border-slate-700">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">

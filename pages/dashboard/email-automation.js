@@ -131,7 +131,7 @@ export default function EmailAutomationSettings() {
   return (
     <AdminLayout title="Cài đặt Email Tự động">
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800">
-        <div className="p-6 max-w-4xl mx-auto">
+        <div className="p-6 w-full mx-auto">
           {/* Header */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6 border border-gray-100 dark:border-slate-700">
             <div className="flex items-center justify-between">

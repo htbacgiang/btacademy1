@@ -214,12 +214,7 @@ const SEOForm: FC<Props> = ({
   const { meta, slug, category, focusKeyword } = values;
 
   return (
-    <div className="space-y-6">
-      <h3 className="seo-form-title">
-        <span>🔍</span>
-        Tối ưu SEO
-      </h3>
-      
+    <div className="space-y-3">
       {/* Focus Keyword */}
       <div className="seo-form-group">
         <label className="seo-form-label">
@@ -234,7 +229,7 @@ const SEOForm: FC<Props> = ({
           placeholder="Nhập từ khóa chính để phân tích SEO"
         />
       </div>
-      
+
       <div className="seo-form-grid">
         <div className="seo-form-group">
           <label className="seo-form-label">
@@ -256,7 +251,7 @@ const SEOForm: FC<Props> = ({
             ))}
           </select>
         </div>
-        
+
         <div className="seo-form-group">
           <Input
             value={slug}
@@ -287,11 +282,11 @@ const SEOForm: FC<Props> = ({
       </div>
 
       {/* SEO Analysis */}
-      <div className="mt-6">
+      <div className="mt-2">
         <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
           🔍 Phân tích SEO
         </h4>
-        
+
         {!focusKeyword ? (
           <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
             <p className="text-blue-800 dark:text-blue-200 text-center">

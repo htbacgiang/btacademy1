@@ -113,7 +113,12 @@ const Blogs: NextPage<Props> = ({ initialPosts = [] }) => {
   const postsToCheck = posts as PostDetail[];
   const featuredPosts = postsToCheck
     .filter((post) => post.isFeatured === true)
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort((a, b) => {
+      // Sort theo featuredOrder (1-4), bài không có order thì xuống cuối
+      const orderA = a.featuredOrder ?? 999;
+      const orderB = b.featuredOrder ?? 999;
+      return orderA - orderB;
+    })
     .slice(0, featuredPostsCount);
   const recentPostsAll = filteredPosts.filter((post) => post.isFeatured !== true);
   const recentStartIndex = (currentPage - 1) * recentPostsPerPage;

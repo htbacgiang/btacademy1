@@ -69,6 +69,7 @@ export const formatPosts = (posts: PostModelSchema[]): PostDetail[] => {
     tags: post.tags,
     isDraft: post.isDraft || false,
     isFeatured: post.isFeatured || false,
+    featuredOrder: post.featuredOrder ?? null,
   }));
 };
 

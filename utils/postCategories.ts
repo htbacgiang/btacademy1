@@ -1,7 +1,7 @@
 export const POST_CATEGORIES = [
   "Kỹ năng MC",
-  "Thuyết trình & Giao tiếp",
   "Góc MC Nhí",
+  "Thuyết trình & Giao tiếp",
   "Tin tức & Sự kiện",
 ] as const;
 

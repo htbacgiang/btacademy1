@@ -81,7 +81,7 @@ const SinglePost: NextPage<Props> = ({ post }) => {
                 <span className="flex hidden md:block font-semibold gap-2 mb-4 text-base text-gray-600">
                   {trimText(title, 100)}
                 </span>
-                   <span className="flex block md:hidden font-semibold gap-2 mb-4 text-base text-gray-600">
+                <span className="flex block md:hidden font-semibold gap-2 mb-4 text-base text-gray-600">
                   {trimText(title, 35)}
                 </span>
               </div>
@@ -96,7 +96,64 @@ const SinglePost: NextPage<Props> = ({ post }) => {
               <div className="mt-2 uppercase text-green-800 font-xl">
                 <b>{category}</b>
               </div>
-              <div className="blog prose prose-lg dark:prose-invert max-w-2xl md:max-w-4xl lg:max-w-5xl">
+              {/* Article Content */}
+              <div className="blog prose prose-lg dark:prose-invert w-full [&_img]:mx-auto">
+                <style jsx>{`
+                  .blog img {
+                    display: block;
+                    margin: 1.5em auto;
+                  }
+                  .blog figure {
+                    margin: 1.5em 0;
+                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                  }
+                  .blog figure img {
+                    display: block;
+                    margin: 0 auto;
+                  }
+                  .blog figcaption {
+                    margin-top: 0.5em;
+                    font-size: 0.875em;
+                    color: #6b7280;
+                    font-style: italic;
+                    text-align: center;
+                    width: 100%;
+                    max-width: 100%;
+                  }
+                  .dark .blog figcaption {
+                    color: #9ca3af;
+                  }
+                  .blog :global(table) {
+                    display: block;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                    max-width: 100%;
+                    width: max-content !important;
+                    margin: 1.5em auto !important;
+                    border-collapse: collapse;
+                    border: 1px solid #d1d5db;
+                  }
+                  .blog :global(td),
+                  .blog :global(th) {
+                    padding: 0.5em 0.5em;
+                    border: 1px solid #d1d5db;
+                    text-align: left;
+                    vertical-align: top;
+                  }
+                  .blog :global(th) {
+                    background-color: #f3f4f6;
+                    font-weight: 600;
+                  }
+                  .blog :global(td p),
+                  .blog :global(th p) {
+                    text-align: left !important;
+                    margin: 0;
+                  }
+                `}</style>
                 {parse(content)}
               </div>
             </div>
@@ -128,31 +185,31 @@ const SinglePost: NextPage<Props> = ({ post }) => {
                         <div className="text-base flex items-center mt-1 gap-2">
                           <span className=" text-orange-700">
 
-                          <svg
-                            className="w-4 h-4 mr-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            ></path>
-                          </svg>
+                            <svg
+                              className="w-4 h-4 mr-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              ></path>
+                            </svg>
                           </span>
 
                           <span >
-                          {new Date(p.createdAt).toLocaleDateString("vi-VN", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }).replace("tháng ", "Tháng ")}
+                            {new Date(p.createdAt).toLocaleDateString("vi-VN", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            }).replace("tháng ", "Tháng ")}
                           </span>
-                     
-                          </div>
+
+                        </div>
 
 
                       </div>
@@ -214,7 +271,7 @@ export const getServerSideProps: GetServerSideProps<
         imageWidth: "1200",
         imageHeight: "630",
         url: `https://btacademy.com.vn/bai-viet/${slug}`,
-        siteName: "BT Academy",   
+        siteName: "BT Academy",
       },
       twitter: {
         card: "summary_large_image",

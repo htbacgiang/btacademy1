@@ -14,7 +14,6 @@ import TeachersSection from '../components/common/TeachersSection';
 import teachersData from '../data/teachers.json';
 import { ScrollingGallery } from '../components/gallery';
 import VideoGallery from '../components/common/VideoGallery';
-import Link from 'next/link';
 export default function Home({ posts, meta }) {
   // JSON-LD Schema.org cho BT Academy
   const jsonLd = {
@@ -72,6 +71,7 @@ export default function Home({ posts, meta }) {
       <OrganicProcess />
       <ScrollingGallery />
       <VideoGallery maxVideos={6} />
+      <FQSection />
       <HeroSectionBlog />
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3 px-2 pb-6">
@@ -80,7 +80,6 @@ export default function Home({ posts, meta }) {
           ))}
         </div>
       </div>
-      <FQSection />
       <NewsletterSignup />
     </DefaultLayout>
   );

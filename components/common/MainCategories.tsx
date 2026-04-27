@@ -15,26 +15,24 @@ const MainCategories: FC<Props> = ({ onCategorySelect }) => {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="w-full sm:w-11/12 md:w-11/12 rounded-3xl xl:rounded-full p-4 shadow-lg gap-4 flex sm:flex-row flex-wrap items-center justify-center bg-gray-100 mt-5">
+      <div className="w-full sm:w-11/12 md:w-11/12  px-2 md:px-4 py-2 md:py-2 gap-2 md:gap-4 flex sm:flex-row flex-wrap items-center justify-center mt-5">
         <button
           onClick={() => handleCategoryClick(null)} // Tất cả bài viết
-          className={`rounded-full px-4 py-2 text-sm sm:text-base transition duration-300 ${
-            activeCategory === null
-              ? "bg-blue-800 text-white"
-              : "hover:bg-blue-50"
-          }`}
+          className={`rounded-full px-2 py-2 md:py-2 md:px-4 text-sm sm:text-base transition duration-300 ${activeCategory === null
+            ? "bg-blue-800 text-white"
+            : "hover:bg-blue-50"
+            }`}
         >
-          Tất cả bài viết
+          Tất cả
         </button>
         {POST_CATEGORIES.map((category) => (
           <button
             key={category}
             onClick={() => handleCategoryClick(category)}
-            className={`rounded-full px-4 py-2 text-sm sm:text-base transition duration-300 ${
-              activeCategory === category
-                ? "bg-blue-800 text-white"
-                : "hover:bg-blue-50"
-            }`}
+            className={`rounded-full px-2 py-2 md:py-2 md:px-4 text-sm sm:text-base transition duration-300 ${activeCategory === category
+              ? "bg-blue-800 text-white"
+              : "hover:bg-blue-50"
+              }`}
           >
             {category}
           </button>

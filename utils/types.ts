@@ -9,6 +9,7 @@ export interface PostDetail {
   createdAt: string;
   isDraft?: boolean;
   isFeatured?: boolean;
+  featuredOrder?: number | null;
 }
 
 export interface IncomingPost {
