@@ -2,6 +2,7 @@ import {
   GetServerSideProps,
   NextPage,
 } from "next";
+import React, { useMemo } from "react";
 import parse from "html-react-parser";
 import DefaultLayout from "../../components/layout/DefaultLayout";
 import db from "../../utils/db";
@@ -9,7 +10,8 @@ import Post from "../../models/Post";
 import Share from "../../components/common/Share";
 import Link from "next/link";
 import Image from "next/image";
-import { trimText } from "../../utils/helper";
+import { trimText, extractHeadingsAndInjectIds } from "../../utils/helper";
+import { TableOfContents } from "../../components/common/TableOfContents";
 
 type PostData = {
   id: string;
@@ -67,6 +69,10 @@ const host = "https://btacademy.com.vn/bai-viet";
 export const APP_NAME = "BT Academy";
 const SinglePost: NextPage<Props> = ({ post }) => {
   const { title, content, meta, slug, thumbnail, category, createdAt, recentPosts } = post;
+
+  const { processedHtml, headings } = useMemo(() => {
+    return extractHeadingsAndInjectIds(content);
+  }, [content]);
 
   return (
     <DefaultLayout>
@@ -199,7 +205,8 @@ const SinglePost: NextPage<Props> = ({ post }) => {
                     margin: 0;
                   }
                 `}</style>
-                {parse(content)}
+                <TableOfContents headings={headings} />
+                {parse(processedHtml)}
               </div>
 
               {/* Author Box */}

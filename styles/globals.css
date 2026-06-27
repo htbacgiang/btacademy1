@@ -6948,3 +6948,42 @@ html {
 .service-text-orange {
   color: #b45309;
 }
+
+/* Styling for tables in blog articles and course details */
+.blog table, .prose table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  width: max-content !important;
+  margin: 1.5em auto !important;
+  border-collapse: collapse;
+  border: 1px solid #d1d5db;
+}
+
+.blog td, .blog th, .prose td, .prose th {
+  padding: 0.5em 0.5em;
+  border: 1px solid #d1d5db;
+  text-align: left;
+  vertical-align: top;
+}
+
+.blog th, .prose th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+}
+
+.blog td p, .blog th p, .prose td p, .prose th p {
+  text-align: left !important;
+  margin: 0;
+}
+
+/* Hide scrollbars inside article/blog content globally while maintaining scrolling functionality */
+.blog, .prose {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE 10+ */
+}
+
+.blog::-webkit-scrollbar, .prose::-webkit-scrollbar {
+  display: none !important; /* Safari and Chrome */
+}

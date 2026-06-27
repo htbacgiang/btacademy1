@@ -24,3 +24,54 @@ export const trimText = (text: string, trimBy: number) => {
   if (text.length <= trimBy) return text;
   return text.substring(0, trimBy).trim() + "...";
 };
+
+const decodeHtmlEntities = (str: string) => {
+  return str
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&nbsp;/g, " ");
+};
+
+export const extractHeadingsAndInjectIds = (htmlString: string) => {
+  const headings: { text: string; id: string; level: number }[] = [];
+  let headingIndex = 0;
+
+  const processedHtml = htmlString.replace(
+    /<(h2|h3)([^>]*)>([\s\S]*?)<\/\1>/gi,
+    (match, tag, attributes, contentText) => {
+      const rawText = contentText.replace(/<[^>]+>/g, "").trim();
+      if (!rawText) return match;
+
+      const cleanText = decodeHtmlEntities(rawText);
+
+      const baseId = cleanText
+        .toLowerCase()
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "d")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
+      
+      const id = `${baseId}-${headingIndex++}`;
+
+      headings.push({
+        text: cleanText,
+        id,
+        level: tag.toLowerCase() === "h2" ? 2 : 3
+      });
+
+      if (/id=/i.test(attributes)) {
+        return match;
+      }
+
+      return `<${tag}${attributes} id="${id}">${contentText}</${tag}>`;
+    }
+  );
+
+  return { processedHtml, headings };
+};

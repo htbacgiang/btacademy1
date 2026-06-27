@@ -10,8 +10,8 @@ async function connectDb() {
     }
     if (mongoose.connections.length > 0) {
       connection.isConnected = mongoose.connections[0].readyState;
-      if (connection.isConnected === 1) {
-        console.log("Use previous connection to the database.");
+      if (connection.isConnected === 1 || connection.isConnected === 2) {
+        console.log("Use previous connection to the database (connected or connecting).");
         return;
       }
       await mongoose.disconnect();
@@ -62,14 +62,9 @@ async function connectDb() {
 }
 
 async function disconnectDb() {
-  if (connection.isConnected) {
-    if (process.env.NODE_ENV === "production") {
-      await mongoose.disconnect();
-      connection.isConnected = false;
-    } else {
-      console.log("not disconnecting from the database.");
-    }
-  }
+  // In Next.js/serverless environment, we keep the connection alive to reuse it via connection pooling.
+  // Disconnecting causes subsequent/concurrent database queries to fail, leading to 404 errors.
+  console.log("Database connection kept alive.");
 }
 const db = { connectDb, disconnectDb };
 export default db;
