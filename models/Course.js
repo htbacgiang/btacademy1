@@ -100,7 +100,7 @@ const courseSchema = new mongoose.Schema(
     locations: {
       type: [String],
       required: [true, "Địa điểm là bắt buộc"],
-      enum: ["CS1 - Hà Nội", "CS2 - Thái Nguyên"],
+      enum: ["CS1 - Hà Nội", "CS2 - Thái Nguyên", "Online", "Tại Doanh nghiệp"],
       validate: {
         validator: function(v) {
           return v && v.length > 0;

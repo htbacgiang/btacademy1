@@ -1,4 +1,3 @@
-// Mapping địa chỉ chi tiết cho các cơ sở
 export const locationMapping = {
   "CS1 - Hà Nội": {
     name: "Cơ sở 1 - Hà Nội",
@@ -7,6 +6,14 @@ export const locationMapping = {
   "CS2 - Thái Nguyên": {
     name: "Cơ sở 2 - Thái Nguyên",
     address: "Tòa nhà Viettel, Số 4 Hoàng Văn Thụ"
+  },
+  "Online": {
+    name: "Online",
+    address: "Học trực tuyến qua Zoom/Meet"
+  },
+  "Tại Doanh nghiệp": {
+    name: "Tại Doanh nghiệp",
+    address: "Đào tạo trực tiếp tại văn phòng doanh nghiệp"
   }
 };
 

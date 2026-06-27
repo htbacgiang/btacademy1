@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Editor from '../../../components/univisport/Editor';
 import { debounce } from 'lodash';
+import { locationOptions } from '../../../utils/locationMapping';
 
 // Vietnamese to ASCII for slug generation
 const vietnameseToAscii = (str) => {
@@ -52,21 +53,21 @@ const generateSlug = (title) =>
 // Transform Cloudinary URL to relative path
 const toRelativePath = (url) => {
   if (!url) return '';
-  
+
   // If it's already a relative path, return as is
   if (url.startsWith('/') && !url.includes('res.cloudinary.com')) {
     return url;
   }
-  
+
   // If it's not a Cloudinary URL, return as is
   if (!url.includes('res.cloudinary.com')) {
     return url;
   }
-  
+
   try {
     const urlObj = new URL(url);
     const pathParts = urlObj.pathname.split('/').filter(part => part);
-    
+
     // Find the upload folder and extract the path after it
     const uploadIndex = pathParts.findIndex(part => part === 'upload');
     if (uploadIndex !== -1 && pathParts.length > uploadIndex + 1) {
@@ -74,12 +75,12 @@ const toRelativePath = (url) => {
       const versionIndex = uploadIndex + 1;
       const isVersion = pathParts[versionIndex] && pathParts[versionIndex].startsWith('v') && !isNaN(pathParts[versionIndex].slice(1));
       const startIndex = isVersion ? versionIndex + 1 : versionIndex;
-      
+
       if (pathParts.length > startIndex) {
         return `/${pathParts.slice(startIndex).join('/')}`;
       }
     }
-    
+
     // Fallback: return the last part of the path
     return `/${pathParts[pathParts.length - 1]}`;
   } catch (error) {
@@ -91,29 +92,29 @@ const toRelativePath = (url) => {
 // Transform relative path to full Cloudinary URL
 const toCloudinaryUrl = (relativePath) => {
   if (!relativePath) return '';
-  
+
   // If it's already a full URL, return as is
   if (relativePath.startsWith('http')) {
     return relativePath;
   }
-  
+
   // If it's already a Cloudinary URL, return as is
   if (relativePath.includes('res.cloudinary.com')) {
     return relativePath;
   }
-  
+
   // Convert relative path to full Cloudinary URL
   const cloudName = process.env.NEXT_PUBLIC_CLOUD_NAME || 'ds3hfu1uz';
   const folder = process.env.CLOUDINARY_FOLDER || 'btacademy';
-  
+
   // Clean the path
   let cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
-  
+
   // If the path already contains the folder, don't add it again
   if (cleanPath.startsWith(`${folder}/`)) {
     return `https://res.cloudinary.com/${cloudName}/image/upload/${cleanPath}`;
   }
-  
+
   // Add the folder if it's not already there
   return `https://res.cloudinary.com/${cloudName}/image/upload/${folder}/${cleanPath}`;
 };
@@ -303,7 +304,7 @@ export default function CreateCoursePage() {
   };
 
   const updateFAQ = (index, field, value) => {
-    const updatedFAQ = formData.faq.map((faqItem, i) => 
+    const updatedFAQ = formData.faq.map((faqItem, i) =>
       i === index ? { ...faqItem, [field]: value } : faqItem
     );
     dispatch({
@@ -642,11 +643,6 @@ export default function CreateCoursePage() {
   return (
     <AdminLayout title={_id ? 'Sửa khóa học' : 'Thêm khóa học'}>
       <div className="product-form-container">
-        <div className="product-form-header">
-          <h2 className='uppercase'>{_id ? 'Sửa khóa học' : 'Thêm khóa học mới'}</h2>
-          <p>Quản lý thông tin khóa học của bạn một cách dễ dàng</p>
-        </div>
-
         {errors.length > 0 && (
           <div className="error-messages">
             {errors.map((error, idx) => (
@@ -673,7 +669,7 @@ export default function CreateCoursePage() {
             {/* Basic Information Section */}
             <div className="form-section">
               <h3 className="form-section-title">📝 Thông tin cơ bản</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-10 gap-4">
                 <div className="form-group md:col-span-3">
                   <label className="form-label required" htmlFor="maKhoaHoc">
@@ -757,11 +753,11 @@ export default function CreateCoursePage() {
             {/* Image Upload Section */}
             <div className="form-section">
               <h3 className="form-section-title">🖼️ Hình ảnh khóa học</h3>
-              
+
               <div className="image-upload-section">
                 <div
                   {...getRootProps()}
-                  className={`${isDragActive ? 'drag-active' : ''}`}
+                  className={`dropzone-area ${isDragActive ? 'drag-active' : ''}`}
                   role="button"
                   aria-label="Tải lên hoặc thả hình ảnh"
                   tabIndex={0}
@@ -775,36 +771,18 @@ export default function CreateCoursePage() {
                   <input {...getInputProps()} />
                   <div className="upload-icon">📸</div>
                   <p className="upload-text">
-                    Thả tập tin vào đây hoặc nhấp để tải lên
+                    Thả tập tin hoặc nhấp để tải lên
                   </p>
                   <p className="upload-hint">
-                    (Chỉ hỗ trợ JPEG, JPG, PNG, WEBP dưới 5MB - Chỉ 1 ảnh duy nhất)
+                    (JPEG, PNG, WEBP dưới 5MB)
                   </p>
                 </div>
-                
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(true)}
-                  className="select-existing-btn"
-                >
-                  🖼️ Chọn ảnh đã upload
-                </button>
-              </div>
 
-              {uploading && (
-                <div className="uploading-indicator">
-                  <div className="loading-spinner"></div>
-                  <span>Đang tải ảnh...</span>
-                </div>
-              )}
-
-              {image && (
-                <div className="image-preview-single">
+                {image && (
                   <div className="image-preview-item">
                     <img
                       src={image.preview}
                       alt="Ảnh khóa học"
-                      className="w-full h-32 object-cover rounded"
                     />
                     <button
                       type="button"
@@ -815,14 +793,31 @@ export default function CreateCoursePage() {
                       ×
                     </button>
                   </div>
+                )}
+
+                <div className="image-upload-actions">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                    className="select-existing-btn"
+                  >
+                    🖼️ Chọn ảnh đã upload
+                  </button>
+
+                  {uploading && (
+                    <div className="uploading-indicator">
+                      <div className="loading-spinner"></div>
+                      <span>Đang tải ảnh...</span>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Course Details Section */}
             <div className="form-section">
               <h3 className="form-section-title">⚙️ Chi tiết khóa học</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-group">
                   <label className="form-label required" htmlFor="level">
@@ -850,42 +845,26 @@ export default function CreateCoursePage() {
                     Địa điểm
                   </label>
                   <div className="space-y-2">
-                    <div className="form-checkbox">
-                      <input
-                        type="checkbox"
-                        id="location-cs1"
-                        checked={formData.locations.includes('CS1 - Hà Nội')}
-                        onChange={(e) => {
-                          const newLocations = e.target.checked
-                            ? [...formData.locations, 'CS1 - Hà Nội']
-                            : formData.locations.filter(loc => loc !== 'CS1 - Hà Nội');
-                          dispatch({ type: 'UPDATE_FIELD', field: 'locations', value: newLocations });
-                        }}
-                        aria-label="Cơ sở Hà Nội"
-                      />
-                      <label htmlFor="location-cs1">
-                        <strong>CS1 - Hà Nội</strong><br />
-                        <span className="text-sm text-gray-600">19 Nguyễn Gia Thiều, Hoàn Kiếm</span>
-                      </label>
-                    </div>
-                    <div className="form-checkbox">
-                      <input
-                        type="checkbox"
-                        id="location-cs2"
-                        checked={formData.locations.includes('CS2 - Thái Nguyên')}
-                        onChange={(e) => {
-                          const newLocations = e.target.checked
-                            ? [...formData.locations, 'CS2 - Thái Nguyên']
-                            : formData.locations.filter(loc => loc !== 'CS2 - Thái Nguyên');
-                          dispatch({ type: 'UPDATE_FIELD', field: 'locations', value: newLocations });
-                        }}
-                        aria-label="Cơ sở Thái Nguyên"
-                      />
-                      <label htmlFor="location-cs2">
-                        <strong>CS2 - Thái Nguyên</strong><br />
-                        <span className="text-sm text-gray-600">Tòa nhà Viettel, Số 4 Hoàng Văn Thụ</span>
-                      </label>
-                    </div>
+                    {locationOptions.map((option, index) => (
+                      <div className="form-checkbox" key={option.code}>
+                        <input
+                          type="checkbox"
+                          id={`location-${index}`}
+                          checked={formData.locations.includes(option.code)}
+                          onChange={(e) => {
+                            const newLocations = e.target.checked
+                              ? [...formData.locations, option.code]
+                              : formData.locations.filter(loc => loc !== option.code);
+                            dispatch({ type: 'UPDATE_FIELD', field: 'locations', value: newLocations });
+                          }}
+                          aria-label={option.label}
+                        />
+                        <label htmlFor={`location-${index}`}>
+                          <strong>{option.code}</strong><br />
+                          <span className="text-sm text-gray-600">{option.address}</span>
+                        </label>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -986,7 +965,7 @@ export default function CreateCoursePage() {
             {/* Course Options Section */}
             <div className="form-section">
               <h3 className="form-section-title">🔧 Tùy chọn khóa học</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="form-checkbox">
                   <input
@@ -1035,7 +1014,7 @@ export default function CreateCoursePage() {
                   </button>
                 )}
               </div>
-              
+
               {formData.faq.map((faqItem, index) => (
                 <div key={index} className="faq-item border rounded-lg p-4 mb-4 bg-gray-50 dark:bg-gray-800">
                   <div className="flex justify-between items-start mb-3">
@@ -1051,7 +1030,7 @@ export default function CreateCoursePage() {
                       ✕ Xóa
                     </button>
                   </div>
-                  
+
                   <div className="grid gap-3">
                     <div className="form-group">
                       <label className="form-label required">
@@ -1066,7 +1045,7 @@ export default function CreateCoursePage() {
                         required
                       />
                     </div>
-                    
+
                     <div className="form-group">
                       <label className="form-label required">
                         Câu trả lời
@@ -1083,7 +1062,7 @@ export default function CreateCoursePage() {
                   </div>
                 </div>
               ))}
-              
+
               <button
                 type="button"
                 onClick={addFAQ}
@@ -1160,7 +1139,7 @@ export default function CreateCoursePage() {
         )}
         <ToastContainer />
       </div>
-      
+
       <style jsx>{`
         .faq-item {
           transition: all 0.2s ease-in-out;

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaSave, FaArrowLeft, FaPlus, FaTrash, FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUser, FaUsers, FaTag } from 'react-icons/fa';
+import { locationOptions } from '../../../../utils/locationMapping';
 
 export default function EditClassSchedulePage() {
   const router = useRouter();
@@ -878,42 +879,26 @@ export default function EditClassSchedulePage() {
                     Địa điểm học <span className="text-red-500">*</span>
                   </label>
                   <div className="space-y-3">
-                    <div className="flex items-start space-x-3">
-                      <input
-                        type="checkbox"
-                        id="location-cs1"
-                        checked={formData.locations.includes('CS1 - Hà Nội')}
-                        onChange={(e) => {
-                          const newLocations = e.target.checked
-                            ? [...formData.locations, 'CS1 - Hà Nội']
-                            : formData.locations.filter(loc => loc !== 'CS1 - Hà Nội');
-                          setFormData(prev => ({ ...prev, locations: newLocations }));
-                        }}
-                        className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <label htmlFor="location-cs1" className="text-sm text-gray-700 dark:text-gray-300">
-                        <div className="font-medium">CS1 - Hà Nội</div>
-                        <div className="text-xs text-gray-500">19 Nguyễn Gia Thiều, Hoàn Kiếm</div>
-                      </label>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <input
-                        type="checkbox"
-                        id="location-cs2"
-                        checked={formData.locations.includes('CS2 - Thái Nguyên')}
-                        onChange={(e) => {
-                          const newLocations = e.target.checked
-                            ? [...formData.locations, 'CS2 - Thái Nguyên']
-                            : formData.locations.filter(loc => loc !== 'CS2 - Thái Nguyên');
-                          setFormData(prev => ({ ...prev, locations: newLocations }));
-                        }}
-                        className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <label htmlFor="location-cs2" className="text-sm text-gray-700 dark:text-gray-300">
-                        <div className="font-medium">CS2 - Thái Nguyên</div>
-                        <div className="text-xs text-gray-500">Tòa nhà Viettel, Số 4 Hoàng Văn Thụ</div>
-                      </label>
-                    </div>
+                    {locationOptions.map((option, index) => (
+                      <div className="flex items-start space-x-3" key={option.code}>
+                        <input
+                          type="checkbox"
+                          id={`location-${index}`}
+                          checked={formData.locations.includes(option.code)}
+                          onChange={(e) => {
+                            const newLocations = e.target.checked
+                              ? [...formData.locations, option.code]
+                              : formData.locations.filter(loc => loc !== option.code);
+                            setFormData(prev => ({ ...prev, locations: newLocations }));
+                          }}
+                          className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor={`location-${index}`} className="text-sm text-gray-700 dark:text-gray-300">
+                          <div className="font-medium">{option.code}</div>
+                          <div className="text-xs text-gray-500">{option.address}</div>
+                        </label>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
