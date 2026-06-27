@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://btacademy.com.vn/
+
+# Sitemaps
+Sitemap: https://btacademy.com.vn/sitemap.xml

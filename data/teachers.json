@@ -1,0 +1,25 @@
+[
+    {
+        "id": 1,
+        "name": "Lê Bích Thủy",
+        "role": "MC/BTV chuyên nghiệp",
+        "imageUrl": "/images/bt.jpg",
+        "description": "MC/BTV với 8 năm kinh nghiệm trong lĩnh vực báo chí, truyền hình. Hiện đang làm việc tại Đài Truyền hình Kỹ thuật số VTC và Báo Xây dựng.",
+        "experience": "8+ năm kinh nghiệm",
+        "specialties": ["MC/BTV Truyền hình", "MC sự kiện", "Đào tạo MC", "Quản trị Báo chí Truyền thông"],
+        "achievements": [
+          "• MC/BTV Đài Truyền hình Kỹ thuật số VTC",
+          "• MC/BTV Báo Xây dựng",
+          "• Thạc sĩ Quản trị Báo chí Truyền thông",
+          "• 8 năm kinh nghiệm trong lĩnh vực báo chí, truyền hình",
+          "• 8 năm kinh nghiệm dẫn sự kiện",
+          "• 7 năm kinh nghiệm đào tạo trong lĩnh vực MC"
+        ],
+        "socialLinks": {
+          "facebook": "https://www.facebook.com/jerry.dcy",
+          "instagram": "https://www.instagram.com/jerry.dcy",
+          "linkedin": "https://www.linkedin.com/in/b%C3%ADch-th%E1%BB%A7y-158269383/"
+        }
+      }
+
+]
