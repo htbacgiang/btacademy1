@@ -1,25 +1,84 @@
 [
-    {
-        "id": 1,
-        "name": "Lê Bích Thủy",
-        "role": "MC/BTV chuyên nghiệp",
-        "imageUrl": "/images/bt.jpg",
-        "description": "MC/BTV với 8 năm kinh nghiệm trong lĩnh vực báo chí, truyền hình. Hiện đang làm việc tại Đài Truyền hình Kỹ thuật số VTC và Báo Xây dựng.",
-        "experience": "8+ năm kinh nghiệm",
-        "specialties": ["MC/BTV Truyền hình", "MC sự kiện", "Đào tạo MC", "Quản trị Báo chí Truyền thông"],
-        "achievements": [
-          "• MC/BTV Đài Truyền hình Kỹ thuật số VTC",
-          "• MC/BTV Báo Xây dựng",
-          "• Thạc sĩ Quản trị Báo chí Truyền thông",
-          "• 8 năm kinh nghiệm trong lĩnh vực báo chí, truyền hình",
-          "• 8 năm kinh nghiệm dẫn sự kiện",
-          "• 7 năm kinh nghiệm đào tạo trong lĩnh vực MC"
-        ],
-        "socialLinks": {
-          "facebook": "https://www.facebook.com/jerry.dcy",
-          "instagram": "https://www.instagram.com/jerry.dcy",
-          "linkedin": "https://www.linkedin.com/in/b%C3%ADch-th%E1%BB%A7y-158269383/"
-        }
-      }
-
+  {
+    "id": 1,
+    "name": "Lê Bích Thủy",
+    "role": "MC/BTV chuyên nghiệp",
+    "imageUrl": "/images/bt.jpg",
+    "description": "MC/BTV với 8 năm kinh nghiệm trong lĩnh vực báo chí, truyền hình. Hiện đang làm việc tại Đài Truyền hình Kỹ thuật số VTC và Báo Xây dựng.",
+    "experience": "8+ năm kinh nghiệm",
+    "specialties": [
+      "MC/BTV Truyền hình",
+      "MC sự kiện",
+      "Đào tạo MC",
+      "Quản trị Báo chí Truyền thông"
+    ],
+    "achievements": [
+      "• MC/BTV Đài Truyền hình Kỹ thuật số VTC",
+      "• MC/BTV Báo Xây dựng",
+      "• Thạc sĩ Quản trị Báo chí Truyền thông",
+      "• 8 năm kinh nghiệm trong lĩnh vực báo chí, truyền hình",
+      "• 8 năm kinh nghiệm dẫn sự kiện",
+      "• 7 năm kinh nghiệm đào tạo trong lĩnh vực MC"
+    ],
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/jerry.dcy",
+      "instagram": "https://www.instagram.com/jerry.dcy",
+      "linkedin": "https://www.linkedin.com/in/b%C3%ADch-th%E1%BB%A7y-158269383/"
+    }
+  },
+  {
+    "id": 2,
+    "name": "MC Mai Chi",
+    "role": "MC/Biên tập viên truyền hình",
+    "imageUrl": "/images/mc-mai-chi.jpg",
+    "description": "MC/BTV Mai Chi sở hữu hơn 5 năm kinh nghiệm trong lĩnh vực truyền hình, sự kiện và đào tạo kỹ năng dẫn chương trình. Cô được biết đến với phong cách dẫn tự nhiên, duyên dáng, chuyên nghiệp và khả năng xử lý tình huống linh hoạt.",
+    "experience": "5+ năm kinh nghiệm",
+    "specialties": [
+      "MC/BTV Truyền hình",
+      "MC sự kiện",
+      "MC doanh nghiệp",
+      "Đào tạo kỹ năng dẫn chương trình",
+      "Kỹ năng giao tiếp & thuyết trình"
+    ],
+    "achievements": [
+      "• MC/BTV tại các chương trình truyền hình và sự kiện lớn",
+      "• Giảng viên đào tạo kỹ năng MC và thuyết trình",
+      "• Chuyên gia đào tạo kỹ năng giao tiếp trước công chúng",
+      "• Được nhiều doanh nghiệp và tổ chức lựa chọn đào tạo MC nội bộ"
+    ],
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/mc.maichi",
+      "instagram": "https://www.instagram.com/mc.maichi",
+      "linkedin": "https://www.linkedin.com/in/mc-mai-chi/"
+    }
+  },
+  {
+    "id": 3,
+    "name": "BTV Thùy Linh",
+    "role": "BTV/MC truyền hình chuyên nghiệp",
+    "imageUrl": "/images/mc-thuy-linh.jpg",
+    "description": "BTV/MC Thùy Linh với hơn 6 năm kinh nghiệm trong lĩnh vực báo chí, truyền hình và truyền thông. Cô có thế mạnh về biên tập nội dung, dẫn chương trình, phỏng vấn nhân vật và đào tạo kỹ năng truyền thông chuyên nghiệp.",
+    "experience": "6+ năm kinh nghiệm",
+    "specialties": [
+      "Biên tập viên Truyền hình",
+      "MC/BTV",
+      "Phỏng vấn & dẫn chuyên đề",
+      "Đào tạo MC",
+      "Kỹ năng nói trước công chúng",
+      "Truyền thông doanh nghiệp"
+    ],
+    "achievements": [
+      "• BTV/MC tại các chương trình truyền hình và chuyên mục thời sự",
+      "• Hơn 6 năm kinh nghiệm trong lĩnh vực báo chí và truyền hình",
+      "• Hơn 5 năm kinh nghiệm dẫn chương trình và sự kiện",
+      "• Có kinh nghiệm biên tập nội dung truyền hình và truyền thông doanh nghiệp",
+      "• Đào tạo kỹ năng MC, thuyết trình và giao tiếp trước công chúng",
+      "• Tham gia đào tạo MC cho nhiều chương trình và tổ chức chuyên nghiệp"
+    ],
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/btv.thuylinh",
+      "instagram": "https://www.instagram.com/btv.thuylinh",
+      "linkedin": "https://www.linkedin.com/in/btv-thuy-linh/"
+    }
+  }
 ]
