@@ -192,10 +192,13 @@ const SEOForm: FC<Props> = ({
     const slug = slugify(title.toLowerCase(), {
       strict: true,
     });
-    const newValues = { ...values, slug };
-    setValues(newValues);
-    onChange(newValues);
-  }, [title, onChange]);
+    setValues((prev) => {
+      if (prev.slug === slug) return prev;
+      const newValues = { ...prev, slug };
+      onChange(newValues);
+      return newValues;
+    });
+  }, [title]);
 
   useEffect(() => {
     if (initialValue) {

@@ -27,7 +27,11 @@ const handler: NextApiHandler = async (req, res) => {
 const getFeaturedPosts: NextApiHandler = async (req, res) => {
   try {
     await db.connectDb();
-    const posts = await Post.find({ isFeatured: true, isDraft: { $ne: true } })
+    const posts = await Post.find({
+      isFeatured: true,
+      isDraft: { $ne: true },
+      $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+    })
       .sort({ featuredOrder: 1 })
       .select("-content")
       .lean();

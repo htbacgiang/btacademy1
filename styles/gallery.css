@@ -4,13 +4,13 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-33.33%);
   }
 }
 
 @keyframes scroll-left-to-right {
   0% {
-    transform: translateX(-50%);
+    transform: translateX(-33.33%);
   }
   100% {
     transform: translateX(0);
@@ -30,11 +30,11 @@
 }
 
 .animate-scroll-right-to-left {
-  animation: scroll-right-to-left 30s linear infinite;
+  animation: scroll-right-to-left 40s linear infinite;
 }
 
 .animate-scroll-left-to-right {
-  animation: scroll-left-to-right 30s linear infinite;
+  animation: scroll-left-to-right 40s linear infinite;
 }
 
 /* Gallery container fade in */
@@ -60,31 +60,31 @@
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .animate-scroll-right-to-left {
-    animation: scroll-right-to-left 25s linear infinite;
+    animation: scroll-right-to-left 35s linear infinite;
   }
   
   .animate-scroll-left-to-right {
-    animation: scroll-left-to-right 25s linear infinite;
+    animation: scroll-left-to-right 35s linear infinite;
   }
 }
 
 @media (max-width: 768px) {
   .animate-scroll-right-to-left {
-    animation: scroll-right-to-left 20s linear infinite;
+    animation: scroll-right-to-left 28s linear infinite;
   }
   
   .animate-scroll-left-to-right {
-    animation: scroll-left-to-right 20s linear infinite;
+    animation: scroll-left-to-right 28s linear infinite;
   }
 }
 
 @media (max-width: 480px) {
   .animate-scroll-right-to-left {
-    animation: scroll-right-to-left 15s linear infinite;
+    animation: scroll-right-to-left 22s linear infinite;
   }
   
   .animate-scroll-left-to-right {
-    animation: scroll-left-to-right 15s linear infinite;
+    animation: scroll-left-to-right 22s linear infinite;
   }
 }
 

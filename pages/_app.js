@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import "../styles/toast.css";
 import "../styles/dashboard.css";
+import "../styles/gallery.css";
 import { SessionProvider } from "next-auth/react"
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

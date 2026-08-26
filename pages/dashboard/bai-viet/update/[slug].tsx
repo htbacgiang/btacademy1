@@ -77,17 +77,17 @@ export const getServerSideProps: GetServerSideProps<ServerSideResponse> = async 
       props: {
         post: {
           id: _id.toString(),
-          title,
-          content,
-          tags: tags.join(", "),
+          title: title || "",
+          content: content || "",
+          tags: Array.isArray(tags) ? tags.join(", ") : (tags || ""),
           thumbnail: thumbnail?.url || "",
-          slug,
+          slug: slug || "",
           category: normalizePostCategory(category),
-          meta,
+          meta: meta || "",
           focusKeyword: "",
-          isDraft: isDraft || false, // Nếu bài viết đã publish thì isDraft = false
-          isFeatured: isFeatured || false, // Bài viết nổi bật
-          author: author ? author.toString() : "",
+          isDraft: isDraft ?? false, // Nếu bài viết đã publish thì isDraft = false
+          isFeatured: isFeatured ?? false, // Bài viết nổi bật
+          author: author ? (typeof author === "object" && (author as any)._id ? (author as any)._id.toString() : author.toString()) : "",
         },
       },
     };

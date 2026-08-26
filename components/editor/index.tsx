@@ -258,7 +258,7 @@ const Editor: FC<Props> = ({
 
   const handleSubmit = () => {
     if (!editor) return;
-    onSubmit({ ...post, content: editor.getHTML(), isDraft, isFeatured });
+    onSubmit({ ...post, content: editor.getHTML(), isDraft: false, isFeatured });
   };
 
   const saveDraft = useCallback(async () => {
@@ -367,18 +367,7 @@ const Editor: FC<Props> = ({
     }
   }, [post.id]);
 
-  // Tự động lưu nháp mỗi 30 giây chỉ khi tạo bài viết mới
-  useEffect(() => {
-    if (!isCreatingNewPost) return;
 
-    const autoSaveInterval = setInterval(() => {
-      if (editor && (post.title || editor.getHTML().trim())) {
-        saveDraft();
-      }
-    }, 30000);
-
-    return () => clearInterval(autoSaveInterval);
-  }, [saveDraft, editor, post.title, isCreatingNewPost]);
 
 
 

@@ -23,12 +23,16 @@ const Create: NextPage<Props> = () => {
       // submit our post
       const { data } = await axios.post("/api/posts", formData);
       toast.success("Bài viết mới đã được tạo thành công!");
-      router.push("/dashboard/bai-viet/update/" + data.post.slug);
+      if (data?.post?.slug) {
+        window.location.href = "/dashboard/bai-viet/update/" + encodeURIComponent(data.post.slug);
+      } else {
+        router.push("/dashboard/bai-viet");
+      }
     } catch (error: any) {
-      console.log(error.response.data);
-      toast.error("Có lỗi xảy ra khi tạo bài viết mới!");
+      console.log(error?.response?.data || error);
+      toast.error(error?.response?.data?.error || error?.response?.data?.message || "Có lỗi xảy ra khi tạo bài viết mới!");
+      setCreating(false);
     }
-    setCreating(false);
   };
   return (
     <AdminLayout title="Thêm bài viết mới">

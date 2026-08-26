@@ -41,7 +41,10 @@ export const readPostsFromDb = async (
   const finalSkip = skip || (limit && pageNo ? limit * pageNo : 0);
   await db.connectDb();
   
-  const filter = includeDrafts ? { deletedAt: null } : { isDraft: { $ne: true }, deletedAt: null };
+  const notDeletedFilter = { $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }] };
+  const filter = includeDrafts
+    ? notDeletedFilter
+    : { isDraft: { $ne: true }, ...notDeletedFilter };
   
   let query = Post.find(filter)
     .sort({ createdAt: "desc" })

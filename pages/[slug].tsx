@@ -216,13 +216,23 @@ export const getServerSideProps: GetServerSideProps<
   try {
     await db.connectDb();
 
-    const post = await Post.findOne({ slug: params?.slug, isDirectPost: true });
+    const notDeletedAndNotDraftFilter = {
+      isDraft: { $ne: true },
+      $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+    };
+
+    const post = await Post.findOne({
+      slug: params?.slug,
+      isDirectPost: true,
+      ...notDeletedAndNotDraftFilter,
+    });
     if (!post) {
       return { notFound: true };
     }
 
     const posts = await Post.find({
       _id: { $ne: post._id },
+      ...notDeletedAndNotDraftFilter,
     })
       .sort({ createdAt: -1 })
       .limit(5)

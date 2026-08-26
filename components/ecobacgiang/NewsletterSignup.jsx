@@ -10,7 +10,7 @@ const NewsletterSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!email || !isAgreed) {
       toast.error('Vui lòng nhập email và đồng ý với chính sách bảo mật');
       return;
@@ -69,7 +69,7 @@ const NewsletterSignup = () => {
           </div>
 
           {/* Subtitle */}
-          <p className="text-xl text-gray-600 mb-12 max-w-6xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 mb-12 mx-auto leading-relaxed">
             Nhận thông tin về khóa học mới, ưu đãi đặc biệt và mẹo học MC hiệu quả từ BT Academy
           </p>
 
@@ -95,7 +95,7 @@ const NewsletterSignup = () => {
                       </svg>
                     </div>
                   </div>
-                  
+
                   <button
                     type="submit"
                     disabled={isLoading}
@@ -120,8 +120,8 @@ const NewsletterSignup = () => {
 
               {/* Privacy Policy Checkbox */}
               <div className="flex items-center justify-center">
-                <label className="flex items-center cursor-pointer group">
-                  <div className="relative">
+                <label className="inline-flex items-center gap-2 cursor-pointer group" style={{ flexWrap: 'nowrap' }}>
+                  <div className="relative flex-shrink-0" style={{ width: 20, height: 20 }}>
                     <input
                       type="checkbox"
                       checked={isAgreed}
@@ -130,15 +130,15 @@ const NewsletterSignup = () => {
                       disabled={isLoading}
                     />
                     {isAgreed && (
-                      <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
                       </div>
                     )}
                   </div>
-                  <span className="ml-3 text-gray-600 group-hover:text-gray-800 transition-colors duration-200">
-                    Tôi đồng ý với{' '}
+                  <span className="text-gray-600 group-hover:text-gray-800 transition-colors duration-200 whitespace-nowrap">
+                    Đồng ý với{' '}
                     <Link href="/chinh-sach-bao-mat" className="text-green-600 hover:text-green-700 font-medium underline">
                       chính sách bảo mật
                     </Link>{' '}
@@ -148,7 +148,7 @@ const NewsletterSignup = () => {
               </div>
             </form>
 
-    
+
           </div>
         </div>
       </div>
