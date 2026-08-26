@@ -5,6 +5,7 @@ interface Props {
   children: ReactNode;
   active?: boolean;
   disabled?: boolean;
+  title?: string;
   onMouseDown?: MouseEventHandler<HTMLButtonElement>;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   onBlur?: () => void;
@@ -14,6 +15,7 @@ const Button: FC<Props> = ({
   children,
   active,
   disabled,
+  title,
   onMouseDown,
   onClick,
   onBlur,
@@ -29,6 +31,7 @@ const Button: FC<Props> = ({
   return (
     <button
       type="button"
+      title={title}
       onMouseDown={onMouseDown}
       onClick={onClick}
       onBlur={onBlur}
