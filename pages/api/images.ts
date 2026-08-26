@@ -1,13 +1,7 @@
 import type { NextApiHandler } from "next";
 import { IncomingForm } from "formidable";
-import { v2 as cloudinary } from "cloudinary";
+import cloudinary from "../../lib/cloudinary";
 
-// Cấu hình Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 // Hàm tiện ích để parse form multipart/form-data
 const parseForm = (req: any): Promise<{ files: any }> => {

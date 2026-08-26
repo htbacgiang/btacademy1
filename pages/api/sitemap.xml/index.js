@@ -1,8 +1,7 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import path from 'path';
 import db from '../../../utils/db';
-import Post from '../../../models/Post.ts';
+import Post from '../../../models/Post';
 import Course from '../../../models/Course';
 
 // Danh sách các trang tĩnh
