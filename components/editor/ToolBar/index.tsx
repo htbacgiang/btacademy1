@@ -1,20 +1,20 @@
-import { FC } from "react";
-import { useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Editor } from "@tiptap/react";
 import { AiFillCaretDown } from "react-icons/ai";
 import { RiDoubleQuotesL } from "react-icons/ri";
+import { MdFormatAlignCenter, MdFormatAlignRight, MdFormatAlignLeft } from "react-icons/md";
 import {
-  BsTypeStrikethrough,
-  BsBraces,
-  BsCode,
-  BsListOl,
-  BsListUl,
   BsTypeBold,
   BsTypeItalic,
   BsTypeUnderline,
+  BsTypeStrikethrough,
+  BsCode,
+  BsBraces,
+  BsListOl,
+  BsListUl,
   BsImageFill,
+  BsImages,
 } from "react-icons/bs";
-import { MdFormatAlignCenter, MdFormatAlignRight, MdFormatAlignLeft } from "react-icons/md";
 
 import Button from "./Button";
 import { getFocusedEditor } from "../EditorUtils";
@@ -25,19 +25,46 @@ import EmbedYoutube from "./EmbedYoutube";
 import EmbedFacebookReels from "./EmbedFacebookReels";
 import EmbedImage from "./EmbedImage";
 import InsertTable from "./InsertTable";
+import FindReplace from "./FindReplace";
 
 interface Props {
   editor: Editor | null;
   onOpenImageClick?(): void;
+  onOpenGalleryClick?(): void;
   onDropdownToggle?(isOpen: boolean): void;
 }
 
 const ToolBar: FC<Props> = ({
   editor,
   onOpenImageClick,
+  onOpenGalleryClick,
   onDropdownToggle,
 }): JSX.Element | null => {
   const [textColor, setTextColor] = useState<string>("#000000");
+  // Track heading level reactively so toolbar re-renders on selection change
+  const [activeHeadingLevel, setActiveHeadingLevel] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const updateHeading = () => {
+      if (editor.isActive("heading", { level: 1 })) setActiveHeadingLevel(1);
+      else if (editor.isActive("heading", { level: 2 })) setActiveHeadingLevel(2);
+      else if (editor.isActive("heading", { level: 3 })) setActiveHeadingLevel(3);
+      else setActiveHeadingLevel(null);
+    };
+
+    editor.on("selectionUpdate", updateHeading);
+    editor.on("transaction", updateHeading);
+
+    // Run once immediately
+    updateHeading();
+
+    return () => {
+      editor.off("selectionUpdate", updateHeading);
+      editor.off("transaction", updateHeading);
+    };
+  }, [editor]);
 
   const handleTextColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!editor) return;
@@ -79,14 +106,12 @@ const ToolBar: FC<Props> = ({
   ];
 
   const getLabel = (): string => {
-    if (!editor) return "Đoạn văn";
-
-    if (editor.isActive("heading", { level: 1 })) return "Tiêu đề 1";
-    if (editor.isActive("heading", { level: 2 })) return "Tiêu đề 2";
-    if (editor.isActive("heading", { level: 3 })) return "Tiêu đề 3";
-
+    if (activeHeadingLevel === 1) return "Tiêu đề 1";
+    if (activeHeadingLevel === 2) return "Tiêu đề 2";
+    if (activeHeadingLevel === 3) return "Tiêu đề 3";
     return "Đoạn văn";
   };
+
 
   const handleLinkSubmit = ({ url, openInNewTab }: linkOption) => {
     if (!editor) return;
@@ -287,13 +312,15 @@ const ToolBar: FC<Props> = ({
         <EmbedYoutube onSubmit={handleEmbedYoutube} onToggle={onDropdownToggle} />
         <EmbedFacebookReels onSubmit={handleEmbedFacebookReels} />
         <EmbedImage onSubmit={handleEmbedImage} />
-        <Button onClick={onOpenImageClick}>
+        <Button onClick={onOpenImageClick} title="Chèn một ảnh">
           <BsImageFill />
+        </Button>
+        <Button onClick={onOpenGalleryClick} title="Chèn gallery ảnh">
+          <BsImages />
         </Button>
         <InsertTable editor={editor} />
         <InsertLink onSubmit={handleLinkSubmit} onToggle={onDropdownToggle} />
-
-
+        <FindReplace editor={editor} onToggle={onDropdownToggle} />
       </div>
       {/* Content Formatting Group */}
       <div className="flex items-center gap-1 flex-wrap">

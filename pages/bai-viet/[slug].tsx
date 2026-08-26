@@ -1,7 +1,4 @@
-import {
-  GetServerSideProps,
-  NextPage,
-} from "next";
+import { GetServerSideProps, NextPage } from "next";
 import React, { useMemo } from "react";
 import parse from "html-react-parser";
 import DefaultLayout from "../../components/layout/DefaultLayout";
@@ -12,6 +9,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { trimText, extractHeadingsAndInjectIds } from "../../utils/helper";
 import { TableOfContents } from "../../components/common/TableOfContents";
+import ArticleImageGallery, {
+  parseArticleGalleryImages,
+} from "../../components/common/ArticleImageGallery";
 
 type PostData = {
   id: string;
@@ -32,7 +32,7 @@ type PostData = {
     slug: string;
     category: string;
     thumbnail?: string;
-    createdAt: string; // Thêm createdAt cho bài viết gần đây
+    createdAt: string;
   }[];
 };
 
@@ -65,237 +65,198 @@ type Props = {
 };
 
 const host = "https://btacademy.com.vn/bai-viet";
-
 export const APP_NAME = "BT Academy";
+
 const SinglePost: NextPage<Props> = ({ post }) => {
-  const { title, content, meta, slug, thumbnail, category, createdAt, recentPosts } = post;
+  if (!post) {
+    return (
+      <DefaultLayout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center p-8 bg-red-50 text-red-600 rounded-xl border border-red-100 max-w-md">
+            <p className="font-medium text-lg">Bài viết không khả dụng</p>
+            <p className="text-sm mt-1 text-red-500">Nội dung bài viết chưa được cập nhật hoặc không tồn tại.</p>
+            <Link href="/" className="mt-4 inline-block px-4 py-2 bg-[#105d97] text-white rounded-lg hover:bg-[#0d4c7a] transition">
+              Quay lại trang chủ
+            </Link>
+          </div>
+        </div>
+      </DefaultLayout>
+    );
+  }
+
+  const { title, content, slug, recentPosts, category, createdAt, authorName, authorAvatar, authorBio } = post;
 
   const { processedHtml, headings } = useMemo(() => {
     return extractHeadingsAndInjectIds(content);
   }, [content]);
 
+  const parseOptions = {
+    replace(domNode: any) {
+      if (
+        domNode.type === "tag" &&
+        domNode.attribs?.["data-article-gallery"] === "true"
+      ) {
+        return (
+          <ArticleImageGallery
+            images={parseArticleGalleryImages(domNode.attribs["data-images"])}
+            title={domNode.attribs["data-title"] || "Thư viện hình ảnh"}
+          />
+        );
+      }
+
+      if (
+        domNode.type === "tag" &&
+        domNode.name === "img" &&
+        domNode.attribs?.["data-caption"] &&
+        domNode.parent?.name !== "figure"
+      ) {
+        const { class: className, style, ...attribs } = domNode.attribs;
+        const caption = attribs["data-caption"];
+        return (
+          <figure className="image-caption-wrapper">
+            {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+            <img className={className || ""} {...attribs} />
+            <figcaption>{caption}</figcaption>
+          </figure>
+        );
+      }
+    },
+  };
+
   return (
     <DefaultLayout>
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col md:flex-row">
-          {/* Main Content - 75% width on md and up */}
-          <div className="w-full md:w-3/4 pr-0 md:pr-8 mb-4 md:mb-0">
-            <div className="md:pb-20 pb-6 container mx-auto mt-[60px] sm:mt-[91px]">
-              {/* Breadcrumb */}
-              <div className="flex font-semibold gap-2 text-base text-gray-600">
-                <Link href="/bai-viet" className="hover:text-blue-800 whitespace-nowrap">
-                  Bài viết
-                </Link>
-                <span>›</span>
-                <span className="flex hidden md:block font-semibold gap-2 mb-4 text-base text-gray-600">
-                  {trimText(title, 100)}
-                </span>
-                <span className="flex block md:hidden font-semibold gap-2 mb-4 text-base text-gray-600">
-                  {trimText(title, 35)}
-                </span>
-              </div>
+      <div className="min-h-screen pt-20 pb-16">
+        <div className="container mx-auto px-4 ">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Main Content */}
+            <div className="flex-1 min-w-0">
+              <div className="bg-white dark:bg-gray-800 ">
+                {/* Breadcrumb UI */}
+                <nav aria-label="Breadcrumb" className="mb-4">
+                  <ol className="flex flex-wrap items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                    <li>
+                      <Link href="/bai-viet" className="hover:text-[#105d97] transition-colors">
+                        Bài viết
+                      </Link>
+                    </li>
+                    <li><span className="text-gray-400">/</span></li>
+                    <li className="text-gray-800 dark:text-gray-200 font-medium" aria-current="page">
+                      {trimText(title, 40)}
+                    </li>
+                  </ol>
+                </nav>
 
-              {/* Tiêu đề bài viết */}
-              <h1 className="md:text-3xl text-xl font-bold text-primary-dark dark:text-primary">
-                {title}
-              </h1>
-              <div className="mt-2 mb-2">
-                <Share url={`${host}/${slug}`} />
-              </div>
-              
-              {/* Meta information: Date & Author */}
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500 border-b border-gray-150 pb-4 mb-4">
-                <span className="uppercase text-green-800 font-semibold tracking-wide">
-                  {category}
-                </span>
-                <span>•</span>
-                <span className="flex items-center gap-1">
-                  <svg
-                    className="w-4 h-4 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    ></path>
-                  </svg>
-                  {new Date(createdAt).toLocaleDateString("vi-VN", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  }).replace("tháng ", "Tháng ")}
-                </span>
-                {post.authorName && (
-                  <>
-                    <span>•</span>
-                    <span className="flex items-center gap-1.5 font-medium text-gray-700">
-                      {post.authorAvatar && (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
-                          src={post.authorAvatar}
-                          alt={post.authorName}
-                          className="w-5 h-5 rounded-full object-cover"
-                        />
+                {/* Article Header */}
+                <div className="md:mb-6 mb-3 border-b border-gray-100 dark:border-gray-700 pb-5">
+                  <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight mb-4">
+                    {title}
+                  </h1>
+                  <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center gap-3">
+                      {category && (
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#105d97] dark:bg-blue-900/30 dark:text-blue-300">
+                          {category}
+                        </span>
                       )}
-                      Tác giả: <span className="text-[#105d97]">{post.authorName}</span>
-                    </span>
-                  </>
-                )}
-              </div>
-              {/* Article Content */}
-              <div className="blog prose prose-lg dark:prose-invert w-full [&_img]:mx-auto">
-                <style jsx>{`
-                  .blog img {
-                    display: block;
-                    margin: 1.5em auto;
-                  }
-                  .blog figure {
-                    margin: 1.5em 0;
-                    text-align: center;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                  }
-                  .blog figure img {
-                    display: block;
-                    margin: 0 auto;
-                  }
-                  .blog figcaption {
-                    margin-top: 0.5em;
-                    font-size: 0.875em;
-                    color: #6b7280;
-                    font-style: italic;
-                    text-align: center;
-                    width: 100%;
-                    max-width: 100%;
-                  }
-                  .dark .blog figcaption {
-                    color: #9ca3af;
-                  }
-                  .blog :global(table) {
-                    display: block;
-                    overflow-x: auto;
-                    -webkit-overflow-scrolling: touch;
-                    max-width: 100%;
-                    width: max-content !important;
-                    margin: 1.5em auto !important;
-                    border-collapse: collapse;
-                    border: 1px solid #d1d5db;
-                  }
-                  .blog :global(td),
-                  .blog :global(th) {
-                    padding: 0.5em 0.5em;
-                    border: 1px solid #d1d5db;
-                    text-align: left;
-                    vertical-align: top;
-                  }
-                  .blog :global(th) {
-                    background-color: #f3f4f6;
-                    font-weight: 600;
-                  }
-                  .blog :global(td p),
-                  .blog :global(th p) {
-                    text-align: left !important;
-                    margin: 0;
-                  }
-                `}</style>
-                <TableOfContents headings={headings} />
-                {parse(processedHtml)}
-              </div>
-
-              {/* Author Box */}
-              {post.authorName && (
-                <div className="mt-12 p-6 bg-slate-50 rounded-xl border border-gray-150 flex flex-col sm:flex-row items-center sm:items-start gap-4">
-                  <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-250 flex-shrink-0 border border-gray-200">
-                    {post.authorAvatar ? (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src={post.authorAvatar}
-                        alt={post.authorName}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold text-xl bg-gray-200">
-                        {post.authorName.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 text-center sm:text-left">
-                    <h4 className="text-base font-bold text-gray-900 mb-1">
-                      Tác giả: {post.authorName}
-                    </h4>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      {post.authorBio || "Chuyên gia chia sẻ kiến thức hữu ích tại BT Academy."}
-                    </p>
+                      <span>
+                        {new Date(createdAt).toLocaleDateString("vi-VN", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                    <Share url={`${host}/${slug}`} />
                   </div>
                 </div>
-              )}
-            </div>
-          </div>
 
-          {/* Recent Posts Section - 25% width on md and up */}
-          <div className="w-full md:w-1/4 px-0.5 md:mt-[91px] mt-10">
-            <div className="pt-5">
-              <p className="text-3xl font-semibold text-primary-dark dark:text-primary p-2 mb-4">
-                Bài viết gần đây
-              </p>
-              <div className="flex flex-col space-y-4">
-                {recentPosts.slice(0, 5).map((p) => (
-                  <Link key={p.slug} href={`/bai-viet/${p.slug}`} legacyBehavior>
-                    <a className="flex space-x-3 w-full">
-                      {p.thumbnail && (
-                        <Image
-                          src={p.thumbnail}
-                          alt={`Thumbnail for ${p.title}`}
-                          width={80}
-                          height={80}
-                          className="w-20 h-20 object-cover rounded"
+                {headings.length > 0 && <TableOfContents headings={headings} />}
+
+                {/* Article Content */}
+                <div className="prose blog prose-base md:prose-lg max-w-none text-gray-700 dark:text-gray-300 dark:prose-invert">
+                  <style jsx>{`
+                    .blog :global(img) { display: block; margin: 1.5em auto; border-radius: 0.5rem; }
+                    .blog :global(figure) { margin: 1.5em 0; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+                    .blog :global(figure img) { display: block; margin: 0 auto; }
+                    .blog :global(figcaption) { margin-top: 0.5rem; font-size: 0.875em; color: #6b7280; font-style: italic; text-align: center; width: 100%; max-width: 100%; }
+                    :global(.dark) .blog :global(figcaption) { color: #9ca3af; }
+                    .blog :global(table) { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; width: max-content !important; margin: 1.5em auto !important; border-collapse: collapse; border: 1px solid #d1d5db; }
+                    .blog :global(td), .blog :global(th) { padding: 0.5em 0.75em; border: 1px solid #d1d5db; text-align: left; vertical-align: top; }
+                    .blog :global(th) { background-color: #f3f4f6; font-weight: 600; color: #111827; }
+                    .blog :global(td p), .blog :global(th p) { text-align: left !important; margin: 0; }
+                    .blog :global(h1), .blog :global(h2), .blog :global(h3), .blog :global(h4), .blog :global(h5), .blog :global(h6) { scroll-margin-top: 100px; }
+                  `}</style>
+                  {parse(processedHtml, parseOptions)}
+                </div>
+
+                {/* Author Card */}
+                {authorName && (
+                  <div className="border-t border-gray-100 dark:border-gray-700 pt-8 mt-12">
+                    <div className="flex items-start gap-4 p-5 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-150 dark:border-gray-700">
+                      {authorAvatar ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          src={authorAvatar}
+                          alt={authorName}
+                          className="w-16 h-16 rounded-full object-cover flex-shrink-0 border border-gray-200"
                         />
-                      )}
-                      <div className="flex flex-col flex-1">
-                        <span className="text-base font-bold text-gray-800">
-                          {p.title}
-                        </span>
-                        <div className="text-base flex items-center mt-1 gap-2">
-                          <span className=" text-orange-700">
-
-                            <svg
-                              className="w-4 h-4 mr-1"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              ></path>
-                            </svg>
-                          </span>
-
-                          <span >
-                            {new Date(p.createdAt).toLocaleDateString("vi-VN", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            }).replace("tháng ", "Tháng ")}
-                          </span>
-
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-[#105d97] flex items-center justify-center flex-shrink-0 text-white text-xl font-bold">
+                          {authorName.charAt(0).toUpperCase()}
                         </div>
-
-
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <span className="font-bold text-lg text-gray-900 dark:text-white">
+                          Tác giả: {authorName}
+                        </span>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 leading-relaxed">
+                          {authorBio || "Chuyên gia chia sẻ kiến thức hữu ích tại BT Academy."}
+                        </p>
                       </div>
-                    </a>
-                  </Link>
-                ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="lg:w-80 lg:flex-shrink-0 w-full">
+              <div className="sticky top-24 space-y-3">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 px-4 py-2">
+                  <h3 className="text-xs font-bold text-[#105d97] uppercase tracking-[0.15em] mb-4 border-b border-gray-100 dark:border-gray-700 pb-2">
+                    Bài viết gần đây
+                  </h3>
+                  <div className="space-y-2">
+                    {recentPosts.slice(0, 5).map((p) => (
+                      <Link key={p.slug} href={`/bai-viet/${p.slug}`} className="block group">
+                        <div className="flex gap-3 p-1 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                          {p.thumbnail && (
+                            /* eslint-disable-next-line @next/next/no-img-element */
+                            <img
+                              src={p.thumbnail}
+                              alt={p.title}
+                              className="w-20 h-16 object-cover rounded-lg flex-shrink-0"
+                            />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-[#105d97] transition-colors line-clamp-2 leading-snug">
+                              {p.title}
+                            </h4>
+                            {p.createdAt && (
+                              <p className="text-xs text-gray-400 mt-1">
+                                {new Date(p.createdAt).toLocaleDateString("vi-VN", {
+                                  day: "numeric",
+                                  month: "numeric",
+                                  year: "numeric",
+                                })}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -335,7 +296,7 @@ export const getServerSideProps: GetServerSideProps<
     })
       .sort({ createdAt: -1 })
       .limit(5)
-      .select("slug title thumbnail category createdAt"); // Thêm createdAt vào select
+      .select("slug title thumbnail category createdAt");
 
     const recentPosts = posts.map((p) => ({
       id: p._id.toString(),
@@ -343,7 +304,7 @@ export const getServerSideProps: GetServerSideProps<
       slug: p.slug,
       category: p.category || "Uncategorized",
       thumbnail: p.thumbnail?.url,
-      createdAt: p.createdAt.toString(), // Đảm bảo có createdAt
+      createdAt: p.createdAt ? p.createdAt.toString() : "",
     }));
 
     const { _id, title, content, meta, slug, tags, thumbnail, category, createdAt, author } = post;

@@ -5,10 +5,22 @@ export const generateFormData = (post: FinalPost) => {
   const formData = new FormData();
   for (let key in post) {
     const value = (post as any)[key];
-    if (key === "tags" && value.trim()) {
-      const tags = value.split(",").map((tag: string) => tag.trim());
+
+    // Bỏ qua undefined và null
+    if (value === undefined || value === null) continue;
+
+    if (key === "tags") {
+      const tagStr = typeof value === "string" ? value.trim() : "";
+      const tags = tagStr ? tagStr.split(",").map((tag: string) => tag.trim()) : [];
       formData.append("tags", JSON.stringify(tags));
-    } else formData.append(key, value);
+    } else if (typeof value === "boolean") {
+      // FormData không hiểu boolean, phải chuyển thành string
+      formData.append(key, String(value));
+    } else if (value instanceof File) {
+      formData.append(key, value);
+    } else {
+      formData.append(key, value);
+    }
   }
 
   return formData;

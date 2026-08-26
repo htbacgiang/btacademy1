@@ -21,11 +21,7 @@ export const postValidationSchema = Joi.object().keys({
     "string.empty": errorMessages.INVALID_SLUG,
     "any.required": errorMessages.INVALID_SLUG,
   }),
-  meta: Joi.string().required().messages({
-    "string.empty": errorMessages.INVALID_META,
-    "any.required": errorMessages.INVALID_META,
-  }),
-
+  meta: Joi.string().allow("").optional(),
 });
 
 export const commentValidationSchema = Joi.object().keys({

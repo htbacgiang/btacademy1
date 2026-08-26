@@ -20,6 +20,8 @@ import ToolBar from "./ToolBar";
 import EditLink from "./Link/EditLink";
 import EditImage from "./Image/EditImage";
 import GalleryModal, { ImageSelectionResult } from "./GalleryModal";
+import ImageGalleryInsertModal from "./GalleryModal/ImageGalleryInsertModal";
+import { ImageGallery, GalleryImage } from "./ImageGallery";
 import axios from "axios";
 import SEOForm, { SeoResult } from "./SeoForm";
 import ThumbnailSelector from "./ThumbnailSelector";
@@ -52,6 +54,7 @@ const Editor: FC<Props> = ({
 }): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
   const [showGallery, setShowGallery] = useState(false);
+  const [showImageGallery, setShowImageGallery] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [savingDraft, setSavingDraft] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -230,6 +233,7 @@ const Editor: FC<Props> = ({
       TableHeader,
       TableCell,
       BubbleMenuExtension,
+      ImageGallery,
     ],
 
     editorProps: {
@@ -254,6 +258,11 @@ const Editor: FC<Props> = ({
       .focus()
       .setImage({ src: result.src, alt: result.altText })
       .run();
+  };
+
+  const handleImageGallerySelection = (galleryImages: GalleryImage[]) => {
+    if (!editor) return;
+    (editor.chain().focus() as any).setImageGallery({ images: galleryImages }).run();
   };
 
   const handleSubmit = () => {
@@ -488,6 +497,7 @@ const Editor: FC<Props> = ({
               <ToolBar
                 editor={editor}
                 onOpenImageClick={() => setShowGallery(true)}
+                onOpenGalleryClick={() => setShowImageGallery(true)}
               />
             </div>
 
@@ -617,6 +627,12 @@ const Editor: FC<Props> = ({
         images={images}
         onFileSelect={handleImageUpload}
         uploading={uploading || loadingImages}
+      />
+      <ImageGalleryInsertModal
+        visible={showImageGallery}
+        onClose={() => setShowImageGallery(false)}
+        onSelect={handleImageGallerySelection}
+        images={images}
       />
       <style jsx global>{`
         .tiptap-table {

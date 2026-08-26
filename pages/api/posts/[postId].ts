@@ -145,27 +145,29 @@ const updatePost: NextApiHandler = async (req, res) => {
 
     const { title, content, meta, slug, category } = body;
     const normalizedCategory = normalizePostCategory(category);
-    const isDraft = (body as any).isDraft;
+    const isDraftRaw = (body as any).isDraft;
+    const isDraft = isDraftRaw === 'true' || isDraftRaw === true;
     const isFeatured = (body as any).isFeatured === 'true' || (body as any).isFeatured === true;
     
     post.title = title;
     post.content = content;
-    post.meta = meta;
+    post.meta = meta || "";
     post.slug = slug;
     post.category = normalizedCategory;
     if ((body as any).author) {
       post.author = (body as any).author;
     }
     
-    // Cập nhật trạng thái nháp nếu có
-    if (typeof isDraft === 'boolean') {
+    // Cập nhật trạng thái nháp nếu có gửi lên
+    if (isDraftRaw !== undefined && isDraftRaw !== null) {
       post.isDraft = isDraft;
     }
     
     // Cập nhật trạng thái nổi bật nếu có
-    if (typeof isFeatured === 'boolean') {
+    if ((body as any).isFeatured !== undefined && (body as any).isFeatured !== null) {
       post.isFeatured = isFeatured;
     }
+
 
     // Cập nhật thumbnail: có thể là file mới upload hoặc URL từ gallery
     const thumbnailFile = files.thumbnail as formidable.File | undefined;

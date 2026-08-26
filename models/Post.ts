@@ -43,8 +43,8 @@ const PostSchema = new Schema<PostModelSchema>(
   },
     meta: {
       type: String,
-      required: true,
       trim: true,
+      default: "",
     },
     tags: {
       type: [String],
@@ -84,6 +84,12 @@ const PostSchema = new Schema<PostModelSchema>(
   }
 );
 
+// Recompile model in dev to reflect schema changes
+if (process.env.NODE_ENV === "development" && models?.Post) {
+  delete (models as any).Post;
+}
+
 const Post = models?.Post || model("Post", PostSchema);
 
 export default Post as Model<PostModelSchema>;
+
