@@ -1,17 +1,21 @@
 import { GetServerSideProps, NextPage } from "next";
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
+import Head from "next/head";
 import parse from "html-react-parser";
 import DefaultLayout from "../../components/layout/DefaultLayout";
 import db from "../../utils/db";
 import Post from "../../models/Post";
+import Author from "../../models/Author";
 import Share from "../../components/common/Share";
 import Link from "next/link";
 import Image from "next/image";
-import { trimText, extractHeadingsAndInjectIds } from "../../utils/helper";
-import { TableOfContents } from "../../components/common/TableOfContents";
+import { trimText } from "../../utils/helper";
+import TableOfContents from "../../components/common/TableOfContents";
+import { parseToc } from "../../utils/toc";
 import ArticleImageGallery, {
   parseArticleGalleryImages,
 } from "../../components/common/ArticleImageGallery";
+import { normalizeInternalLinkAttributes } from "../../utils/internalLinks";
 
 type PostData = {
   id: string;
@@ -23,17 +27,21 @@ type PostData = {
   thumbnail: string;
   createdAt: string;
   category: string;
-  authorName?: string;
-  authorBio?: string;
-  authorAvatar?: string;
   recentPosts: {
     id: string;
     title: string;
     slug: string;
     category: string;
     thumbnail?: string;
-    createdAt: string;
   }[];
+  postAuthor?: {
+    name: string;
+    slug?: string;
+    role?: string;
+    bio?: string;
+    avatar?: string;
+  };
+  faqs?: { question: string; answer: string }[];
 };
 
 type MetaData = {
@@ -41,15 +49,19 @@ type MetaData = {
   description: string;
   author: string;
   canonical: string;
+  keywords?: string;
+  robots?: string;
   og: {
     title: string;
     description: string;
     type: string;
     image: string;
-    imageWidth: string;
-    imageHeight: string;
+    imageWidth?: string;
+    imageHeight?: string;
+    imageAlt?: string;
     url: string;
-    siteName: string;
+    siteName?: string;
+    site_name?: string;
   };
   twitter: {
     card: string;
@@ -57,25 +69,108 @@ type MetaData = {
     description: string;
     image: string;
   };
+  schema?: object[];
 };
 
 type Props = {
   post: PostData;
-  meta: MetaData;
+  meta?: MetaData;
 };
 
 const host = "https://btacademy.com.vn/bai-viet";
 export const APP_NAME = "BT Academy";
 
-const SinglePost: NextPage<Props> = ({ post }) => {
+type VideoAspectRatio = "square" | "vertical" | "horizontal";
+
+const detectVideoAspectRatio = (width: number, height: number): VideoAspectRatio => {
+  if (Math.abs(width - height) / Math.max(width, height) < 0.12) return "square";
+  return height > width ? "vertical" : "horizontal";
+};
+
+const ArticleCloudinaryVideo = ({
+  src,
+  title,
+  initialRatio = "horizontal",
+}: {
+  src: string;
+  title?: string;
+  initialRatio?: VideoAspectRatio;
+}) => {
+  const [aspectRatio, setAspectRatio] = useState<VideoAspectRatio>(initialRatio);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const aspectValue =
+    aspectRatio === "square" ? "1 / 1" : aspectRatio === "vertical" ? "9 / 16" : "16 / 9";
+  const maxWidth =
+    aspectRatio === "vertical" ? "420px" : aspectRatio === "square" ? "640px" : "100%";
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const updateRatio = () => {
+      if (video.videoWidth && video.videoHeight) {
+        setAspectRatio(detectVideoAspectRatio(video.videoWidth, video.videoHeight));
+      }
+    };
+
+    updateRatio();
+    video.addEventListener("loadedmetadata", updateRatio);
+    video.addEventListener("loadeddata", updateRatio);
+    video.addEventListener("canplay", updateRatio);
+    return () => {
+      video.removeEventListener("loadedmetadata", updateRatio);
+      video.removeEventListener("loadeddata", updateRatio);
+      video.removeEventListener("canplay", updateRatio);
+    };
+  }, [src]);
+
+  return (
+    <div
+      className="cloudinary-video-embed"
+      data-aspect-ratio={aspectRatio}
+      style={{
+        display: "block",
+        width: "100%",
+        maxWidth,
+        aspectRatio: aspectValue,
+        margin: "0 auto",
+        background: "#000",
+        overflow: "hidden",
+      }}
+    >
+      <video
+        ref={videoRef}
+        src={src}
+        title={title || "Video BT Academy"}
+        controls
+        playsInline
+        preload="metadata"
+        onLoadedMetadata={() => {
+          const video = videoRef.current;
+          if (video?.videoWidth && video.videoHeight) {
+            setAspectRatio(detectVideoAspectRatio(video.videoWidth, video.videoHeight));
+          }
+        }}
+        style={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
+      />
+    </div>
+  );
+};
+
+const SinglePost: NextPage<Props> = ({ post, meta }) => {
   if (!post) {
     return (
       <DefaultLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center p-8 bg-red-50 text-red-600 rounded-xl border border-red-100 max-w-md">
             <p className="font-medium text-lg">Bài viết không khả dụng</p>
-            <p className="text-sm mt-1 text-red-500">Nội dung bài viết chưa được cập nhật hoặc không tồn tại.</p>
-            <Link href="/" className="mt-4 inline-block px-4 py-2 bg-[#105d97] text-white rounded-lg hover:bg-[#0d4c7a] transition">
+            <p className="text-sm mt-1 text-red-500">
+              Nội dung bài viết chưa được cập nhật hoặc không tồn tại.
+            </p>
+            <Link
+              href="/"
+              className="mt-4 inline-block px-4 py-2 bg-[#105d97] text-white rounded-lg hover:bg-[#0d4c7a] transition"
+            >
               Quay lại trang chủ
             </Link>
           </div>
@@ -84,14 +179,49 @@ const SinglePost: NextPage<Props> = ({ post }) => {
     );
   }
 
-  const { title, content, slug, recentPosts, category, createdAt, authorName, authorAvatar, authorBio } = post;
+  const { title, content, slug, recentPosts, postAuthor, faqs } = post;
 
-  const { processedHtml, headings } = useMemo(() => {
-    return extractHeadingsAndInjectIds(content);
-  }, [content]);
+  const { headings, content: processedContent } = useMemo(
+    () => parseToc(content),
+    [content]
+  );
 
   const parseOptions = {
     replace(domNode: any) {
+      if (domNode.type === "tag" && domNode.name === "a") {
+        normalizeInternalLinkAttributes(domNode.attribs);
+      }
+
+      if (
+        domNode.type === "tag" &&
+        domNode.name === "div" &&
+        domNode.attribs?.class?.includes("cloudinary-video-embed")
+      ) {
+        const videoNode = domNode.children?.find(
+          (child: any) => child.type === "tag" && child.name === "video"
+        );
+        if (videoNode?.attribs?.src) {
+          return (
+            <ArticleCloudinaryVideo
+              src={videoNode.attribs.src}
+              title={videoNode.attribs.title}
+              initialRatio={
+                (domNode.attribs?.["data-aspect-ratio"] as VideoAspectRatio) || "horizontal"
+              }
+            />
+          );
+        }
+      }
+
+      if (
+        domNode.type === "tag" &&
+        domNode.name === "video" &&
+        domNode.attribs?.src?.includes("res.cloudinary.com") &&
+        !domNode.parent?.attribs?.class?.includes("cloudinary-video-embed")
+      ) {
+        return <ArticleCloudinaryVideo src={domNode.attribs.src} title={domNode.attribs.title} />;
+      }
+
       if (
         domNode.type === "tag" &&
         domNode.attribs?.["data-article-gallery"] === "true"
@@ -125,47 +255,75 @@ const SinglePost: NextPage<Props> = ({ post }) => {
 
   return (
     <DefaultLayout>
-      <div className="min-h-screen pt-20 pb-16">
-        <div className="container mx-auto px-4 ">
+      <Head>
+        <title>{title ? `${title} | ${APP_NAME}` : APP_NAME}</title>
+        <meta name="description" content={meta?.description || post?.meta || title || ""} />
+        <link rel="canonical" href={meta?.canonical || `https://btacademy.com.vn/bai-viet/${slug}`} />
+
+        {/* OpenGraph */}
+        <meta property="og:title" content={meta?.og?.title || title || ""} />
+        <meta
+          property="og:description"
+          content={meta?.og?.description || meta?.description || post?.meta || ""}
+        />
+        <meta property="og:type" content={meta?.og?.type || "article"} />
+        <meta property="og:url" content={meta?.og?.url || `https://btacademy.com.vn/bai-viet/${slug}`} />
+        <meta property="og:image" content={meta?.og?.image || post?.thumbnail || ""} />
+        <meta
+          property="og:site_name"
+          content={meta?.og?.site_name || meta?.og?.siteName || APP_NAME}
+        />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content={meta?.twitter?.card || "summary_large_image"} />
+        <meta name="twitter:title" content={meta?.twitter?.title || title || ""} />
+        <meta
+          name="twitter:description"
+          content={meta?.twitter?.description || meta?.description || post?.meta || ""}
+        />
+        <meta name="twitter:image" content={meta?.twitter?.image || post?.thumbnail || ""} />
+
+        {/* JSON-LD Schema */}
+        {meta?.schema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(meta.schema),
+            }}
+          />
+        )}
+      </Head>
+
+      <div className="min-h-screen">
+        <div className="h-[80px]"></div>
+        <div className="container mx-auto">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Main Content */}
             <div className="flex-1 min-w-0">
-              <div className="bg-white dark:bg-gray-800 ">
-                {/* Breadcrumb UI */}
-                <nav aria-label="Breadcrumb" className="mb-4">
-                  <ol className="flex flex-wrap items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+              <div className="bg-white p-4 md:p-4">
+                {/* Breadcrumb UI — 3 cấp */}
+                <nav aria-label="Breadcrumb">
+                  <ol className="flex flex-wrap items-center space-x-1 text-sm text-gray-500">
                     <li>
                       <Link href="/bai-viet" className="hover:text-[#105d97] transition-colors">
                         Bài viết
                       </Link>
                     </li>
-                    <li><span className="text-gray-400">/</span></li>
-                    <li className="text-gray-800 dark:text-gray-200 font-medium" aria-current="page">
-                      {trimText(title, 40)}
+                    <li>
+                      <span className="text-gray-400">/</span>
+                    </li>
+                    <li className="text-gray-700 font-medium" aria-current="page">
+                      {trimText(title, 35)}
                     </li>
                   </ol>
                 </nav>
 
                 {/* Article Header */}
-                <div className="md:mb-6 mb-3 border-b border-gray-100 dark:border-gray-700 pb-5">
-                  <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight mb-4">
+                <div className="mb-4">
+                  <h1 className="text-xl md:text-3xl font-medium tracking-tight text-gray-900 leading-6 mb-4">
                     {title}
                   </h1>
-                  <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center gap-3">
-                      {category && (
-                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#105d97] dark:bg-blue-900/30 dark:text-blue-300">
-                          {category}
-                        </span>
-                      )}
-                      <span>
-                        {new Date(createdAt).toLocaleDateString("vi-VN", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </div>
+                  <div className="flex items-center justify-between">
                     <Share url={`${host}/${slug}`} />
                   </div>
                 </div>
@@ -173,45 +331,236 @@ const SinglePost: NextPage<Props> = ({ post }) => {
                 {headings.length > 0 && <TableOfContents headings={headings} />}
 
                 {/* Article Content */}
-                <div className="prose blog prose-base md:prose-lg max-w-none text-gray-700 dark:text-gray-300 dark:prose-invert">
+                <div className="prose blog prose-base md:prose-lg max-w-none text-gray-700">
                   <style jsx>{`
-                    .blog :global(img) { display: block; margin: 1.5em auto; border-radius: 0.5rem; }
-                    .blog :global(figure) { margin: 1.5em 0; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-                    .blog :global(figure img) { display: block; margin: 0 auto; }
-                    .blog :global(figcaption) { margin-top: 0.5rem; font-size: 0.875em; color: #6b7280; font-style: italic; text-align: center; width: 100%; max-width: 100%; }
-                    :global(.dark) .blog :global(figcaption) { color: #9ca3af; }
-                    .blog :global(table) { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; width: max-content !important; margin: 1.5em auto !important; border-collapse: collapse; border: 1px solid #d1d5db; }
-                    .blog :global(td), .blog :global(th) { padding: 0.5em 0.75em; border: 1px solid #d1d5db; text-align: left; vertical-align: top; }
-                    .blog :global(th) { background-color: #f3f4f6; font-weight: 600; color: #111827; }
-                    .blog :global(td p), .blog :global(th p) { text-align: left !important; margin: 0; }
-                    .blog :global(h1), .blog :global(h2), .blog :global(h3), .blog :global(h4), .blog :global(h5), .blog :global(h6) { scroll-margin-top: 100px; }
+                    .blog :global(img) {
+                      display: block;
+                      margin: 1.5em auto;
+                    }
+                    .blog :global(figure) {
+                      margin: 1.5em 0;
+                      text-align: center;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      justify-content: center;
+                    }
+                    .blog :global(figure img) {
+                      display: block;
+                      margin: 0 auto;
+                    }
+                    .blog :global(figcaption) {
+                      margin-top: 0;
+                      padding-bottom: 0.2rem;
+                      font-size: 0.875em;
+                      color: #6b7280;
+                      font-style: italic;
+                      text-align: center;
+                      width: 100%;
+                      max-width: 100%;
+                    }
+                    :global(.dark) .blog :global(figcaption) {
+                      color: #9ca3af;
+                    }
+                    .blog :global(table) {
+                      display: block;
+                      overflow-x: auto;
+                      -webkit-overflow-scrolling: touch;
+                      max-width: 100%;
+                      width: max-content !important;
+                      margin: 1.5em auto !important;
+                      border-collapse: collapse;
+                      border: 1px solid #d1d5db;
+                    }
+                    .blog :global(td),
+                    .blog :global(th) {
+                      padding: 0.5em 0.5em;
+                      border: 1px solid #d1d5db;
+                      text-align: left;
+                      vertical-align: top;
+                    }
+                    .blog :global(th) {
+                      background-color: #f3f4f6;
+                      font-weight: 600;
+                      color: #111827;
+                    }
+                    .blog :global(td p),
+                    .blog :global(th p) {
+                      text-align: left !important;
+                      margin: 0;
+                    }
+                    .blog :global(h1),
+                    .blog :global(h2),
+                    .blog :global(h3),
+                    .blog :global(h4),
+                    .blog :global(h5),
+                    .blog :global(h6) {
+                      scroll-margin-top: 100px;
+                    }
+                    .blog :global(.cloudinary-video-embed[data-aspect-ratio="vertical"]) {
+                      width: 100% !important;
+                      max-width: 420px !important;
+                      margin-left: auto !important;
+                      margin-right: auto !important;
+                    }
+                    .blog :global(.cloudinary-video-embed[data-aspect-ratio="square"]) {
+                      width: 100% !important;
+                      max-width: 640px !important;
+                      margin-left: auto !important;
+                      margin-right: auto !important;
+                    }
+                    .blog :global(.cloudinary-video-embed[data-aspect-ratio="horizontal"]) {
+                      width: 100% !important;
+                      max-width: 100% !important;
+                    }
+                    .blog :global(.cloudinary-video-embed video) {
+                      display: block;
+                      width: 100%;
+                      height: 100%;
+                      margin: 0 !important;
+                      padding: 0 !important;
+                      max-width: none !important;
+                    }
+                    @media (max-width: 767px) {
+                      .blog :global(.cloudinary-video-embed[data-aspect-ratio="vertical"]),
+                      .blog :global(.cloudinary-video-embed[data-aspect-ratio="square"]) {
+                        max-width: 100% !important;
+                      }
+                    }
+                    @media (min-width: 768px) {
+                      .blog :global(.cloudinary-video-embed) {
+                        display: block !important;
+                        width: 100% !important;
+                        min-width: 100% !important;
+                        max-width: none !important;
+                        box-sizing: border-box;
+                        aspect-ratio: 16 / 9 !important;
+                        margin-top: 10px !important;
+                        margin-bottom: 0 !important;
+                        padding: 0 !important;
+                        background: #000;
+                      }
+                      .blog :global(.cloudinary-video-embed video) {
+                        width: 100% !important;
+                        height: 100% !important;
+                        object-fit: contain;
+                        margin: 0 !important;
+                      }
+                    }
+                    @media (max-width: 767px) {
+                      .blog :global(.cloudinary-video-embed) {
+                        max-width: 100% !important;
+                        aspect-ratio: auto !important;
+                        padding: 0 !important;
+                      }
+                      .blog :global(.cloudinary-video-embed video) {
+                        height: auto !important;
+                      }
+                    }
                   `}</style>
-                  {parse(processedHtml, parseOptions)}
+                  {parse(processedContent, parseOptions)}
                 </div>
 
+                {/* FAQs Section */}
+                {faqs && faqs.length > 0 && (
+                  <div className="mt-12 bg-gray-50 rounded-2xl p-3 md:p-8 border border-gray-100 shadow-sm">
+                    <h2 className="text-xl md:text-2xl font-medium tracking-tight leading-6 text-gray-900 mb-6 flex items-center gap-2">
+                      <svg
+                        className="w-6 h-6 md:w-7 md:h-7 text-[#105d97]"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                      </svg>
+                      Câu hỏi thường gặp
+                    </h2>
+                    <div className="space-y-4">
+                      {faqs.map((faq, idx) => (
+                        <details
+                          key={idx}
+                          className="group bg-white rounded-xl border border-gray-200 overflow-hidden [&_summary::-webkit-details-marker]:hidden"
+                        >
+                          <summary className="flex items-center justify-between cursor-pointer p-4 font-semibold text-gray-900 hover:text-[#105d97] transition-colors">
+                            <span className="pr-4">{faq.question}</span>
+                            <span className="transition-transform duration-300 group-open:-rotate-180 text-gray-400 group-hover:text-[#105d97] flex-shrink-0">
+                              <svg
+                                fill="none"
+                                height="24"
+                                shapeRendering="geometricPrecision"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                viewBox="0 0 24 24"
+                                width="24"
+                              >
+                                <path d="M6 9l6 6 6-6"></path>
+                              </svg>
+                            </span>
+                          </summary>
+                          <div className="py-4 px-2 pt-2 text-sm leading-6 text-gray-700 border-t border-gray-100 bg-gray-50/50">
+                            {faq.answer.split("\n").map((line, i) => (
+                              <p key={i} className={i > 0 ? "mt-2" : ""}>
+                                {line}
+                              </p>
+                            ))}
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Author Card */}
-                {authorName && (
-                  <div className="border-t border-gray-100 dark:border-gray-700 pt-8 mt-12">
-                    <div className="flex items-start gap-4 p-5 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-150 dark:border-gray-700">
-                      {authorAvatar ? (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
-                          src={authorAvatar}
-                          alt={authorName}
-                          className="w-16 h-16 rounded-full object-cover flex-shrink-0 border border-gray-200"
+                {postAuthor && (
+                  <div className="border-t border-gray-100 pt-8 mt-12">
+                    <div className="flex items-start gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100">
+                      {postAuthor.avatar ? (
+                        <Image
+                          src={postAuthor.avatar}
+                          alt={postAuthor.name}
+                          width={64}
+                          height={64}
+                          className="w-16 h-16 rounded-full object-cover flex-shrink-0"
                         />
                       ) : (
-                        <div className="w-16 h-16 rounded-full bg-[#105d97] flex items-center justify-center flex-shrink-0 text-white text-xl font-bold">
-                          {authorName.charAt(0).toUpperCase()}
+                        <div className="w-16 h-16 rounded-full bg-[#105d97] flex items-center justify-center flex-shrink-0">
+                          <span className="text-white text-xl font-bold">
+                            {postAuthor.name.charAt(0)}
+                          </span>
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <span className="font-bold text-lg text-gray-900 dark:text-white">
-                          Tác giả: {authorName}
-                        </span>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 leading-relaxed">
-                          {authorBio || "Chuyên gia chia sẻ kiến thức hữu ích tại BT Academy."}
-                        </p>
+                        {postAuthor.slug ? (
+                          <Link
+                            href={`/tac-gia/${postAuthor.slug}`}
+                            className="font-medium text-gray-900 hover:text-[#105d97] transition-colors"
+                          >
+                            {postAuthor.name}
+                          </Link>
+                        ) : (
+                          <span className="font-medium text-gray-900">{postAuthor.name}</span>
+                        )}
+                        {postAuthor.role && (
+                          <p className="text-sm text-[#105d97] mt-0.5">{postAuthor.role}</p>
+                        )}
+                        {postAuthor.bio && (
+                          <p className="text-sm text-gray-700 mt-2 leading-6">{postAuthor.bio}</p>
+                        )}
+                        {postAuthor.slug && (
+                          <Link
+                            href={`/tac-gia/${postAuthor.slug}`}
+                            className="inline-block mt-3 text-xs font-medium text-[#105d97] hover:underline"
+                          >
+                            Xem tất cả bài viết của {postAuthor.name} →
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -220,42 +569,32 @@ const SinglePost: NextPage<Props> = ({ post }) => {
             </div>
 
             {/* Sidebar */}
-            <div className="lg:w-80 lg:flex-shrink-0 w-full">
-              <div className="sticky top-24 space-y-3">
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 px-4 py-2">
-                  <h3 className="text-xs font-bold text-[#105d97] uppercase tracking-[0.15em] mb-4 border-b border-gray-100 dark:border-gray-700 pb-2">
-                    Bài viết gần đây
-                  </h3>
-                  <div className="space-y-2">
-                    {recentPosts.slice(0, 5).map((p) => (
-                      <Link key={p.slug} href={`/bai-viet/${p.slug}`} className="block group">
-                        <div className="flex gap-3 p-1 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
-                          {p.thumbnail && (
-                            /* eslint-disable-next-line @next/next/no-img-element */
-                            <img
-                              src={p.thumbnail}
-                              alt={p.title}
-                              className="w-20 h-16 object-cover rounded-lg flex-shrink-0"
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-[#105d97] transition-colors line-clamp-2 leading-snug">
-                              {p.title}
-                            </h4>
-                            {p.createdAt && (
-                              <p className="text-xs text-gray-400 mt-1">
-                                {new Date(p.createdAt).toLocaleDateString("vi-VN", {
-                                  day: "numeric",
-                                  month: "numeric",
-                                  year: "numeric",
-                                })}
-                              </p>
-                            )}
-                          </div>
+            <div className="lg:w-96 lg:flex-shrink-0 w-full pb-5">
+              <div className="bg-white rounded-lg shadow-sm p-3">
+                <h3 className="text-xs font-medium text-[#105d97] uppercase tracking-[0.15em] mb-4">
+                  Bài viết gần đây
+                </h3>
+                <div className="space-y-4">
+                  {recentPosts.slice(0, 4).map((p) => (
+                    <Link key={p.slug} href={`/bai-viet/${p.slug}`} className="block group">
+                      <div className="flex gap-3 p-1 rounded-lg hover:bg-gray-50 transition-colors">
+                        {p.thumbnail && (
+                          <Image
+                            src={p.thumbnail}
+                            alt={p.title}
+                            width={120}
+                            height={80}
+                            className="w-[120px] h-[80px] object-cover rounded"
+                          />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-medium text-gray-900 group-hover:text-[#105d97] transition-colors line-clamp-2 mt-1">
+                            {p.title}
+                          </h4>
                         </div>
-                      </Link>
-                    ))}
-                  </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>
@@ -268,6 +607,7 @@ const SinglePost: NextPage<Props> = ({ post }) => {
 
 export default SinglePost;
 
+// ─── SERVER SIDE PROPS ────────────────────────────────────────
 export const getServerSideProps: GetServerSideProps<
   { post: PostData; meta: MetaData },
   { slug: string }
@@ -275,8 +615,12 @@ export const getServerSideProps: GetServerSideProps<
   try {
     await db.connectDb();
 
+    // Ensure Author model is registered before populate
+    const _author = Author;
+
     const notDeletedAndNotDraftFilter = {
       isDraft: { $ne: true },
+      isDirectPost: { $ne: true },
       $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
     };
 
@@ -296,45 +640,123 @@ export const getServerSideProps: GetServerSideProps<
     })
       .sort({ createdAt: -1 })
       .limit(5)
-      .select("slug title thumbnail category createdAt");
+      .select("slug title thumbnail category");
 
     const recentPosts = posts.map((p) => ({
       id: p._id.toString(),
       title: p.title,
       slug: p.slug,
-      category: p.category || "Uncategorized",
+      category: p.category || "Chưa phân loại",
       thumbnail: p.thumbnail?.url,
-      createdAt: p.createdAt ? p.createdAt.toString() : "",
     }));
 
-    const { _id, title, content, meta, slug, tags, thumbnail, category, createdAt, author } = post;
+    const { _id, title, content, meta, slug, tags, thumbnail, category, createdAt } = post;
+    const rawFaqs = (post as any).faqs || (post as any).faq;
 
-    const populatedAuthor = author as any;
-    const authorName = populatedAuthor?.name || "";
-    const authorBio = populatedAuthor?.bio || "";
-    const authorAvatar = populatedAuthor?.avatar?.url || "";
+    const postAuthorDoc = (post.author || (post as any).postAuthor) as any;
+    const authorName = postAuthorDoc?.name || "BT Academy";
+    const authorSlug = postAuthorDoc?.slug || "";
+    const authorBio = postAuthorDoc?.bio || "Đội ngũ chuyên gia và giảng viên tại BT Academy.";
+    const authorAvatar = postAuthorDoc?.avatar?.url || postAuthorDoc?.avatar || "";
+    const authorRole = postAuthorDoc?.role || "Giảng viên & Biên tập viên";
+
+    const thumbnailUrl = thumbnail?.url || "https://btacademy.com.vn/images/noi-that-1.jpg";
+    const canonicalUrl = `https://btacademy.com.vn/bai-viet/${slug}`;
+    const createdAtISO = createdAt ? new Date(createdAt).toISOString() : new Date().toISOString();
+
+    const faqs =
+      Array.isArray(rawFaqs) && rawFaqs.length > 0
+        ? rawFaqs
+            .map((item: any) => ({
+              question: item?.question || "",
+              answer: item?.answer || "",
+            }))
+            .filter((item: any) => item.question && item.answer)
+        : [];
+
+    // ── Schema: Article + BreadcrumbList + FAQPage ──
+    const articleSchema = [
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Trang chủ", item: "https://btacademy.com.vn" },
+          { "@type": "ListItem", position: 2, name: "Bài viết", item: "https://btacademy.com.vn/bai-viet" },
+          { "@type": "ListItem", position: 3, name: title, item: canonicalUrl },
+        ],
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "@id": `${canonicalUrl}#article`,
+        headline: title,
+        description: meta || title,
+        image: {
+          "@type": "ImageObject",
+          url: thumbnailUrl,
+          width: 1200,
+          height: 630,
+        },
+        datePublished: createdAtISO,
+        dateModified: createdAtISO,
+        url: canonicalUrl,
+        isPartOf: { "@id": "https://btacademy.com.vn/#website" },
+        publisher: { "@id": "https://btacademy.com.vn/#organization" },
+        author: {
+          "@type": "Person",
+          ...(authorSlug ? { "@id": `https://btacademy.com.vn/tac-gia/${authorSlug}#person` } : {}),
+          name: authorName,
+        },
+        mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+        speakable: {
+          "@type": "SpeakableSpecification",
+          cssSelector: ["h1", ".prose p:first-of-type"],
+        },
+      },
+      ...(faqs.length > 0
+        ? [
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqs.map((faq: any) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: faq.answer,
+                },
+              })),
+            },
+          ]
+        : []),
+    ];
 
     const metaData: MetaData = {
       title,
-      description: meta,
-      author: authorName || "BT Academy",
-      canonical: `https://btacademy.com.vn/bai-viet/${slug}`,
+      description: meta || title,
+      author: authorName,
+      canonical: canonicalUrl,
+      keywords: `${tags?.join(", ") || ""} ${category || ""}, đào tạo MC, BT Academy`.trim(),
+      robots: "index, follow",
       og: {
         title,
-        description: meta,
-        type: "website",
-        image: thumbnail?.url || "/images/noi-that-1.jpg",
+        description: meta || title,
+        type: "article",
+        image: thumbnailUrl,
         imageWidth: "1200",
         imageHeight: "630",
-        url: `https://btacademy.com.vn/bai-viet/${slug}`,
-        siteName: "BT Academy",
+        imageAlt: `${title} — BT Academy`,
+        url: canonicalUrl,
+        site_name: APP_NAME,
+        siteName: APP_NAME,
       },
       twitter: {
         card: "summary_large_image",
         title,
-        description: meta,
-        image: thumbnail?.url || "/images/noi-that-1.jpg",
+        description: meta || title,
+        image: thumbnailUrl,
       },
+      schema: articleSchema,
     };
 
     const postData: PostData = {
@@ -343,14 +765,19 @@ export const getServerSideProps: GetServerSideProps<
       content,
       meta,
       slug,
-      tags,
-      category,
-      thumbnail: thumbnail?.url || "",
-      createdAt: createdAt.toString(),
-      authorName,
-      authorBio,
-      authorAvatar,
+      tags: tags || [],
+      category: category ?? "Chưa phân loại",
+      thumbnail: thumbnailUrl,
+      createdAt: createdAt ? createdAt.toString() : "",
       recentPosts,
+      postAuthor: {
+        name: authorName,
+        slug: authorSlug,
+        role: authorRole,
+        bio: authorBio,
+        avatar: authorAvatar,
+      },
+      faqs,
     };
 
     return {

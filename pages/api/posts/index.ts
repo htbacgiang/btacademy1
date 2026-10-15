@@ -44,6 +44,21 @@ const createNewPost: NextApiHandler = async (req, res) => {
       tags = [];
     }
 
+    let faq: { question: string; answer: string }[] = [];
+    try {
+      if ((body as any).faq) {
+        faq = typeof (body as any).faq === "string" ? JSON.parse((body as any).faq) : (body as any).faq;
+        faq = (Array.isArray(faq) ? faq : [])
+          .map((item: any) => ({
+            question: typeof item?.question === "string" ? item.question.trim() : "",
+            answer: typeof item?.answer === "string" ? item.answer.trim() : "",
+          }))
+          .filter((item: any) => item.question || item.answer);
+      }
+    } catch {
+      faq = [];
+    }
+
     // Kiểm tra dữ liệu đầu vào
     const error = validateSchema(postValidationSchema, { ...body, tags });
     if (error) return res.status(400).json({ error });
@@ -98,6 +113,7 @@ const createNewPost: NextApiHandler = async (req, res) => {
       existingPost.tags = tags;
       existingPost.category = normalizedCategory;
       existingPost.isFeatured = isFeatured;
+      existingPost.faq = faq;
       if (typeof parsedIsDraft === "boolean") {
         existingPost.isDraft = parsedIsDraft;
       }
@@ -105,7 +121,7 @@ const createNewPost: NextApiHandler = async (req, res) => {
         existingPost.author = (body as any).author;
       }
 
-      const thumbnailUrl = (body as any).thumbnail as string | undefined;
+      const thumbnailUrl = ((body as any).thumbnailUrl || (body as any).thumbnail) as string | undefined;
       const thumbnailFile = files.thumbnail as formidable.File | undefined;
       if (thumbnailFile) {
         const { secure_url: url, public_id } = await cloudinary.uploader.upload(
@@ -149,10 +165,11 @@ const createNewPost: NextApiHandler = async (req, res) => {
       author: (body as any).author || session.user.sub,
       isDraft: false, // Bài viết được đăng sẽ không phải là nháp
       isFeatured: isFeatured || false, // Bài viết nổi bật
+      faq,
     });
 
-    // Xử lý thumbnail: có thể là file mới upload hoặc URL từ gallery
-    const thumbnailUrl = (body as any).thumbnail as string | undefined;
+    // Xử lý thumbnail: có thể là file mới upload hoặc URL từ gallery / R2
+    const thumbnailUrl = ((body as any).thumbnailUrl || (body as any).thumbnail) as string | undefined;
     const thumbnailFile = files.thumbnail as formidable.File | undefined;
     
     if (thumbnailFile) {

@@ -1,114 +1,209 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { HeadingItem } from "../../utils/toc";
 
-export interface HeadingItem {
-  text: string;
-  id: string;
-  level: number;
-}
-
-interface TableOfContentsProps {
+export interface TableOfContentsProps {
   headings: HeadingItem[];
+  onHeadingClick?: () => void;
 }
 
-export const TableOfContents: React.FC<TableOfContentsProps> = ({ headings }) => {
-  const [isOpen, setIsOpen] = useState(false); // Collapsed by default
+export type { HeadingItem };
+
+export const TableOfContents: React.FC<TableOfContentsProps> = ({ headings, onHeadingClick }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [activeId, setActiveId] = useState<string>("");
+
+  useEffect(() => {
+    if (headings.length === 0) return;
+
+    const handleScrollActive = () => {
+      // Offsets: sticky header is around 80px, let's use 110px offset for trigger margin
+      const scrollPosition = window.scrollY + 110;
+
+      let currentActiveId = "";
+      for (let i = 0; i < headings.length; i++) {
+        const heading = headings[i];
+        const el = document.getElementById(heading.id);
+        if (el) {
+          const top = el.offsetTop;
+          if (scrollPosition >= top) {
+            currentActiveId = heading.id;
+          } else {
+            break; // Headings are ordered, so we stop checking
+          }
+        }
+      }
+
+      // Fallback: If we scrolled to the very bottom, activate the last heading
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50) {
+        currentActiveId = headings[headings.length - 1].id;
+      }
+
+      if (currentActiveId) {
+        setActiveId(currentActiveId);
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollActive);
+    // Run once initially
+    handleScrollActive();
+
+    return () => {
+      window.removeEventListener("scroll", handleScrollActive);
+    };
+  }, [headings]);
 
   if (!headings || headings.length === 0) return null;
 
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+
+    // Call heading click callback if provided (e.g. to expand parent containers)
+    if (onHeadingClick) {
+      onHeadingClick();
+    }
+
+    const element = document.getElementById(id);
+    if (element) {
+      // Scroll to element with 100px offset for sticky header
+      const headerOffset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+
+      setActiveId(id);
+      window.history.pushState(null, "", `#${id}`);
+    }
+  };
+
   return (
-    <div className="md:mb-4 mb-2 border border-gray-200 rounded-xl bg-slate-50 dark:bg-slate-900/50 dark:border-slate-800 transition-all duration-300 shadow-sm overflow-hidden not-prose">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 font-bold text-gray-800 dark:text-gray-200 text-base md:text-lg hover:bg-slate-100/70 dark:hover:bg-slate-800/70 transition-colors focus:outline-none"
-        aria-expanded={isOpen}
-      >
-        <span className="flex items-center gap-2.5">
+    <div className="toc-container my-4 border border-[#105d97]/15 rounded-xl bg-gray-50/70 p-3 md:p-4 transition-all duration-300 shadow-sm not-prose">
+      <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-2">
+        <div className="flex items-center gap-2">
           <svg
-            className="w-5 h-5 text-gray-700 dark:text-gray-300"
+            className="w-5 h-5 text-[#105d97]"
             fill="none"
             stroke="currentColor"
+            strokeWidth="2.5"
             viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth="2.5"
-              d="M4 6h16M4 12h16M4 18h16"
-            ></path>
+              d="M4 6h16M4 12h16M4 18h7"
+            />
           </svg>
-          Mục lục bài viết
-        </span>
-        <span className="bg-white dark:bg-slate-800 border border-gray-150 dark:border-slate-700 rounded-full p-1 shadow-sm transition-transform duration-300">
+          <span className="font-bold text-gray-900 text-sm md:text-base">
+            Mục lục bài viết
+          </span>
+        </div>
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center gap-1 text-xs font-semibold text-[#105d97] hover:text-[#0e4a7a] focus:outline-none transition-colors duration-200"
+          type="button"
+        >
+          <span>{isExpanded ? "Thu gọn" : "Mở rộng"}</span>
           <svg
-            className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${isOpen ? "rotate-180" : ""
-              }`}
+            className={`w-3.5 h-3.5 transition-transform duration-300 ${
+              isExpanded ? "rotate-180" : ""
+            }`}
             fill="none"
             stroke="currentColor"
+            strokeWidth="2.5"
             viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth="2.5"
               d="M19 9l-7 7-7-7"
-            ></path>
+            />
           </svg>
-        </span>
-      </button>
+        </button>
+      </div>
 
       <div
-        className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? "max-h-[800px] border-t border-gray-150 dark:border-slate-800 p-4" : "max-h-0"
-          }`}
+        className={`toc-content transition-all duration-300 ease-in-out ${
+          isExpanded
+            ? "max-h-[400px] opacity-100 overflow-y-auto pr-1.5"
+            : "max-h-0 opacity-0 overflow-hidden pointer-events-none"
+        }`}
       >
-        <ul className="space-y-2.5 text-base text-gray-700 dark:text-gray-300 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent m-0 p-0">
+        <style jsx>{`
+          .toc-content::-webkit-scrollbar {
+            width: 4px;
+          }
+          .toc-content::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .toc-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 2px;
+          }
+          .toc-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+          }
+        `}</style>
+        <nav className="space-y-1 pl-1">
           {headings.map((heading) => {
-            const isH3 = heading.level === 3;
-            return (
-              <li
-                key={heading.id}
-                className={`${isH3
-                  ? "pl-6 border-l border-gray-200 dark:border-slate-800 ml-2"
-                  : ""
-                  } list-none m-0 p-0`}
-              >
-                <a
-                  href={`#${heading.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const element = document.getElementById(heading.id);
-                    if (element) {
-                      const offset = 100; // Space for fixed header
-                      const bodyRect = document.body.getBoundingClientRect().top;
-                      const elementRect = element.getBoundingClientRect().top;
-                      const elementPosition = elementRect - bodyRect;
-                      const offsetPosition = elementPosition - offset;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: "smooth",
-                      });
+            const isActive = activeId === heading.id;
 
-                      // Highlight effect for the target heading briefly
-                      element.classList.add("bg-gray-100/50", "dark:bg-slate-800/50", "transition-colors", "duration-500");
-                      setTimeout(() => {
-                        element.classList.remove("bg-gray-100/50", "dark:bg-slate-800/50");
-                      }, 2000);
-                    }
-                  }}
-                  className={
-                    isH3
-                      ? "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:underline transition-colors block py-0.5 text-sm not-italic font-normal"
-                      : "text-gray-800 dark:text-gray-200 hover:text-gray-950 dark:hover:text-white hover:underline transition-colors block py-0.5 font-semibold not-italic"
-                  }
-                >
-                  {heading.text}
-                </a>
-              </li>
+            let levelClass = "";
+            let pyClass = "py-1";
+            if (heading.level === 1) {
+              levelClass = "text-xs md:text-sm font-bold text-gray-900";
+            } else if (heading.level === 2) {
+              levelClass = "text-xs md:text-sm font-semibold text-gray-800";
+            } else if (heading.level === 3) {
+              levelClass = "pl-4 text-xs text-gray-600 border-l border-gray-200";
+              pyClass = "py-0.5";
+            } else if (heading.level === 4) {
+              levelClass = "pl-7 text-[11px] text-gray-500 border-l border-gray-200";
+              pyClass = "py-0.5";
+            } else if (heading.level === 5) {
+              levelClass = "pl-10 text-[10px] text-gray-400 border-l border-gray-200";
+              pyClass = "py-0.5";
+            } else if (heading.level === 6) {
+              levelClass = "pl-12 text-[9px] text-gray-400 border-l border-gray-200";
+              pyClass = "py-0.5";
+            }
+
+            let activeClass = "";
+            if (isActive) {
+              if (heading.level <= 2) {
+                activeClass = "text-[#105d97] font-bold translate-x-0.5";
+              } else {
+                let paddingClass = "pl-[14px]";
+                if (heading.level === 4) {
+                  paddingClass = "pl-[26px]";
+                } else if (heading.level === 5) {
+                  paddingClass = "pl-[38px]";
+                } else if (heading.level === 6) {
+                  paddingClass = "pl-[46px]";
+                }
+                activeClass = `text-[#105d97] font-bold border-l-2 border-[#105d97] ${paddingClass} -ml-[1px]`;
+              }
+            } else {
+              activeClass = "hover:text-[#105d97] hover:translate-x-0.5";
+            }
+
+            return (
+              <a
+                key={heading.id}
+                href={`#${heading.id}`}
+                onClick={(e) => handleScroll(e, heading.id)}
+                className={`block transition-all duration-200 leading-6 cursor-pointer transform ${levelClass} ${pyClass} ${activeClass}`}
+              >
+                {heading.text}
+              </a>
             );
           })}
-        </ul>
+        </nav>
       </div>
     </div>
   );
 };
+
+export default TableOfContents;

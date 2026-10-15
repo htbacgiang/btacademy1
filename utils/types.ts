@@ -1,15 +1,21 @@
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface PostDetail {
   id: string;
   title: string;
   slug: string;
   meta: string;
-  category:string;
+  category: string;
   tags: string[];
   thumbnail?: string;
   createdAt: string;
   isDraft?: boolean;
   isFeatured?: boolean;
   featuredOrder?: number | null;
+  faq?: FaqItem[];
 }
 
 export interface IncomingPost {
@@ -18,8 +24,9 @@ export interface IncomingPost {
   slug: string;
   meta: string;
   tags: string;
-  category:string;
+  category: string;
   thumbnail?: string;
+  faq?: string | FaqItem[];
 }
 
 export interface UserProfile {

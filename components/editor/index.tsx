@@ -19,6 +19,8 @@ import { BubbleMenu as BubbleMenuExtension } from "@tiptap/extension-bubble-menu
 import ToolBar from "./ToolBar";
 import EditLink from "./Link/EditLink";
 import EditImage from "./Image/EditImage";
+import EditCloudinaryVideo from "./EditCloudinaryVideo";
+import CloudinaryVideo from "./CloudinaryVideo";
 import GalleryModal, { ImageSelectionResult } from "./GalleryModal";
 import ImageGalleryInsertModal from "./GalleryModal/ImageGalleryInsertModal";
 import { ImageGallery, GalleryImage } from "./ImageGallery";
@@ -27,6 +29,10 @@ import SEOForm, { SeoResult } from "./SeoForm";
 import ThumbnailSelector from "./ThumbnailSelector";
 import WordCount from "./WordCount";
 import { toast } from "react-toastify";
+import R2ImageModal, { R2ImageSelectionResult } from "./R2ImageModal";
+
+import QASection from "./QASection";
+import { FaqItem } from "../../utils/types";
 
 export interface FinalPost extends SeoResult {
   id?: string;
@@ -37,6 +43,7 @@ export interface FinalPost extends SeoResult {
   isDraft?: boolean;
   isFeatured?: boolean; // Bài viết nổi bật
   author?: string;
+  faq?: FaqItem[];
 }
 
 interface Props {
@@ -54,6 +61,7 @@ const Editor: FC<Props> = ({
 }): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
   const [showGallery, setShowGallery] = useState(false);
+  const [showR2Modal, setShowR2Modal] = useState(false);
   const [showImageGallery, setShowImageGallery] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [savingDraft, setSavingDraft] = useState(false);
@@ -73,6 +81,7 @@ const Editor: FC<Props> = ({
     category: "",
     focusKeyword: "",
     author: "",
+    faq: [],
   });
   const [authors, setAuthors] = useState<{ _id: string; name: string }[]>([]);
 
@@ -234,6 +243,7 @@ const Editor: FC<Props> = ({
       TableCell,
       BubbleMenuExtension,
       ImageGallery,
+      CloudinaryVideo,
     ],
 
     editorProps: {
@@ -260,6 +270,13 @@ const Editor: FC<Props> = ({
       .run();
   };
 
+  const handleR2ImageSelection = (result: R2ImageSelectionResult) => {
+    if (!editor) return;
+    (editor.chain().focus() as any)
+      .setImage({ src: result.src, alt: result.altText || "", caption: result.caption || "" })
+      .run();
+  };
+
   const handleImageGallerySelection = (galleryImages: GalleryImage[]) => {
     if (!editor) return;
     (editor.chain().focus() as any).setImageGallery({ images: galleryImages }).run();
@@ -267,7 +284,13 @@ const Editor: FC<Props> = ({
 
   const handleSubmit = () => {
     if (!editor) return;
-    onSubmit({ ...post, content: editor.getHTML(), isDraft: false, isFeatured });
+    onSubmit({
+      ...post,
+      content: editor.getHTML(),
+      isDraft: false,
+      isFeatured,
+      faq: post.faq || [],
+    });
   };
 
   const saveDraft = useCallback(async () => {
@@ -294,12 +317,16 @@ const Editor: FC<Props> = ({
       }
       // Đảm bảo luôn gửi một mảng hợp lệ
       formData.append("tags", JSON.stringify(tagsArray || []));
+      formData.append("faq", JSON.stringify(post.faq || []));
 
       if (post.id) {
         formData.append("postId", post.id);
       }
 
       if (post.thumbnail instanceof File) {
+        formData.append("thumbnail", post.thumbnail);
+      } else if (typeof post.thumbnail === "string" && post.thumbnail) {
+        formData.append("thumbnailUrl", post.thumbnail);
         formData.append("thumbnail", post.thumbnail);
       }
 
@@ -390,7 +417,7 @@ const Editor: FC<Props> = ({
 
   const updateSeoValue = (result: SeoResult) => setPost({ ...post, ...result });
 
-  const updateThumbnail = (file: File) => setPost({ ...post, thumbnail: file });
+  const updateThumbnail = (fileOrUrl: File | string) => setPost({ ...post, thumbnail: fileOrUrl });
 
   useEffect(() => {
     if (editor && selectionRange) {
@@ -403,12 +430,64 @@ const Editor: FC<Props> = ({
   }, []);
 
   useEffect(() => {
+    if (!editor) return;
+
+    const refreshVideoRatios = () => {
+      const videos = Array.from(editor.view.dom.querySelectorAll("video[data-cloudinary-video]"));
+      videos.forEach((video) => {
+        const element = video as HTMLVideoElement;
+        if (element.dataset.ratioListener !== "true") {
+          element.addEventListener("loadedmetadata", handleMetadata);
+          element.dataset.ratioListener = "true";
+        }
+        const wrapper = element.closest(".cloudinary-video-embed") as HTMLElement | null;
+        if (!wrapper || !element.videoWidth || !element.videoHeight) return;
+
+        const isSquare =
+          Math.abs(element.videoWidth - element.videoHeight) /
+            Math.max(element.videoWidth, element.videoHeight) <
+          0.12;
+        const aspectRatio = isSquare
+          ? "square"
+          : element.videoHeight > element.videoWidth
+          ? "vertical"
+          : "horizontal";
+        const aspectValue =
+          aspectRatio === "square" ? "1 / 1" : aspectRatio === "vertical" ? "9 / 16" : "16 / 9";
+        const maxWidth =
+          aspectRatio === "vertical" ? "420px" : aspectRatio === "square" ? "640px" : "100%";
+
+        wrapper.dataset.aspectRatio = aspectRatio;
+        wrapper.style.aspectRatio = aspectValue;
+        wrapper.style.maxWidth = maxWidth;
+      });
+    };
+
+    const handleMetadata = () => refreshVideoRatios();
+    const videos = Array.from(editor.view.dom.querySelectorAll("video[data-cloudinary-video]"));
+    videos.forEach((video) => {
+      if ((video as HTMLVideoElement).readyState >= 1) handleMetadata();
+    });
+    editor.on("update", refreshVideoRatios);
+    refreshVideoRatios();
+
+    return () => {
+      videos.forEach((video) => video.removeEventListener("loadedmetadata", handleMetadata));
+      editor.off("update", refreshVideoRatios);
+    };
+  }, [editor, initialValue?.content]);
+
+  useEffect(() => {
     if (initialValue) {
       const authorId = typeof initialValue.author === "object" && initialValue.author
         ? (initialValue.author as any)._id
         : initialValue.author || "";
 
-      setPost({ ...initialValue, author: authorId });
+      setPost({
+        ...initialValue,
+        author: authorId,
+        faq: initialValue.faq || [],
+      });
       editor?.commands.setContent(initialValue.content);
 
       const { meta, slug, tags, category, focusKeyword } = initialValue;
@@ -426,99 +505,108 @@ const Editor: FC<Props> = ({
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-6 w-full items-stretch">
-        {/* Content - Left */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-[calc(100vh-140px)] overflow-hidden flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-2 flex-shrink-0">
-            <h2 className="text-xl font-bold text-gray-900">Nội dung bài viết *</h2>
-            <div className="flex items-center gap-3">
-              {(isCreatingNewPost || (!isDraft && post.id)) && (
-                <button
-                  onClick={isCreatingNewPost ? saveDraft : convertToDraft}
-                  disabled={savingDraft || publishing}
-                  className={`flex items-center justify-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors font-medium text-sm ${(savingDraft || publishing) ? 'opacity-70 cursor-not-allowed' : ''}`}
-                >
-                  {(savingDraft || publishing) ? (
-                    <svg className="animate-spin h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                    </svg>
-                  )}
-                  <span className="whitespace-nowrap">{savingDraft ? "Đang lưu..." : (isCreatingNewPost ? "Lưu nháp" : "Về nháp")}</span>
-                </button>
-              )}
-
-              {post.id && isDraft && (
-                <button
-                  onClick={publishDraft}
-                  disabled={publishing}
-                  className={`flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium text-sm ${publishing ? 'opacity-70 cursor-not-allowed' : ''}`}
-                >
-                  {publishing ? (
-                    <svg className="animate-spin h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  )}
-                  <span className="whitespace-nowrap">{publishing ? "Đang xử lý..." : "Công khai"}</span>
-                </button>
-              )}
-
-              <button
-                onClick={handleSubmit}
-                disabled={busy}
-                className={`flex items-center justify-center gap-2 px-4 py-2 bg-[#105d97] hover:bg-[#0e4d7a] text-white rounded-lg transition-colors font-medium text-sm ${busy ? 'opacity-70 cursor-not-allowed' : ''}`}
-              >
-                {busy ? (
-                  <svg className="animate-spin h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
+      <div className="flex flex-col lg:flex-row gap-6 w-full items-start">
+        {/* Left Column */}
+        <div className="flex-1 min-w-0 space-y-6">
+          {/* Content Card */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-[calc(100vh-140px)] min-h-[550px] overflow-hidden">
+            <div className="flex items-center justify-between mb-2 flex-shrink-0">
+              <h2 className="text-xl font-bold text-gray-900">Nội dung bài viết *</h2>
+              <div className="flex items-center gap-3">
+                {(isCreatingNewPost || (!isDraft && post.id)) && (
+                  <button
+                    onClick={isCreatingNewPost ? saveDraft : convertToDraft}
+                    disabled={savingDraft || publishing}
+                    className={`flex items-center justify-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors font-medium text-sm ${(savingDraft || publishing) ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  >
+                    {(savingDraft || publishing) ? (
+                      <svg className="animate-spin h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                      </svg>
+                    )}
+                    <span className="whitespace-nowrap">{savingDraft ? "Đang lưu..." : (isCreatingNewPost ? "Lưu nháp" : "Về nháp")}</span>
+                  </button>
                 )}
-                <span className="whitespace-nowrap">{busy ? "Đang đăng..." : btnTitle}</span>
-              </button>
-            </div>
-          </div>
 
-          <div className="border border-gray-200 rounded-lg flex flex-col bg-white flex-1 min-h-0">
-            <div className="bg-gray-50 border-b border-gray-200 p-2 flex-shrink-0 z-10">
-              <ToolBar
-                editor={editor}
-                onOpenImageClick={() => setShowGallery(true)}
-                onOpenGalleryClick={() => setShowImageGallery(true)}
-              />
-            </div>
+                {post.id && isDraft && (
+                  <button
+                    onClick={publishDraft}
+                    disabled={publishing}
+                    className={`flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium text-sm ${publishing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  >
+                    {publishing ? (
+                      <svg className="animate-spin h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    )}
+                    <span className="whitespace-nowrap">{publishing ? "Đang xử lý..." : "Công khai"}</span>
+                  </button>
+                )}
 
-            <div className="p-4 w-full flex-1 overflow-y-auto custom-scrollbar">
-              {editor ? <EditLink editor={editor} /> : null}
-              {editor ? <EditImage editor={editor} /> : null}
-              <div className="editor-content">
-                <EditorContent editor={editor} className="min-h-[600px]" />
+                <button
+                  onClick={handleSubmit}
+                  disabled={busy}
+                  className={`flex items-center justify-center gap-2 px-4 py-2 bg-[#105d97] hover:bg-[#0e4d7a] text-white rounded-lg transition-colors font-medium text-sm ${busy ? 'opacity-70 cursor-not-allowed' : ''}`}
+                >
+                  {busy ? (
+                    <svg className="animate-spin h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                  )}
+                  <span className="whitespace-nowrap">{busy ? "Đang đăng..." : btnTitle}</span>
+                </button>
               </div>
             </div>
+
+            <div className="border border-gray-200 rounded-lg flex flex-col bg-white flex-1 min-h-0 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 p-2 flex-shrink-0 z-20 sticky top-0 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+                <ToolBar
+                  editor={editor}
+                  onOpenImageClick={() => setShowGallery(true)}
+                  onOpenR2ModalClick={() => setShowR2Modal(true)}
+                  onOpenGalleryClick={() => setShowImageGallery(true)}
+                />
+              </div>
+
+              <div className="p-4 w-full flex-1 min-h-0 overflow-y-auto custom-scrollbar">
+                {editor ? <EditLink editor={editor} /> : null}
+                {editor ? <EditImage editor={editor} /> : null}
+                {editor ? <EditCloudinaryVideo editor={editor} /> : null}
+                <div className="editor-content min-h-full">
+                  <EditorContent editor={editor} className="min-h-[500px]" />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-3 text-sm text-gray-500 flex-shrink-0">
+              <WordCount editor={editor} />
+            </div>
           </div>
 
-          <div className="mt-3 text-sm text-gray-500 flex-shrink-0">
-            <WordCount editor={editor} />
-          </div>
-
-
+          {/* QA / FAQ Section for GEO & AIO */}
+          <QASection
+            value={post.faq || []}
+            onChange={(faq) => setPost((prev) => ({ ...prev, faq }))}
+          />
         </div>
 
         {/* Basic Info - Right 350px */}
-        <div className="sticky top-0 z-10 h-fit pr-1 pb-2 w-full lg:w-[350px] shrink-0">
+        <div className="sticky top-6 z-10 h-fit pr-1 pb-2 w-full lg:w-[350px] shrink-0">
           {/* Basic Info & SEO Combine */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-3">
             <div className="space-y-2">
@@ -628,6 +716,11 @@ const Editor: FC<Props> = ({
         onFileSelect={handleImageUpload}
         uploading={uploading || loadingImages}
       />
+      <R2ImageModal
+        visible={showR2Modal}
+        onClose={() => setShowR2Modal(false)}
+        onSelect={handleR2ImageSelection}
+      />
       <ImageGalleryInsertModal
         visible={showImageGallery}
         onClose={() => setShowImageGallery(false)}
@@ -642,6 +735,57 @@ const Editor: FC<Props> = ({
           max-width: 100%;
           width: max-content !important;
           margin: 1.5em auto !important;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #cbd5e1;
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: #94a3b8;
+        }
+        .cloudinary-video-embed[data-aspect-ratio="vertical"] {
+          width: 100% !important;
+          max-width: 420px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        .cloudinary-video-embed[data-aspect-ratio="square"] {
+          width: 100% !important;
+          max-width: 640px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        .cloudinary-video-embed[data-aspect-ratio="horizontal"] {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        .cloudinary-video-embed {
+          margin: 1.5em auto;
+          border-radius: 0.75rem;
+          overflow: hidden;
+          background: #000;
+        }
+        .cloudinary-video-embed video {
+          display: block;
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: contain;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        @media (max-width: 767px) {
+          .cloudinary-video-embed[data-aspect-ratio="vertical"],
+          .cloudinary-video-embed[data-aspect-ratio="square"] {
+            max-width: 100% !important;
+          }
         }
       `}</style>
     </>

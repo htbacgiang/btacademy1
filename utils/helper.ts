@@ -13,6 +13,15 @@ export const generateFormData = (post: FinalPost) => {
       const tagStr = typeof value === "string" ? value.trim() : "";
       const tags = tagStr ? tagStr.split(",").map((tag: string) => tag.trim()) : [];
       formData.append("tags", JSON.stringify(tags));
+    } else if (key === "faq") {
+      formData.append("faq", JSON.stringify(value || []));
+    } else if (key === "thumbnail") {
+      if (value instanceof File) {
+        formData.append("thumbnail", value);
+      } else if (typeof value === "string" && value) {
+        formData.append("thumbnailUrl", value);
+        formData.append("thumbnail", value);
+      }
     } else if (typeof value === "boolean") {
       // FormData không hiểu boolean, phải chuyển thành string
       formData.append(key, String(value));

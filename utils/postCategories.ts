@@ -3,6 +3,7 @@ export const POST_CATEGORIES = [
   "Góc MC Nhí",
   "Thuyết trình & Giao tiếp",
   "Tin tức & Sự kiện",
+  "Feedback học viên",
 ] as const;
 
 export type PostCategory = (typeof POST_CATEGORIES)[number];

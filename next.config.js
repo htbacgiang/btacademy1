@@ -71,6 +71,18 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "img.btacademy.com.vn",
+      },
+      {
+        protocol: "https",
+        hostname: "*.btacademy.com.vn",
+      },
+      {
+        protocol: "https",
+        hostname: "*.r2.cloudflarestorage.com",
+      },
+      {
+        protocol: "https",
         hostname: "example.com",
       },
       {

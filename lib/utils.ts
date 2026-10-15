@@ -73,6 +73,7 @@ export const formatPosts = (posts: PostModelSchema[]): PostDetail[] => {
     isDraft: post.isDraft || false,
     isFeatured: post.isFeatured || false,
     featuredOrder: post.featuredOrder ?? null,
+    faq: post.faq || [],
   }));
 };
 

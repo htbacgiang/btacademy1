@@ -157,6 +157,28 @@ const updatePost: NextApiHandler = async (req, res) => {
     if ((body as any).author) {
       post.author = (body as any).author;
     }
+
+    if (body.tags !== undefined) {
+      try {
+        post.tags = typeof body.tags === "string" ? JSON.parse(body.tags) : body.tags;
+      } catch {
+        post.tags = [];
+      }
+    }
+
+    if ((body as any).faq !== undefined) {
+      try {
+        const rawFaq = typeof (body as any).faq === "string" ? JSON.parse((body as any).faq) : (body as any).faq;
+        post.faq = (Array.isArray(rawFaq) ? rawFaq : [])
+          .map((item: any) => ({
+            question: typeof item?.question === "string" ? item.question.trim() : "",
+            answer: typeof item?.answer === "string" ? item.answer.trim() : "",
+          }))
+          .filter((item: any) => item.question || item.answer);
+      } catch {
+        post.faq = [];
+      }
+    }
     
     // Cập nhật trạng thái nháp nếu có gửi lên
     if (isDraftRaw !== undefined && isDraftRaw !== null) {
@@ -171,7 +193,7 @@ const updatePost: NextApiHandler = async (req, res) => {
 
     // Cập nhật thumbnail: có thể là file mới upload hoặc URL từ gallery
     const thumbnailFile = files.thumbnail as formidable.File | undefined;
-    const thumbnailUrl = (body as any).thumbnail as string | undefined;
+    const thumbnailUrl = ((body as any).thumbnailUrl || (body as any).thumbnail) as string | undefined;
     
     if (thumbnailFile) {
       // Kiểm tra cấu hình Cloudinary trước khi upload

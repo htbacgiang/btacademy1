@@ -97,14 +97,33 @@ export default async function handler(req, res) {
 
 async function sendEmailNotification({ email, phone, fileName, filePath, originalFilename }) {
   try {
-    // Configure email transporter (using Gmail as example)
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER, // Your email
-        pass: process.env.EMAIL_PASS, // Your app password
-      },
-    });
+    const host = process.env.SMTP_HOST || "smtp-relay.brevo.com";
+    const port = Number(process.env.SMTP_PORT) || 587;
+    const user = process.env.SMTP_USER || process.env.EMAIL_USER;
+    const pass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+    const senderEmail = process.env.EMAIL_FROM || user;
+    const isBrevoOrCustom = Boolean(process.env.SMTP_PASS || process.env.SMTP_HOST);
+
+    // Configure email transporter (Brevo SMTP or Gmail fallback)
+    const transporter = nodemailer.createTransport(
+      isBrevoOrCustom
+        ? {
+            host,
+            port,
+            secure: port === 465,
+            auth: {
+              user,
+              pass,
+            },
+          }
+        : {
+            service: "gmail",
+            auth: {
+              user,
+              pass,
+            },
+          }
+    );
 
     const contactInfo = email ? `Email: ${email}` : `Số điện thoại: ${phone}`;
     
@@ -120,7 +139,7 @@ async function sendEmailNotification({ email, phone, fileName, filePath, origina
     }
     
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"BT Academy" <${senderEmail}>`,
       to: adminEmails, // Gửi đến nhiều email
       subject: `Bài Test Giọng MC Mới từ ${email || phone} - BT Academy`,
       html: `

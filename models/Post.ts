@@ -1,6 +1,11 @@
 import { Schema, models, model, ObjectId, Model } from "mongoose";
 import "./Author";
 
+export interface PostFaqItem {
+  question: string;
+  answer: string;
+}
+
 // title, content, slug, tags, thumbnail, meta, author, date
 export interface PostModelSchema {
   _id: ObjectId;
@@ -18,6 +23,7 @@ export interface PostModelSchema {
   deletedAt?: Date | null;
   createdAt: Date;
   isDirectPost?: boolean;
+  faq?: PostFaqItem[];
 }
 
 const PostSchema = new Schema<PostModelSchema>(
@@ -78,6 +84,20 @@ const PostSchema = new Schema<PostModelSchema>(
       type: Boolean,
       default: false,
     },
+    faq: [
+      {
+        question: {
+          type: String,
+          trim: true,
+          default: "",
+        },
+        answer: {
+          type: String,
+          trim: true,
+          default: "",
+        },
+      },
+    ],
   },
   {
     timestamps: true,

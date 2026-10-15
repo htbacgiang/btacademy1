@@ -51,6 +51,22 @@ const saveDraft: NextApiHandler = async (req, res) => {
       tags = [];
     }
 
+    let faq: { question: string; answer: string }[] = [];
+    try {
+      if ((fields as any).faq) {
+        faq = typeof (fields as any).faq === 'string' ? JSON.parse((fields as any).faq) : (fields as any).faq;
+        faq = (Array.isArray(faq) ? faq : [])
+          .map((item: any) => ({
+            question: typeof item?.question === 'string' ? item.question.trim() : '',
+            answer: typeof item?.answer === 'string' ? item.answer.trim() : '',
+          }))
+          .filter((item: any) => item.question || item.answer);
+      }
+    } catch (parseError) {
+      console.error("Lỗi parse faq:", parseError);
+      faq = [];
+    }
+
     const { title, content, slug, meta, category } = fields;
     const normalizedCategory = normalizePostCategory(category);
     const postId = (fields as any).postId;
@@ -80,11 +96,15 @@ const saveDraft: NextApiHandler = async (req, res) => {
         existingPost.tags = tags;
         existingPost.category = normalizedCategory || existingPost.category;
         existingPost.isDraft = true;
+        if ((fields as any).faq !== undefined) {
+          existingPost.faq = faq;
+        }
         if ((fields as any).author) {
           existingPost.author = (fields as any).author;
         }
 
-        // Nếu có thumbnail mới, upload lên Cloudinary
+        const thumbnailUrl = ((fields as any).thumbnailUrl || (fields as any).thumbnail) as string | undefined;
+        // Nếu có thumbnail mới, upload lên Cloudinary hoặc lưu URL từ R2
         if (files.thumbnail) {
           const thumbnail = files.thumbnail as formidable.File;
           const { secure_url: url, public_id } = await cloudinary.uploader.upload(
@@ -92,6 +112,8 @@ const saveDraft: NextApiHandler = async (req, res) => {
             { folder: process.env.CLOUDINARY_FOLDER || "btacademy" }
           );
           existingPost.thumbnail = { url, public_id };
+        } else if (thumbnailUrl && typeof thumbnailUrl === "string" && thumbnailUrl.trim()) {
+          existingPost.thumbnail = { url: thumbnailUrl.trim() };
         }
 
         await existingPost.save();
@@ -108,16 +130,20 @@ const saveDraft: NextApiHandler = async (req, res) => {
         category: normalizedCategory,
         author: (fields as any).author || session.user.sub,
         isDraft: true,
+        faq,
       });
 
-      // Nếu có thumbnail, upload lên Cloudinary
+      const newThumbnailUrl = ((fields as any).thumbnailUrl || (fields as any).thumbnail) as string | undefined;
+      // Nếu có thumbnail, upload lên Cloudinary hoặc lưu URL từ R2
       if (files.thumbnail) {
         const thumbnail = files.thumbnail as formidable.File;
         const { secure_url: url, public_id } = await cloudinary.uploader.upload(
           thumbnail.filepath,
-          { folder: "btacademy" }
+          { folder: process.env.CLOUDINARY_FOLDER || "btacademy" }
         );
         newDraft.thumbnail = { url, public_id };
+      } else if (newThumbnailUrl && typeof newThumbnailUrl === "string" && newThumbnailUrl.trim()) {
+        newDraft.thumbnail = { url: newThumbnailUrl.trim() };
       }
 
       await newDraft.save();

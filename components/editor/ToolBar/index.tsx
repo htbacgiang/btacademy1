@@ -23,6 +23,7 @@ import InsertLink from "../Link/InsertLink";
 import type { linkOption } from "../Link/LinkForm";
 import EmbedYoutube from "./EmbedYoutube";
 import EmbedFacebookReels from "./EmbedFacebookReels";
+import EmbedCloudinaryVideo from "./EmbedCloudinaryVideo";
 import EmbedImage from "./EmbedImage";
 import InsertTable from "./InsertTable";
 import FindReplace from "./FindReplace";
@@ -31,6 +32,7 @@ interface Props {
   editor: Editor | null;
   onOpenImageClick?(): void;
   onOpenGalleryClick?(): void;
+  onOpenR2ModalClick?(): void;
   onDropdownToggle?(isOpen: boolean): void;
 }
 
@@ -38,11 +40,16 @@ const ToolBar: FC<Props> = ({
   editor,
   onOpenImageClick,
   onOpenGalleryClick,
+  onOpenR2ModalClick,
   onDropdownToggle,
 }): JSX.Element | null => {
   const [textColor, setTextColor] = useState<string>("#000000");
   // Track heading level reactively so toolbar re-renders on selection change
   const [activeHeadingLevel, setActiveHeadingLevel] = useState<number | null>(null);
+  const [selectedCloudinaryVideo, setSelectedCloudinaryVideo] = useState<{
+    src?: string;
+    aspectRatio?: "square" | "vertical" | "horizontal";
+  } | null>(null);
 
   useEffect(() => {
     if (!editor) return;
@@ -63,6 +70,30 @@ const ToolBar: FC<Props> = ({
     return () => {
       editor.off("selectionUpdate", updateHeading);
       editor.off("transaction", updateHeading);
+    };
+  }, [editor]);
+
+  useEffect(() => {
+    if (!editor) {
+      setSelectedCloudinaryVideo(null);
+      return;
+    }
+
+    const syncSelectedVideo = () => {
+      setSelectedCloudinaryVideo(
+        editor.isActive("cloudinaryVideo")
+          ? (editor.getAttributes("cloudinaryVideo") as {
+              src?: string;
+              aspectRatio?: "square" | "vertical" | "horizontal";
+            })
+          : null
+      );
+    };
+
+    editor.on("selectionUpdate", syncSelectedVideo);
+    syncSelectedVideo();
+    return () => {
+      editor.off("selectionUpdate", syncSelectedVideo);
     };
   }, [editor]);
 
@@ -219,6 +250,27 @@ const ToolBar: FC<Props> = ({
     });
   };
 
+  const handleEmbedCloudinaryVideo = (video: {
+    src: string;
+    name?: string;
+    aspectRatio?: "square" | "vertical" | "horizontal";
+  }) => {
+    if (!editor) return;
+
+    const options = {
+      src: video.src,
+      title: video.name || "Video BT Academy",
+      aspectRatio: video.aspectRatio || "horizontal",
+    };
+
+    if (selectedCloudinaryVideo) {
+      (editor.chain().focus() as any).updateAttributes("cloudinaryVideo", options).run();
+      return;
+    }
+
+    (editor.chain().focus() as any).setCloudinaryVideo(options).run();
+  };
+
   const Head = () => {
     return (
       <div className="flex items-center gap-1 text-gray-700 dark:text-gray-300">
@@ -311,10 +363,26 @@ const ToolBar: FC<Props> = ({
         <div className="h-4 w-[1px] bg-gray-300 dark:bg-gray-600 mx-1" />
         <EmbedYoutube onSubmit={handleEmbedYoutube} onToggle={onDropdownToggle} />
         <EmbedFacebookReels onSubmit={handleEmbedFacebookReels} />
+        <EmbedCloudinaryVideo
+          onSubmit={handleEmbedCloudinaryVideo}
+          onToggle={onDropdownToggle}
+          selectedVideo={selectedCloudinaryVideo}
+          centered
+        />
         <EmbedImage onSubmit={handleEmbedImage} />
-        <Button onClick={onOpenImageClick} title="Chèn một ảnh">
+        <Button onClick={onOpenImageClick} title="Chèn một ảnh (Cloudinary)">
           <BsImageFill />
         </Button>
+        {onOpenR2ModalClick && (
+          <Button onClick={onOpenR2ModalClick}>
+            <div className="flex items-center gap-0.5 text-orange-600 dark:text-orange-400 font-semibold" title="Kho ảnh Cloudflare R2">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+              </svg>
+              <span className="text-[10px] font-bold tracking-tight">R2</span>
+            </div>
+          </Button>
+        )}
         <Button onClick={onOpenGalleryClick} title="Chèn gallery ảnh">
           <BsImages />
         </Button>
