@@ -26,11 +26,13 @@ export interface CampaignConfig {
   /** Thời gian tự động đóng popup (milliseconds) - 90000ms = 90 giây */
   autoCloseMs: number;
   /** 
-   * Có giới hạn chỉ hiện 1 lần trong phiên không.
-   * false: Mỗi lần người dùng vào lại trang đều tự mở sau 3s.
+   * Chỉ hiển thị 1 lần duy nhất khi vào web (lưu vào localStorage & sessionStorage).
+   * Khi đặt true: sau lần đầu tiên xem, popup sẽ không hiển thị lại trên trình duyệt đó.
    */
-  oncePerSession: boolean;
-  /** Khóa lưu trong sessionStorage để đánh dấu đã xem trong phiên duyệt web */
+  onlyFirstVisit: boolean;
+  /** Tương thích: có giới hạn 1 lần mỗi phiên */
+  oncePerSession?: boolean;
+  /** Khóa lưu trong storage để đánh dấu đã xem */
   sessionStorageKey: string;
   /** Múi giờ áp dụng để so sánh ngày giờ */
   timeZone: string;
@@ -73,9 +75,10 @@ export const CAMPAIGN_2010_CONFIG: CampaignConfig = {
   // Chiến dịch hiển thị trong đúng 3 ngày (19/10, 20/10, 21/10)
   startDate: '2026-10-19T00:00:00+07:00',
   endDate: '2026-10-21T23:59:59+07:00',
-  delayMs: 3000,          // Tự động mở sau 3 giây
+  delayMs: 2000,          // Tự động mở sau 2 giây
   autoCloseMs: 90000,     // Tự động đóng sau 90 giây (90s)
-  oncePerSession: false,  // Mỗi lần vào trang đều tự mở sau 3s
+  onlyFirstVisit: true,   // Chỉ hiển thị lần đầu tiên vào web
+  oncePerSession: true,
   sessionStorageKey: 'bt_academy_popup_2010_shown_v1',
   timeZone: 'Asia/Ho_Chi_Minh',
   excludeRoutes: ['/admin', '/dashboard'],

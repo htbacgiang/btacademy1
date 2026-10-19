@@ -140,14 +140,17 @@ export const October20Popup: React.FC<October20PopupProps> = ({
     }
   }, []);
 
-  // Đóng popup và ghi nhớ vào sessionStorage nếu được bật
+  // Đóng popup và ghi nhớ vào storage nếu được cấu hình chỉ hiện lần đầu
   const handleClose = useCallback(() => {
     setIsOpen(false);
-    if (typeof window !== 'undefined' && config.oncePerSession && config.sessionStorageKey) {
-      try {
-        sessionStorage.setItem(config.sessionStorageKey, 'true');
-      } catch (err) {
-        // Tránh lỗi bảo mật trên một số trình duyệt khi cookie/storage bị chặn
+    if (typeof window !== 'undefined' && config.sessionStorageKey) {
+      if (config.onlyFirstVisit || config.oncePerSession) {
+        try {
+          localStorage.setItem(config.sessionStorageKey, 'true');
+          sessionStorage.setItem(config.sessionStorageKey, 'true');
+        } catch (err) {
+          // Tránh lỗi bảo mật trên một số trình duyệt khi cookie/storage bị chặn
+        }
       }
     }
     // Trả lại focus cho phần tử trước đó
@@ -155,7 +158,7 @@ export const October20Popup: React.FC<October20PopupProps> = ({
       previousActiveElementRef.current.focus();
     }
     onClose?.();
-  }, [config.oncePerSession, config.sessionStorageKey, onClose]);
+  }, [config.onlyFirstVisit, config.oncePerSession, config.sessionStorageKey, onClose]);
 
   // Đếm ngược và tự động đóng popup sau thời gian autoCloseMs (mặc định 90 giây = 90s)
   useEffect(() => {
@@ -202,15 +205,16 @@ export const October20Popup: React.FC<October20PopupProps> = ({
       return;
     }
 
-    // Nếu cấu hình chỉ hiện 1 lần mỗi phiên thì mới kiểm tra sessionStorage
-    if (config.oncePerSession) {
+    // Nếu cấu hình chỉ hiện lần đầu tiên vào web: kiểm tra cả localStorage và sessionStorage
+    if (config.onlyFirstVisit || config.oncePerSession) {
       try {
-        const alreadyShown = sessionStorage.getItem(config.sessionStorageKey);
-        if (alreadyShown === 'true') {
+        const shownInLocal = localStorage.getItem(config.sessionStorageKey);
+        const shownInSession = sessionStorage.getItem(config.sessionStorageKey);
+        if (shownInLocal === 'true' || shownInSession === 'true') {
           return;
         }
       } catch (err) {
-        // Bỏ qua lỗi truy cập sessionStorage
+        // Bỏ qua lỗi truy cập storage
       }
     }
 
@@ -221,6 +225,17 @@ export const October20Popup: React.FC<October20PopupProps> = ({
         previousActiveElementRef.current = document.activeElement;
       }
       setIsOpen(true);
+
+      // Đánh dấu đã hiển thị ngay khi mở để tránh mở lại khi người dùng reload hoặc chuyển trang
+      if (config.onlyFirstVisit || config.oncePerSession) {
+        try {
+          localStorage.setItem(config.sessionStorageKey, 'true');
+          sessionStorage.setItem(config.sessionStorageKey, 'true');
+        } catch (err) {
+          // Bỏ qua lỗi storage
+        }
+      }
+
       onOpen?.();
     }, config.delayMs);
 
