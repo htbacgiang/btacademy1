@@ -60,9 +60,12 @@ const R2ImageUploader: FC<Props> = ({
     setFile(selectedFile);
     setPreviewUrl(objectUrl);
     setProgress(0);
-    // Gợi ý alt text từ tên file không có đuôi mở rộng
-    const nameWithoutExt = selectedFile.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
-    if (!altText) {
+    // Gợi ý alt text: ưu tiên Alt text gần nhất đã nhập từ localStorage
+    const savedAlt = typeof window !== "undefined" ? localStorage.getItem("r2_last_alt_text") : "";
+    if (savedAlt && savedAlt.trim()) {
+      setAltText(savedAlt);
+    } else if (!altText) {
+      const nameWithoutExt = selectedFile.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
       setAltText(nameWithoutExt);
     }
   };
@@ -168,6 +171,10 @@ const R2ImageUploader: FC<Props> = ({
       if (directUploadSuccess) {
         setProgress(100);
         toast.success("Upload ảnh lên Cloudflare R2 thành công!");
+
+        if (altText.trim() && typeof window !== "undefined") {
+          localStorage.setItem("r2_last_alt_text", altText.trim());
+        }
 
         // 3. Callback để tự động chèn vào editor
         onSuccess({
@@ -366,7 +373,12 @@ const R2ImageUploader: FC<Props> = ({
                     <input
                       type="text"
                       value={altText}
-                      onChange={(e) => setAltText(e.target.value)}
+                      onChange={(e) => {
+                        setAltText(e.target.value);
+                        if (typeof window !== "undefined") {
+                          localStorage.setItem("r2_last_alt_text", e.target.value);
+                        }
+                      }}
                       placeholder="Mô tả cho ảnh..."
                       disabled={uploading}
                       className="w-full text-xs px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#105d97]"

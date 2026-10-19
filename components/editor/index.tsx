@@ -30,6 +30,7 @@ import ThumbnailSelector from "./ThumbnailSelector";
 import WordCount from "./WordCount";
 import { toast } from "react-toastify";
 import R2ImageModal, { R2ImageSelectionResult } from "./R2ImageModal";
+import { FiTrash2 } from "react-icons/fi";
 
 import QASection from "./QASection";
 import { FaqItem } from "../../utils/types";
@@ -248,6 +249,14 @@ const Editor: FC<Props> = ({
 
     editorProps: {
       handleClick(view, pos, event) {
+        const target = event.target as HTMLElement;
+        if (target && target.tagName === "IMG") {
+          try {
+            const { NodeSelection } = require("@tiptap/pm/state");
+            const nodePos = view.posAtDOM(target, 0);
+            view.dispatch(view.state.tr.setSelection(NodeSelection.create(view.state.doc, nodePos)));
+          } catch (_) {}
+        }
         const { state } = view;
         const selectionRange = getMarkRange(
           state.doc.resolve(pos),
@@ -503,6 +512,32 @@ const Editor: FC<Props> = ({
     }
   }, [initialValue, editor]);
 
+  // Kiểm tra xem có ảnh đang được chọn trong editor không
+  const [isImageSelected, setIsImageSelected] = useState(false);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const checkImageSelection = () => {
+      setIsImageSelected(editor.isActive("image"));
+    };
+
+    editor.on("selectionUpdate", checkImageSelection);
+    editor.on("transaction", checkImageSelection);
+
+    return () => {
+      editor.off("selectionUpdate", checkImageSelection);
+      editor.off("transaction", checkImageSelection);
+    };
+  }, [editor]);
+
+  const handleDeleteSelectedImage = () => {
+    if (!editor) return;
+    editor.chain().focus().deleteSelection().run();
+    setIsImageSelected(false);
+    toast.success("Đã xóa ảnh được chọn!");
+  };
+
   return (
     <>
       <div className="flex flex-col lg:flex-row gap-6 w-full items-start">
@@ -511,7 +546,20 @@ const Editor: FC<Props> = ({
           {/* Content Card */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col h-[calc(100vh-140px)] min-h-[550px] overflow-hidden">
             <div className="flex items-center justify-between mb-2 flex-shrink-0">
-              <h2 className="text-xl font-bold text-gray-900">Nội dung bài viết *</h2>
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-bold text-gray-900">Nội dung bài viết *</h2>
+                {isImageSelected && (
+                  <button
+                    type="button"
+                    onClick={handleDeleteSelectedImage}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-all cursor-pointer animate-in fade-in"
+                    title="Xóa ảnh đang chọn khỏi nội dung bài viết"
+                  >
+                    <FiTrash2 size={14} />
+                    <span>Xóa ảnh đã chọn</span>
+                  </button>
+                )}
+              </div>
               <div className="flex items-center gap-3">
                 {(isCreatingNewPost || (!isDraft && post.id)) && (
                   <button

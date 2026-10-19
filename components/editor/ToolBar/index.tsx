@@ -17,6 +17,8 @@ import {
 } from "react-icons/bs";
 
 import Button from "./Button";
+import { FiTrash2 } from "react-icons/fi";
+import { toast } from "react-toastify";
 import { getFocusedEditor } from "../EditorUtils";
 import DropdownOptions from "../../common/DropdownOptions";
 import InsertLink from "../Link/InsertLink";
@@ -46,10 +48,28 @@ const ToolBar: FC<Props> = ({
   const [textColor, setTextColor] = useState<string>("#000000");
   // Track heading level reactively so toolbar re-renders on selection change
   const [activeHeadingLevel, setActiveHeadingLevel] = useState<number | null>(null);
+  const [isImageActive, setIsImageActive] = useState<boolean>(false);
   const [selectedCloudinaryVideo, setSelectedCloudinaryVideo] = useState<{
     src?: string;
     aspectRatio?: "square" | "vertical" | "horizontal";
   } | null>(null);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const checkImage = () => {
+      setIsImageActive(editor.isActive("image"));
+    };
+
+    editor.on("selectionUpdate", checkImage);
+    editor.on("transaction", checkImage);
+    checkImage();
+
+    return () => {
+      editor.off("selectionUpdate", checkImage);
+      editor.off("transaction", checkImage);
+    };
+  }, [editor]);
 
   useEffect(() => {
     if (!editor) return;
@@ -389,6 +409,23 @@ const ToolBar: FC<Props> = ({
         <InsertTable editor={editor} />
         <InsertLink onSubmit={handleLinkSubmit} onToggle={onDropdownToggle} />
         <FindReplace editor={editor} onToggle={onDropdownToggle} />
+
+        {/* Nút Xóa ảnh đã chọn (xuất hiện khi nhấp chọn bất kỳ ảnh nào trong nội dung) */}
+        {isImageActive && (
+          <button
+            type="button"
+            onClick={() => {
+              editor.chain().focus().deleteSelection().run();
+              setIsImageActive(false);
+              toast.success("Đã xóa ảnh được chọn!");
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md text-xs font-semibold shadow-xs transition-colors cursor-pointer ml-1 animate-in fade-in"
+            title="Xóa ảnh đang chọn khỏi bài viết"
+          >
+            <FiTrash2 size={13} />
+            <span>Xóa ảnh đã chọn</span>
+          </button>
+        )}
       </div>
       {/* Content Formatting Group */}
       <div className="flex items-center gap-1 flex-wrap">

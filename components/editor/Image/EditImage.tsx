@@ -200,9 +200,12 @@ const EditImage: FC<Props> = ({ editor }): JSX.Element | null => {
               className="w-full bg-white dark:bg-gray-700 rounded border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 transition p-2 text-gray-800 dark:text-gray-200 text-sm"
               placeholder="Mô tả ảnh..."
               value={imageData.alt}
-              onChange={(e) =>
-                setImageData({ ...imageData, alt: e.target.value })
-              }
+              onChange={(e) => {
+                setImageData({ ...imageData, alt: e.target.value });
+                if (typeof window !== "undefined") {
+                  localStorage.setItem("r2_last_alt_text", e.target.value);
+                }
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();

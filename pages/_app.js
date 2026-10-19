@@ -6,6 +6,12 @@ import { SessionProvider } from "next-auth/react"
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
+import dynamic from "next/dynamic";
+
+const October20Popup = dynamic(
+  () => import("../components/campaigns/October20Popup"),
+  { ssr: false }
+);
 
 // Font Rajdhani được load qua CSS trong globals.css để tránh lỗi build trên VPS
 // Nếu cần sử dụng next/font, có thể uncomment code bên dưới và cấu hình network cho VPS
@@ -157,6 +163,7 @@ function MyApp({ Component, pageProps = {} }) {
                 theme="light"
                 style={{ zIndex: 10001 }}
               />
+              <October20Popup />
               <Component {...pageProps} />
             </div>
           </SessionProvider>

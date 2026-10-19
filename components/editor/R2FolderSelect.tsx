@@ -391,21 +391,6 @@ const R2FolderSelect: FC<Props> = ({
           </button>
         )}
 
-        {/* Trường hợp thư mục hiện tại chưa có thư mục con nào */}
-        {visibleFolderCards.length === 0 && (
-          <div className="col-span-full py-5 text-center text-xs text-gray-500 border border-dashed border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50/50 dark:bg-gray-800/40">
-            {currentNav
-              ? `Thư mục "${getFolderName(currentNav)}" chưa có thư mục con nào.`
-              : "Chưa có thư mục nào trên Cloudflare R2."}
-            <button
-              type="button"
-              onClick={() => setIsCreating(true)}
-              className="ml-2 font-semibold text-[#105d97] hover:underline cursor-pointer"
-            >
-              + Tạo ngay
-            </button>
-          </div>
-        )}
 
         {/* Danh sách các thư mục / thư mục con ở cấp hiện tại */}
         {visibleFolderCards.map((card) => {

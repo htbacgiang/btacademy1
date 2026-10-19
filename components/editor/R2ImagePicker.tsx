@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useCallback } from "react";
+import { FC, useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import {
   FiTrash2,
@@ -9,11 +9,14 @@ import {
   FiFolder,
   FiAlertTriangle,
   FiCornerUpRight,
+  FiUploadCloud,
 } from "react-icons/fi";
 import { FcFolder } from "react-icons/fc";
 import { BsCardImage } from "react-icons/bs";
 import { toast } from "react-toastify";
 import R2FolderSelect, { getFolderName, getParentFolder } from "./R2FolderSelect";
+
+const LAST_ALT_STORAGE_KEY = "r2_last_alt_text";
 
 export interface R2ImageItem {
   key: string;
@@ -86,6 +89,22 @@ const R2ImagePicker: FC<Props> = ({
   const [activeImage, setActiveImage] = useState<R2ImageItem | null>(null);
   const [altText, setAltText] = useState("");
   const [caption, setCaption] = useState("");
+
+  // Trạng thái upload nhanh tại ô đầu tiên của danh sách ảnh
+  const [quickUploading, setQuickUploading] = useState(false);
+  const [quickUploadProgress, setQuickUploadProgress] = useState(0);
+  const [isDragOverUpload, setIsDragOverUpload] = useState(false);
+  const quickUploadInputRef = useRef<HTMLInputElement>(null);
+
+  // Nạp Alt text gần nhất từ localStorage khi khởi tạo
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedAlt = localStorage.getItem(LAST_ALT_STORAGE_KEY);
+      if (savedAlt) {
+        setAltText(savedAlt);
+      }
+    }
+  }, []);
 
   const fetchImages = useCallback(async () => {
     setLoading(true);
@@ -209,22 +228,116 @@ const R2ImagePicker: FC<Props> = ({
   // Chọn ảnh để xem thông tin
   const handlePickImage = (image: R2ImageItem) => {
     setActiveImage(image);
-    // Tự sinh altText từ tên file
-    const filename = image.key.split("/").pop() || "";
-    const cleanName = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
-    setAltText(cleanName);
+    // Ưu tiên giữ Alt text gần nhất đã nhập từ localStorage
+    const savedAlt = typeof window !== "undefined" ? localStorage.getItem(LAST_ALT_STORAGE_KEY) : "";
+    if (savedAlt && savedAlt.trim()) {
+      setAltText(savedAlt);
+    } else {
+      // Nếu chưa có Alt text nào được lưu, fallback sang tên file sạch
+      const filename = image.key.split("/").pop() || "";
+      const cleanName = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+      setAltText(cleanName);
+    }
     setCaption("");
   };
 
   // Xác nhận chèn vào editor
   const handleInsert = (imageToInsert: R2ImageItem) => {
+    const finalAlt = altText.trim();
+    if (finalAlt && typeof window !== "undefined") {
+      localStorage.setItem(LAST_ALT_STORAGE_KEY, finalAlt);
+    }
     onSelect({
       url: imageToInsert.url,
       key: imageToInsert.key,
-      altText: altText.trim(),
+      altText: finalAlt,
       caption: caption.trim(),
     });
     toast.success("Đã chèn ảnh vào bài viết!");
+  };
+
+  // Upload nhanh tại ô đầu tiên của danh sách ảnh
+  const handleQuickUpload = async (files: FileList | File[]) => {
+    if (!files || files.length === 0) return;
+    const fileList = Array.from(files);
+    const validImages = fileList.filter((f) => f.type.startsWith("image/"));
+    if (validImages.length === 0) {
+      toast.error("Vui lòng chọn file hình ảnh hợp lệ (JPG, PNG, WEBP, GIF, SVG)!");
+      return;
+    }
+
+    setQuickUploading(true);
+    setQuickUploadProgress(10);
+    try {
+      let lastUploadedItem: R2ImageItem | null = null;
+      const targetFolder = selectedFolder || "uploads";
+
+      for (let i = 0; i < validImages.length; i++) {
+        const file = validImages[i];
+        // 1. Lấy presigned URL
+        const { data: presignedData } = await axios.post("/api/r2/upload", {
+          filename: file.name,
+          contentType: file.type || "application/octet-stream",
+          folder: targetFolder,
+        });
+
+        let finalUrl = presignedData.publicUrl;
+        let finalKey = presignedData.key;
+
+        // 2. Upload trực tiếp file
+        let directSuccess = false;
+        try {
+          await axios.put(presignedData.uploadUrl, file, {
+            headers: { "Content-Type": file.type || "application/octet-stream" },
+          });
+          directSuccess = true;
+        } catch (directErr) {
+          // Fallback proxy nếu CORS / kết nối trực tiếp lỗi
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("folder", targetFolder);
+
+          const { data: proxyData } = await axios.post("/api/r2/upload-proxy", formData);
+          if (proxyData?.publicUrl) {
+            finalUrl = proxyData.publicUrl;
+            finalKey = proxyData.key;
+            directSuccess = true;
+          } else {
+            throw directErr;
+          }
+        }
+
+        if (directSuccess) {
+          const newItem: R2ImageItem = {
+            key: finalKey,
+            url: finalUrl,
+            size: file.size,
+            lastModified: new Date().toISOString(),
+          };
+          lastUploadedItem = newItem;
+          setImages((prev) => [newItem, ...prev.filter((it) => it.key !== newItem.key)]);
+        }
+
+        setQuickUploadProgress(Math.round(((i + 1) / validImages.length) * 100));
+      }
+
+      toast.success(
+        `Đã tải lên ${validImages.length} ảnh vào thư mục "${selectedFolder || "Gốc"}"!`
+      );
+
+      if (lastUploadedItem) {
+        handlePickImage(lastUploadedItem);
+      }
+    } catch (err: any) {
+      console.error("Lỗi khi upload nhanh lên R2:", err);
+      toast.error(err.response?.data?.error || "Upload ảnh thất bại");
+    } finally {
+      setQuickUploading(false);
+      setQuickUploadProgress(0);
+      if (quickUploadInputRef.current) {
+        quickUploadInputRef.current.value = "";
+      }
+    }
   };
 
   return (
@@ -313,7 +426,7 @@ const R2ImagePicker: FC<Props> = ({
         )}
       </div>
 
-      {/* Grid danh sách ảnh */}
+      {/* Grid danh sách ảnh: Ô đầu tiên là Upload ảnh mới, từ ô thứ 2 là các ảnh */}
       {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[380px] overflow-y-auto p-1 custom-scrollbar">
           {Array.from({ length: 10 }).map((_, idx) => (
@@ -323,20 +436,66 @@ const R2ImagePicker: FC<Props> = ({
             />
           ))}
         </div>
-      ) : images.length === 0 ? (
-        <div className="py-14 text-center border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl">
-          <div className="w-14 h-14 mx-auto mb-3 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-gray-400">
-            <BsCardImage size={28} />
-          </div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-            {selectedFolder ? `Thư mục "${selectedFolder}" chưa có ảnh nào` : "Chưa có ảnh nào trên Cloudflare R2"}
-          </p>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-            Chuyển qua tab &ldquo;Upload ảnh mới&rdquo; để tải ảnh lên
-          </p>
-        </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-[380px] overflow-y-auto p-1 custom-scrollbar">
+          {/* Ô ĐẦU TIÊN: Upload ảnh mới trực tiếp vào thư mục hiện tại */}
+          <div
+            onClick={() => !quickUploading && quickUploadInputRef.current?.click()}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragOverUpload(true);
+            }}
+            onDragLeave={() => setIsDragOverUpload(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setIsDragOverUpload(false);
+              if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                handleQuickUpload(e.dataTransfer.files);
+              }
+            }}
+            className={`relative aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center p-3 text-center cursor-pointer transition-all duration-200 group ${
+              isDragOverUpload
+                ? "border-[#105d97] bg-blue-100/70 dark:bg-blue-900/40 scale-102 shadow-md"
+                : "border-[#105d97]/40 hover:border-[#105d97] bg-blue-50/40 hover:bg-blue-50/80 dark:bg-gray-800/60 dark:hover:bg-gray-800 hover:shadow-xs hover:-translate-y-0.5"
+            }`}
+            title={`Click hoặc kéo thả ảnh để tải lên thư mục "${selectedFolder || "Gốc"}"`}
+          >
+            <input
+              ref={quickUploadInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  handleQuickUpload(e.target.files);
+                }
+              }}
+            />
+
+            {quickUploading ? (
+              <div className="flex flex-col items-center gap-1.5 text-[#105d97] dark:text-blue-400">
+                <FiRefreshCw className="animate-spin text-[#105d97]" size={26} />
+                <span className="text-[11px] font-semibold">
+                  {quickUploadProgress > 0 ? `Đang tải ${quickUploadProgress}%` : "Đang tải..."}
+                </span>
+              </div>
+            ) : (
+              <>
+                <div className="w-11 h-11 rounded-full bg-blue-100 dark:bg-blue-950/60 text-[#105d97] dark:text-blue-400 flex items-center justify-center mb-1.5 group-hover:scale-110 transition-transform shadow-2xs">
+                  <FiUploadCloud size={22} />
+                </div>
+                <span className="text-xs font-bold text-[#105d97] dark:text-blue-300 leading-snug">
+                  + Upload ảnh mới
+                </span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 truncate max-w-full px-1">
+                  {selectedFolder ? `vào ${getFolderName(selectedFolder)}` : "vào thư mục này"}
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* Ô THỨ 2 TRỞ ĐI: Danh sách các ảnh */}
           {images.map((img) => {
             const isSelected = activeImage?.key === img.key;
 
@@ -349,10 +508,11 @@ const R2ImagePicker: FC<Props> = ({
                   e.dataTransfer.effectAllowed = "move";
                 }}
                 onClick={() => handlePickImage(img)}
-                className={`relative aspect-square rounded-lg overflow-hidden border cursor-grab active:cursor-grabbing group transition-all duration-200 bg-white dark:bg-gray-800 ${isSelected
+                className={`relative aspect-square rounded-lg overflow-hidden border cursor-grab active:cursor-grabbing group transition-all duration-200 bg-white dark:bg-gray-800 ${
+                  isSelected
                     ? "border-[#105d97] ring-2 ring-[#105d97] shadow-md"
                     : "border-gray-200 dark:border-gray-700 hover:border-[#105d97]/60 hover:shadow-sm"
-                  }`}
+                }`}
                 title="Kéo ảnh thả vào folder phía trên hoặc click để chọn"
               >
                 {/* Ảnh hiển thị */}
@@ -403,6 +563,18 @@ const R2ImagePicker: FC<Props> = ({
               </div>
             );
           })}
+
+          {/* Gợi ý nhẹ khi thư mục chưa có ảnh */}
+          {images.length === 0 && (
+            <div className="col-span-1 sm:col-span-2 md:col-span-3 flex flex-col justify-center p-4 border border-dashed border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/40 dark:bg-gray-800/20 text-gray-400">
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-300">
+                Thư mục này hiện chưa có ảnh nào.
+              </p>
+              <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">
+                Nhấp vào ô &ldquo;+ Upload ảnh mới&rdquo; bên cạnh hoặc kéo thả file ảnh trực tiếp vào ô đó để tải lên.
+              </p>
+            </div>
+          )}
         </div>
       )}
 
@@ -432,7 +604,13 @@ const R2ImagePicker: FC<Props> = ({
             <input
               type="text"
               value={altText}
-              onChange={(e) => setAltText(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setAltText(val);
+                if (typeof window !== "undefined") {
+                  localStorage.setItem(LAST_ALT_STORAGE_KEY, val);
+                }
+              }}
               placeholder="Alt text (SEO)..."
               className="text-xs px-2.5 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg w-full sm:w-40 focus:outline-none focus:ring-1 focus:ring-[#105d97]"
             />
