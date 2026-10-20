@@ -205,8 +205,16 @@ export const October20Popup: React.FC<October20PopupProps> = ({
       return;
     }
 
-    // Nếu cấu hình chỉ hiện lần đầu tiên vào web: kiểm tra cả localStorage và sessionStorage
-    if (config.onlyFirstVisit || config.oncePerSession) {
+    // Nếu không giới hạn số lần hiển thị (mỗi lần F5, reload đều hiện), dọn dẹp key cũ trong storage
+    if (!config.onlyFirstVisit && !config.oncePerSession) {
+      try {
+        localStorage.removeItem(config.sessionStorageKey);
+        sessionStorage.removeItem(config.sessionStorageKey);
+      } catch (err) {
+        // Bỏ qua lỗi truy cập storage
+      }
+    } else {
+      // Nếu cấu hình chỉ hiện lần đầu tiên vào web: kiểm tra cả localStorage và sessionStorage
       try {
         const shownInLocal = localStorage.getItem(config.sessionStorageKey);
         const shownInSession = sessionStorage.getItem(config.sessionStorageKey);
@@ -226,7 +234,7 @@ export const October20Popup: React.FC<October20PopupProps> = ({
       }
       setIsOpen(true);
 
-      // Đánh dấu đã hiển thị ngay khi mở để tránh mở lại khi người dùng reload hoặc chuyển trang
+      // Đánh dấu đã hiển thị nếu đang bật chế độ giới hạn 1 lần
       if (config.onlyFirstVisit || config.oncePerSession) {
         try {
           localStorage.setItem(config.sessionStorageKey, 'true');

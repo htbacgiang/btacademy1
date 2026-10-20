@@ -75,10 +75,10 @@ export const CAMPAIGN_2010_CONFIG: CampaignConfig = {
   // Chiến dịch hiển thị trong đúng 3 ngày (19/10, 20/10, 21/10)
   startDate: '2026-10-19T00:00:00+07:00',
   endDate: '2026-10-21T23:59:59+07:00',
-  delayMs: 2000,          // Tự động mở sau 2 giây
+  delayMs: 3000,          // Tự động mở sau 3 giây (3s)
   autoCloseMs: 90000,     // Tự động đóng sau 90 giây (90s)
-  onlyFirstVisit: true,   // Chỉ hiển thị lần đầu tiên vào web
-  oncePerSession: true,
+  onlyFirstVisit: false,  // false: Mỗi lần F5, reload hay vào lại trang đều tự mở sau 3s
+  oncePerSession: false,  // false: Không giới hạn phiên duyệt web
   sessionStorageKey: 'bt_academy_popup_2010_shown_v1',
   timeZone: 'Asia/Ho_Chi_Minh',
   excludeRoutes: ['/admin', '/dashboard'],
