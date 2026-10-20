@@ -29,6 +29,22 @@ interface October20PopupProps {
   forceShow?: boolean;
 }
 
+// Biến in-memory ghi nhớ trạng thái trong lần tải trang này:
+// - Khi F5, reload hoặc mở tab mới: bộ nhớ JS reset lại => popup mở lại sau 3s
+// - Khi người dùng bấm tắt hoặc chạy hết 90s: cờ chuyển thành true => không bao giờ mở lại khi chuyển trang
+let hasDismissedThisPageLoad = false;
+let hasOpenedThisPageLoad = false;
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('pageshow', (event) => {
+    // Nếu trang được khôi phục từ bfcache (quay lại từ website khác)
+    if (event.persisted) {
+      hasDismissedThisPageLoad = false;
+      hasOpenedThisPageLoad = false;
+    }
+  });
+}
+
 export const October20Popup: React.FC<October20PopupProps> = ({
   campaignConfig: customCampaign,
   imagesConfig: customImages,
@@ -140,8 +156,9 @@ export const October20Popup: React.FC<October20PopupProps> = ({
     }
   }, []);
 
-  // Đóng popup và ghi nhớ vào storage nếu được cấu hình chỉ hiện lần đầu
+  // Đóng popup: đánh dấu đã đóng cho lần tải trang này
   const handleClose = useCallback(() => {
+    hasDismissedThisPageLoad = true;
     setIsOpen(false);
     if (typeof window !== 'undefined' && config.sessionStorageKey) {
       if (config.onlyFirstVisit || config.oncePerSession) {
@@ -171,6 +188,7 @@ export const October20Popup: React.FC<October20PopupProps> = ({
         setCountdown((prev) => {
           if (prev <= 1) {
             window.clearInterval(interval);
+            hasDismissedThisPageLoad = true;
             handleClose();
             return 0;
           }
@@ -186,7 +204,17 @@ export const October20Popup: React.FC<October20PopupProps> = ({
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Kiểm tra loại trừ trang quản trị
+    // 1. Nếu đã đóng popup hoặc đã chạy hết 90s trong lần tải trang này: KHÔNG bật lại nữa
+    if (hasDismissedThisPageLoad) {
+      return;
+    }
+
+    // 2. Nếu popup đang mở hoặc đã từng mở trong lần tải trang này: không hẹn giờ mở lại
+    if (isOpen || hasOpenedThisPageLoad) {
+      return;
+    }
+
+    // 3. Kiểm tra loại trừ trang quản trị
     const currentPath = router?.asPath || router?.pathname || '';
     if (config.excludeRoutes?.some((route) => currentPath.startsWith(route))) {
       return;
@@ -194,13 +222,14 @@ export const October20Popup: React.FC<October20PopupProps> = ({
 
     if (forceShow) {
       const timer = window.setTimeout(() => {
+        hasOpenedThisPageLoad = true;
         setIsOpen(true);
         onOpen?.();
       }, 500);
       return () => window.clearTimeout(timer);
     }
 
-    // Kiểm tra xem chiến dịch có hợp lệ không (trong vòng 3 ngày: 19/10 đến 21/10)
+    // 4. Kiểm tra xem chiến dịch có hợp lệ không (trong vòng 3 ngày: 19/10 đến 21/10)
     if (!isCampaignActive(config)) {
       return;
     }
@@ -226,12 +255,16 @@ export const October20Popup: React.FC<October20PopupProps> = ({
       }
     }
 
-    // Hẹn giờ tự động hiển thị sau delayMs (mặc định 3 giây = 3s)
+    // 5. Hẹn giờ tự động hiển thị sau delayMs (mặc định 3 giây = 3s)
     const timer = window.setTimeout(() => {
+      // Nếu trong lúc chờ 3s mà người dùng đã tắt hoặc điều kiện không còn thỏa mãn
+      if (hasDismissedThisPageLoad) return;
+
       // Lưu lại phần tử đang focus trước khi modal mở
       if (document.activeElement instanceof HTMLElement) {
         previousActiveElementRef.current = document.activeElement;
       }
+      hasOpenedThisPageLoad = true;
       setIsOpen(true);
 
       // Đánh dấu đã hiển thị nếu đang bật chế độ giới hạn 1 lần
@@ -248,7 +281,7 @@ export const October20Popup: React.FC<October20PopupProps> = ({
     }, config.delayMs);
 
     return () => window.clearTimeout(timer);
-  }, [config, forceShow, onOpen, router]);
+  }, [config, forceShow, onOpen, router, isOpen]);
 
   // Quản lý phím Escape, click ra ngoài và focus trap
   useEffect(() => {
