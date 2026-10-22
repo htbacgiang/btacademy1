@@ -89,6 +89,37 @@ const Editor: FC<Props> = ({
   // Kiểm tra xem có phải đang tạo bài viết mới không
   const isCreatingNewPost = !initialValue?.id;
 
+  const [generatingFaqs, setGeneratingFaqs] = useState(false);
+
+  const handleGenerateAiFaqs = async () => {
+    const editorContent = editor ? editor.getHTML() : "";
+    const cleanContent = editor ? editor.getText().trim() : "";
+
+    if (!post.title?.trim() && cleanContent.length < 30) {
+      toast.warning("Vui lòng nhập tiêu đề hoặc nội dung bài viết trước khi tạo FAQ bằng Gemini AI!");
+      return;
+    }
+
+    setGeneratingFaqs(true);
+    try {
+      const { data } = await axios.post("/api/ai/generate", {
+        type: "faqs",
+        title: post.title || "",
+        content: editorContent || cleanContent,
+      });
+
+      if (data?.faqs && Array.isArray(data.faqs) && data.faqs.length > 0) {
+        setPost((prev) => ({ ...prev, faq: data.faqs }));
+        toast.success(`Đã tạo ${data.faqs.length} câu hỏi thường gặp bằng Gemini AI thành công!`);
+      }
+    } catch (err: any) {
+      console.error("Lỗi tạo FAQ bằng AI:", err);
+      toast.error(err.response?.data?.error || "Không thể tạo FAQ bằng Gemini AI. Vui lòng thử lại!");
+    } finally {
+      setGeneratingFaqs(false);
+    }
+  };
+
   // Button featured bị disable khi đủ 4 bài VÀ bài hiện tại chưa phải featured
   const featuredDisabled = featuredCount >= 4 && !isFeatured;
 
@@ -650,6 +681,8 @@ const Editor: FC<Props> = ({
           <QASection
             value={post.faq || []}
             onChange={(faq) => setPost((prev) => ({ ...prev, faq }))}
+            onGenerateAi={handleGenerateAiFaqs}
+            isGenerating={generatingFaqs}
           />
         </div>
 

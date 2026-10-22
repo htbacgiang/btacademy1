@@ -29,8 +29,9 @@ const R2ImageUploader: FC<Props> = ({
   onFolderCreated,
   onSuccess,
 }) => {
-  // Logic 2 bước: Bước 1 = Chọn thư mục lưu xong, Bước 2 = Mới cho phép tải ảnh lên
-  const [step, setStep] = useState<1 | 2>(1);
+  // Logic 2 bước: Nếu đã có selectedFolder (ví dụ: thumbnail) hoặc initialFile thì vào thẳng Bước 2 (Upload)
+  const [step, setStep] = useState<1 | 2>(selectedFolder || initialFile ? 2 : 1);
+  const userManuallyNavigatedStep1 = useRef(false);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [altText, setAltText] = useState("");
@@ -43,8 +44,16 @@ const R2ImageUploader: FC<Props> = ({
   useEffect(() => {
     if (initialFile) {
       handleFileChange(initialFile);
+      userManuallyNavigatedStep1.current = false;
+      setStep(2);
     }
   }, [initialFile]);
+
+  useEffect(() => {
+    if (!userManuallyNavigatedStep1.current && (selectedFolder || initialFile)) {
+      setStep(2);
+    }
+  }, [selectedFolder, initialFile]);
 
   const handleFileChange = (selectedFile: File) => {
     if (!selectedFile.type.startsWith("image/")) {
@@ -269,7 +278,10 @@ const R2ImageUploader: FC<Props> = ({
 
             <button
               type="button"
-              onClick={() => setStep(2)}
+              onClick={() => {
+                userManuallyNavigatedStep1.current = false;
+                setStep(2);
+              }}
               className="px-5 py-2.5 rounded-xl bg-[#105d97] hover:bg-[#0c4a7c] text-white font-bold text-xs flex items-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer"
             >
               <FiCheck className="w-4 h-4" />
@@ -295,7 +307,10 @@ const R2ImageUploader: FC<Props> = ({
             <button
               type="button"
               disabled={uploading}
-              onClick={() => setStep(1)}
+              onClick={() => {
+                userManuallyNavigatedStep1.current = true;
+                setStep(1);
+              }}
               className="text-xs font-semibold text-[#105d97] dark:text-sky-400 hover:underline flex items-center gap-1 disabled:opacity-50 cursor-pointer"
             >
               <FiArrowLeft size={13} />

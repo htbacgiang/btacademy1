@@ -1,6 +1,9 @@
 import { ChangeEventHandler, FC, useEffect, useState } from "react";
 import classnames from "classnames";
 import slugify from "slugify";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { FiZap } from "react-icons/fi";
 import SeoAnalysisV2 from "./SeoAnalysisV2";
 import { POST_CATEGORIES } from "../../utils/postCategories";
 
@@ -178,6 +181,119 @@ const SEOForm: FC<Props> = ({
     focusKeyword: "",
   });
 
+  const [generatingDesc, setGeneratingDesc] = useState(false);
+  const [generatingKeyword, setGeneratingKeyword] = useState(false);
+  const [optimizingAll, setOptimizingAll] = useState(false);
+
+  const handleGenerateAiDescription = async () => {
+    const editorContent = editor ? editor.getHTML() : "";
+    const cleanContent = editor ? editor.getText().trim() : "";
+
+    if (!title?.trim() && cleanContent.length < 30) {
+      toast.warning("Vui lòng nhập tiêu đề hoặc nội dung bài viết trước khi tạo mô tả bằng Gemini AI!");
+      return;
+    }
+
+    setGeneratingDesc(true);
+    try {
+      const { data } = await axios.post("/api/ai/generate", {
+        type: "description",
+        title: title || "",
+        content: editorContent || cleanContent,
+        focusKeyword: values.focusKeyword || "",
+      });
+
+      if (data?.description) {
+        const newValues = { ...values, meta: data.description };
+        setValues(newValues);
+        onChange(newValues);
+        toast.success("Đã tạo Meta Description bằng Gemini AI thành công!");
+      }
+    } catch (err: any) {
+      console.error("Lỗi tạo mô tả AI:", err);
+      toast.error(err.response?.data?.error || "Không thể tạo mô tả bằng Gemini AI. Vui lòng thử lại!");
+    } finally {
+      setGeneratingDesc(false);
+    }
+  };
+
+  const handleGenerateAiKeyword = async () => {
+    const editorContent = editor ? editor.getHTML() : "";
+    const cleanContent = editor ? editor.getText().trim() : "";
+
+    if (!title?.trim() && cleanContent.length < 30) {
+      toast.warning("Vui lòng nhập tiêu đề hoặc nội dung bài viết trước khi gợi ý từ khóa!");
+      return;
+    }
+
+    setGeneratingKeyword(true);
+    try {
+      const { data } = await axios.post("/api/ai/generate", {
+        type: "keyword",
+        title: title || "",
+        content: editorContent || cleanContent,
+      });
+
+      if (data?.keyword) {
+        const newValues = { ...values, focusKeyword: data.keyword };
+        setValues(newValues);
+        onChange(newValues);
+        toast.success(`Đã gợi ý từ khóa chính: "${data.keyword}"`);
+      }
+    } catch (err: any) {
+      console.error("Lỗi gợi ý từ khóa AI:", err);
+      toast.error(err.response?.data?.error || "Không thể gợi ý từ khóa. Vui lòng thử lại!");
+    } finally {
+      setGeneratingKeyword(false);
+    }
+  };
+
+  const handleAutoOptimizeSeo = async () => {
+    const editorContent = editor ? editor.getHTML() : "";
+    const cleanContent = editor ? editor.getText().trim() : "";
+
+    if (!title?.trim() && cleanContent.length < 30) {
+      toast.warning("Vui lòng nhập tiêu đề hoặc nội dung bài viết trước khi tối ưu SEO bằng Gemini AI!");
+      return;
+    }
+
+    setOptimizingAll(true);
+    try {
+      let currentKeyword = values.focusKeyword?.trim();
+      if (!currentKeyword) {
+        const kwRes = await axios.post("/api/ai/generate", {
+          type: "keyword",
+          title: title || "",
+          content: editorContent || cleanContent,
+        });
+        if (kwRes.data?.keyword) {
+          currentKeyword = kwRes.data.keyword;
+        }
+      }
+
+      const descRes = await axios.post("/api/ai/generate", {
+        type: "description",
+        title: title || "",
+        content: editorContent || cleanContent,
+        focusKeyword: currentKeyword || "",
+      });
+
+      const newValues = {
+        ...values,
+        ...(currentKeyword ? { focusKeyword: currentKeyword } : {}),
+        ...(descRes.data?.description ? { meta: descRes.data.description } : {}),
+      };
+      setValues(newValues);
+      onChange(newValues);
+      toast.success("Đã tối ưu Từ khóa & Meta Description bằng Gemini AI thành công!");
+    } catch (err: any) {
+      console.error("Lỗi tối ưu SEO AI:", err);
+      toast.error(err.response?.data?.error || "Không thể tối ưu SEO bằng Gemini AI. Vui lòng thử lại!");
+    } finally {
+      setOptimizingAll(false);
+    }
+  };
+
   const handleChange: ChangeEventHandler<
     HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
   > = ({ target }) => {
@@ -220,16 +336,31 @@ const SEOForm: FC<Props> = ({
     <div className="space-y-3">
       {/* Focus Keyword */}
       <div className="seo-form-group">
-        <label className="seo-form-label">
-          Từ khóa chính:
-        </label>
+        <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+          <label className="seo-form-label !mb-0">
+            Từ khóa chính:
+          </label>
+          <button
+            type="button"
+            onClick={handleGenerateAiKeyword}
+            disabled={generatingKeyword}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:text-purple-300 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800 rounded-lg transition-all shadow-2xs disabled:opacity-50 cursor-pointer"
+            title="Dùng Gemini AI tự động gợi ý từ khóa chính chuẩn SEO theo nội dung bài viết"
+          >
+            <FiZap
+              size={12}
+              className={generatingKeyword ? "animate-spin text-purple-600" : "text-purple-600"}
+            />
+            <span>{generatingKeyword ? "Đang tìm..." : "✨ Gợi ý từ khóa AI"}</span>
+          </button>
+        </div>
         <input
           type="text"
           name="focusKeyword"
           value={focusKeyword}
           onChange={handleChange}
           className="seo-form-input"
-          placeholder="Nhập từ khóa chính để phân tích SEO"
+          placeholder="Ví dụ: Luyện giọng nói, kỹ năng thuyết trình..."
         />
       </div>
 
@@ -267,18 +398,33 @@ const SEOForm: FC<Props> = ({
       </div>
 
       <div className="seo-form-group">
-        <label className="seo-form-label">
-          Meta Description:
-        </label>
+        <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
+          <label className="seo-form-label !mb-0">
+            Mô tả ngắn (Meta Description):
+          </label>
+          <button
+            type="button"
+            onClick={handleGenerateAiDescription}
+            disabled={generatingDesc}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:text-purple-300 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800 rounded-lg transition-all shadow-2xs disabled:opacity-50 cursor-pointer"
+            title="Dùng Gemini AI tự động tạo mô tả ngắn chuẩn SEO theo nội dung bài viết"
+          >
+            <FiZap
+              size={12}
+              className={generatingDesc ? "animate-spin text-purple-600" : "text-purple-600"}
+            />
+            <span>{generatingDesc ? "Đang viết..." : "✨ Tạo với Gemini AI"}</span>
+          </button>
+        </div>
         <div className="relative">
           <textarea
             name="meta"
             value={meta}
             onChange={handleChange}
             className="seo-form-input seo-form-textarea"
-            placeholder="Meta description 160-200 ký tự thì ok"
+            placeholder="Meta description 150-180 ký tự chuẩn SEO..."
           ></textarea>
-          <p className="absolute bottom-3 right-3 text-dark dark:text-white text-sm">
+          <p className="absolute bottom-3 right-3 text-dark dark:text-white text-xs">
             {meta.length}/250
           </p>
         </div>
@@ -286,15 +432,39 @@ const SEOForm: FC<Props> = ({
 
       {/* SEO Analysis */}
       <div className="mt-2">
-        <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-          🔍 Phân tích SEO
-        </h4>
+        <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+          <h4 className="text-lg font-semibold text-gray-800 dark:text-white flex items-center gap-1.5">
+            🔍 Phân tích SEO
+          </h4>
+          <button
+            type="button"
+            onClick={handleAutoOptimizeSeo}
+            disabled={optimizingAll}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:text-purple-300 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800 rounded-lg transition-all shadow-2xs disabled:opacity-50 cursor-pointer"
+            title="Dùng Gemini AI tự động gợi ý từ khóa và tạo Meta Description cùng lúc"
+          >
+            <FiZap
+              size={13}
+              className={optimizingAll ? "animate-spin text-purple-600" : "text-purple-600"}
+            />
+            <span>{optimizingAll ? "Đang tối ưu..." : "✨ Tối ưu SEO với Gemini"}</span>
+          </button>
+        </div>
 
         {!focusKeyword ? (
-          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
-            <p className="text-blue-800 dark:text-blue-200 text-center">
-              💡 Nhập từ khóa chính ở trên để bắt đầu phân tích SEO
+          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg text-center space-y-2.5">
+            <p className="text-blue-800 dark:text-blue-200 text-sm">
+              💡 Nhập từ khóa chính ở trên hoặc để Gemini AI tự động gợi ý:
             </p>
+            <button
+              type="button"
+              onClick={handleGenerateAiKeyword}
+              disabled={generatingKeyword}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-lg shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+            >
+              <FiZap size={13} className={generatingKeyword ? "animate-spin" : ""} />
+              <span>{generatingKeyword ? "Đang gợi ý..." : "✨ Gợi ý từ khóa bằng Gemini AI"}</span>
+            </button>
           </div>
         ) : (
           <div>

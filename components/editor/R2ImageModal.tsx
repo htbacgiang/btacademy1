@@ -26,36 +26,38 @@ const R2ImageModal: FC<Props> = ({
   initialTab = "manage",
   initialFile = null,
 }) => {
+  const defaultFolder = initialFolder || "";
   // Tab hiện tại: upload hoặc manage
   const [activeTab, setActiveTab] = useState<"upload" | "manage">(initialTab || "manage");
   const [folders, setFolders] = useState<string[]>([]);
   
   // Mặc định thư mục lọc
-  const [manageFolder, setManageFolder] = useState<string>(initialFolder);
-  const [uploadFolder, setUploadFolder] = useState<string>(initialFolder);
+  const [manageFolder, setManageFolder] = useState<string>(defaultFolder);
+  const [uploadFolder, setUploadFolder] = useState<string>(defaultFolder);
 
   // Fetch danh sách thư mục khi mở modal
   const fetchFolders = useCallback(async () => {
     try {
       const { data } = await axios.get("/api/r2/folders");
       if (data?.folders && Array.isArray(data.folders)) {
-        setFolders(data.folders);
-        if (data.folders.length > 0) {
-          setUploadFolder((prev) => prev || data.folders[0]);
+        const fetchedFolders: string[] = [...data.folders];
+        if (initialFolder && !fetchedFolders.includes(initialFolder)) {
+          fetchedFolders.push(initialFolder);
+          fetchedFolders.sort((a, b) => a.localeCompare(b));
         }
+        setFolders(fetchedFolders);
       }
     } catch (err) {
       console.error("Lỗi khi tải danh sách folders R2:", err);
     }
-  }, []);
+  }, [initialFolder]);
 
   useEffect(() => {
     if (visible) {
+      const targetFolder = initialFolder || "";
       setActiveTab(initialTab || "manage");
-      setManageFolder(initialFolder || "");
-      if (initialFolder) {
-        setUploadFolder(initialFolder);
-      }
+      setManageFolder(targetFolder);
+      setUploadFolder(targetFolder);
       fetchFolders();
     }
   }, [visible, fetchFolders, initialFolder, initialTab]);
@@ -138,9 +140,17 @@ const R2ImageModal: FC<Props> = ({
                 <span className="text-[10px] font-semibold bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300 px-2 py-0.5 rounded-full">
                   Lưu trữ trực tiếp
                 </span>
+                {initialFolder && (
+                  <span className="text-[10px] font-mono font-bold bg-sky-100 text-[#105d97] dark:bg-sky-950/60 dark:text-sky-300 border border-sky-300 dark:border-sky-800 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <FiFolder size={11} />
+                    <span>{initialFolder}</span>
+                  </span>
+                )}
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Upload và quản lý kho hình ảnh bài viết qua Cloudflare R2
+                {initialFolder
+                  ? `Đang quản lý & tải ảnh cho thư mục ${initialFolder}`
+                  : "Upload và quản lý kho hình ảnh bài viết qua Cloudflare R2"}
               </p>
             </div>
           </div>

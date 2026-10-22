@@ -1,12 +1,20 @@
 import React from "react";
+import { FiZap } from "react-icons/fi";
 import { FaqItem } from "../../utils/types";
 
 interface Props {
   value: FaqItem[];
   onChange: (faq: FaqItem[]) => void;
+  onGenerateAi?: () => void;
+  isGenerating?: boolean;
 }
 
-const QASection: React.FC<Props> = ({ value = [], onChange }) => {
+const QASection: React.FC<Props> = ({
+  value = [],
+  onChange,
+  onGenerateAi,
+  isGenerating = false,
+}) => {
   const handleAddFaq = () => {
     onChange([...value, { question: "", answer: "" }]);
   };
@@ -74,16 +82,34 @@ const QASection: React.FC<Props> = ({ value = [], onChange }) => {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleAddFaq}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#105d97] hover:bg-[#0d4d7c] text-white text-sm font-medium rounded-lg transition-colors shadow-sm shrink-0"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Thêm câu hỏi
-        </button>
+        <div className="flex items-center gap-2 flex-wrap shrink-0">
+          {onGenerateAi && (
+            <button
+              type="button"
+              onClick={onGenerateAi}
+              disabled={isGenerating}
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:text-purple-300 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800 rounded-lg transition-all shadow-xs disabled:opacity-50 cursor-pointer"
+              title="Dùng Gemini AI tự động đọc bài viết và tạo 3-5 câu hỏi thường gặp"
+            >
+              <FiZap
+                size={14}
+                className={isGenerating ? "animate-spin text-purple-600" : "text-purple-600"}
+              />
+              <span>{isGenerating ? "Đang tạo FAQ..." : "✨ Tạo FAQ với Gemini"}</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={handleAddFaq}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#105d97] hover:bg-[#0d4d7c] text-white text-sm font-medium rounded-lg transition-colors shadow-sm shrink-0"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Thêm câu hỏi
+          </button>
+        </div>
       </div>
 
       {/* Quick Suggestion Pills */}
@@ -121,13 +147,26 @@ const QASection: React.FC<Props> = ({ value = [], onChange }) => {
             <p className="text-xs text-gray-500 max-w-md mx-auto mt-1 mb-4 leading-relaxed">
               Các bài viết có phần Q&A đạt tỷ lệ xuất hiện trên Google AI Overviews và các công cụ tìm kiếm AI (Perplexity, ChatGPT Search) cao hơn đến 40%.
             </p>
-            <button
-              type="button"
-              onClick={handleAddFaq}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#105d97] hover:bg-[#0d4d7c] text-white text-xs font-medium rounded-lg transition"
-            >
-              + Thêm câu hỏi đầu tiên
-            </button>
+            <div className="flex items-center justify-center gap-2 flex-wrap">
+              {onGenerateAi && (
+                <button
+                  type="button"
+                  onClick={onGenerateAi}
+                  disabled={isGenerating}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-lg shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+                >
+                  <FiZap size={14} className={isGenerating ? "animate-spin" : ""} />
+                  <span>{isGenerating ? "Đang tạo bằng Gemini..." : "✨ Tự động tạo bằng Gemini AI"}</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleAddFaq}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition"
+              >
+                + Thêm thủ công
+              </button>
+            </div>
           </div>
         ) : (
           value.map((item, index) => (
