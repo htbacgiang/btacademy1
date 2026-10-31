@@ -124,6 +124,9 @@ export async function getServerSideProps() {
   };
 
   return {
-    props: { posts, meta },
+    props: {
+      posts: JSON.parse(JSON.stringify(posts)),
+      meta,
+    },
   };
 }

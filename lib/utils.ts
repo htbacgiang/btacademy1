@@ -73,7 +73,12 @@ export const formatPosts = (posts: PostModelSchema[]): PostDetail[] => {
     isDraft: post.isDraft || false,
     isFeatured: post.isFeatured || false,
     featuredOrder: post.featuredOrder ?? null,
-    faq: post.faq || [],
+    faq: Array.isArray(post.faq)
+      ? post.faq.map((item: any) => ({
+          question: typeof item?.question === "string" ? item.question : "",
+          answer: typeof item?.answer === "string" ? item.answer : "",
+        }))
+      : [],
   }));
 };
 

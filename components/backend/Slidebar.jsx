@@ -20,6 +20,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ChevronRight,
+  Sparkles,
 } from "lucide-react";
 
 import { useRouter } from "next/router";
@@ -60,6 +61,12 @@ const NAV_GROUPS = [
     label: "Khách hàng",
     items: [
       { title: "Email đăng ký", icon: Mail, href: "/dashboard/danh-sach-email" },
+    ],
+  },
+  {
+    label: "Cấu hình",
+    items: [
+      { title: "Cài đặt Popup", icon: Sparkles, href: "/dashboard/popup" },
     ],
   },
 ];

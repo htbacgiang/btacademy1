@@ -7,9 +7,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Head from "next/head";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 
-const October20Popup = dynamic(
-  () => import("../components/campaigns/October20Popup"),
+const DynamicSitePopup = dynamic(
+  () => import("../components/campaigns/DynamicSitePopup"),
   { ssr: false }
 );
 
@@ -44,6 +45,10 @@ const createSiteNavigation = () => {
 
 function MyApp({ Component, pageProps = {} }) {
   const { session, meta } = pageProps;
+  const router = useRouter();
+  const isDashboardRoute =
+    router.pathname?.startsWith("/dashboard") ||
+    router.pathname?.startsWith("/admin");
 
   return (
       <>
@@ -163,7 +168,7 @@ function MyApp({ Component, pageProps = {} }) {
                 theme="light"
                 style={{ zIndex: 10001 }}
               />
-              <October20Popup />
+              {!isDashboardRoute && <DynamicSitePopup />}
               <Component {...pageProps} />
             </div>
           </SessionProvider>

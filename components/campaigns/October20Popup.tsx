@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -13,8 +13,16 @@ import {
   ImagesConfig,
   ContentConfig,
 } from './october20Config';
+import {
+  isAnyPopupOpen,
+  openGlobalPopup,
+  closeGlobalPopup,
+  hasAnyPopupOpenedThisPageLoad,
+} from '../../lib/popup-manager';
 
 interface October20PopupProps {
+  /** Cấu hình ngày lễ từ Dashboard (optional) */
+  holiday?: any;
   /** Ghi đè cấu hình chiến dịch nếu muốn (optional) */
   campaignConfig?: Partial<CampaignConfig>;
   /** Ghi đè cấu hình hình ảnh nếu muốn (optional) */
@@ -46,6 +54,7 @@ if (typeof window !== 'undefined') {
 }
 
 export const October20Popup: React.FC<October20PopupProps> = ({
+  holiday,
   campaignConfig: customCampaign,
   imagesConfig: customImages,
   contentConfig: customContent,
@@ -53,9 +62,31 @@ export const October20Popup: React.FC<October20PopupProps> = ({
   onClose,
   forceShow = false,
 }) => {
-  const config = { ...CAMPAIGN_2010_CONFIG, ...customCampaign };
-  const images = { ...IMAGES_2010_CONFIG, ...customImages };
-  const content = { ...CONTENT_2010_CONFIG, ...customContent };
+  const config = useMemo(
+    () => ({
+      ...CAMPAIGN_2010_CONFIG,
+      ...(holiday?.autoCloseSeconds ? { autoCloseMs: holiday.autoCloseSeconds * 1000 } : {}),
+      ...(holiday?.delaySeconds ? { delayMs: holiday.delaySeconds * 1000 } : {}),
+      ...customCampaign,
+    }),
+    [holiday?.autoCloseSeconds, holiday?.delaySeconds, customCampaign]
+  );
+  const images = {
+    ...IMAGES_2010_CONFIG,
+    ...(holiday?.bannerImage ? { floralBanner: holiday.bannerImage } : {}),
+    ...(holiday?.bannerAlt ? { founderAlt: holiday.bannerAlt } : {}),
+    ...customImages,
+  };
+  const content = {
+    ...CONTENT_2010_CONFIG,
+    ...(holiday?.scriptTagline ? { scriptTagline: holiday.scriptTagline } : {}),
+    ...(holiday?.mainTitle ? { mainTitle: holiday.mainTitle } : {}),
+    ...(holiday?.dateSubtitle ? { dateSubtitle: holiday.dateSubtitle } : {}),
+    ...(holiday?.recipientGreeting ? { recipientGreeting: holiday.recipientGreeting } : {}),
+    ...(holiday?.wishes && holiday.wishes.length > 0 ? { wishes: holiday.wishes as string[] } : {}),
+    ...(holiday?.signature ? { signature: holiday.signature } : {}),
+    ...customContent,
+  };
 
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -160,6 +191,7 @@ export const October20Popup: React.FC<October20PopupProps> = ({
   const handleClose = useCallback(() => {
     hasDismissedThisPageLoad = true;
     setIsOpen(false);
+    closeGlobalPopup('october20_popup');
     if (typeof window !== 'undefined' && config.sessionStorageKey) {
       if (config.onlyFirstVisit || config.oncePerSession) {
         try {
@@ -210,7 +242,7 @@ export const October20Popup: React.FC<October20PopupProps> = ({
     }
 
     // 2. Nếu popup đang mở hoặc đã từng mở trong lần tải trang này: không hẹn giờ mở lại
-    if (isOpen || hasOpenedThisPageLoad) {
+    if (isOpen || hasOpenedThisPageLoad || hasAnyPopupOpenedThisPageLoad() || isAnyPopupOpen()) {
       return;
     }
 
@@ -222,9 +254,11 @@ export const October20Popup: React.FC<October20PopupProps> = ({
 
     if (forceShow) {
       const timer = window.setTimeout(() => {
-        hasOpenedThisPageLoad = true;
-        setIsOpen(true);
-        onOpen?.();
+        if (openGlobalPopup('october20_popup', { force: true })) {
+          hasOpenedThisPageLoad = true;
+          setIsOpen(true);
+          onOpen?.();
+        }
       }, 500);
       return () => window.clearTimeout(timer);
     }
@@ -255,10 +289,23 @@ export const October20Popup: React.FC<October20PopupProps> = ({
       }
     }
 
+    let timer: number | null = null;
+    const handleCancel = () => {
+      if (timer) {
+        window.clearTimeout(timer);
+        timer = null;
+      }
+    };
+
+    window.addEventListener('bta:popup:opened', handleCancel);
+    window.addEventListener('bta:popup:cancel_auto', handleCancel);
+
     // 5. Hẹn giờ tự động hiển thị sau delayMs (mặc định 3 giây = 3s)
-    const timer = window.setTimeout(() => {
-      // Nếu trong lúc chờ 3s mà người dùng đã tắt hoặc điều kiện không còn thỏa mãn
-      if (hasDismissedThisPageLoad) return;
+    timer = window.setTimeout(() => {
+      // Nếu trong lúc chờ 3s mà người dùng đã tắt hoặc đã có popup khác mở
+      if (hasDismissedThisPageLoad || hasAnyPopupOpenedThisPageLoad() || isAnyPopupOpen()) return;
+
+      if (!openGlobalPopup('october20_popup')) return;
 
       // Lưu lại phần tử đang focus trước khi modal mở
       if (document.activeElement instanceof HTMLElement) {
@@ -280,7 +327,11 @@ export const October20Popup: React.FC<October20PopupProps> = ({
       onOpen?.();
     }, config.delayMs);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      if (timer) window.clearTimeout(timer);
+      window.removeEventListener('bta:popup:opened', handleCancel);
+      window.removeEventListener('bta:popup:cancel_auto', handleCancel);
+    };
   }, [config, forceShow, onOpen, router, isOpen]);
 
   // Quản lý phím Escape, click ra ngoài và focus trap
@@ -472,7 +523,7 @@ export const October20Popup: React.FC<October20PopupProps> = ({
 
                 {/* 5. Nội dung lời chúc chi tiết - cỡ chữ gọn gàng, thoáng mắt */}
                 <div id="october20-wishes" className="text-stone-700 text-xs sm:text-sm md:text-xl leading-relaxed space-y-1 mx-auto text-justify sm:text-center font-normal">
-                  {content.wishes.map((paragraph, idx) => (
+                  {content.wishes.map((paragraph: string, idx: number) => (
                     <p key={idx} className="transition-opacity duration-200">
                       {paragraph}
                     </p>
