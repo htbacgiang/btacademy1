@@ -4,7 +4,7 @@ import Course from '../../../models/Course';
 import { sendEmail } from '../../../utils/sendEmails';
 import { courseRegistrationEmailTemplate } from '../../../emails/courseRegistrationEmailTemplate';
 import { adminNotificationEmailTemplate } from '../../../emails/adminNotificationEmailTemplate';
-import { verifyTurnstileToken } from '../../../lib/turnstile';
+
 
 export default async function handler(req, res) {
   await db.connectDb();
@@ -21,26 +21,7 @@ export default async function handler(req, res) {
         source = 'course_registration_popup', 
         ipAddress, 
         userAgent,
-        turnstileToken,
-        'cf-turnstile-response': cfTurnstileResponse
       } = req.body;
-
-      // Cloudflare Turnstile token validation
-      const token = turnstileToken || cfTurnstileResponse;
-      if (token) {
-        const clientIp =
-          (typeof req.headers['x-forwarded-for'] === 'string'
-            ? req.headers['x-forwarded-for'].split(',')[0].trim()
-            : undefined) || req.socket?.remoteAddress;
-        
-        const turnstileCheck = await verifyTurnstileToken(token, clientIp);
-        if (!turnstileCheck.success) {
-          return res.status(400).json({
-            success: false,
-            message: turnstileCheck.error || 'Xác thực bảo vệ Cloudflare Turnstile thất bại',
-          });
-        }
-      }
 
       // Validate required fields (only name and phone are required now)
       if (!name || !phone) {

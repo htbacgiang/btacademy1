@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { HiOutlineX, HiChevronDown, HiOutlinePhone } from "react-icons/hi";
 import { ArrowRight, Search, Mic } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 const ResponsiveNavbarV2 = ({
   isOpen,
@@ -14,15 +13,20 @@ const ResponsiveNavbarV2 = ({
 }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
 
-  // Prevent background scrolling when drawer is open
+  // Prevent background scrolling without causing page layout shift / jump
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    if (!isOpen) return;
+
+    const handleTouchMove = (e) => {
+      const target = e.target;
+      if (target && !target.closest?.('[role="dialog"]')) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
     return () => {
-      document.body.style.overflow = "unset";
+      document.removeEventListener("touchmove", handleTouchMove);
     };
   }, [isOpen]);
 
@@ -61,33 +65,30 @@ const ResponsiveNavbarV2 = ({
   ];
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            key="mobile-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease: "easeInOut" }}
-            className="fixed inset-0 bg-black/45 backdrop-blur-xs z-[9998]"
-            onClick={toggleMenu}
-            aria-hidden="true"
-          />
+    <>
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black/50 z-[9998] transition-opacity duration-500 ease-out ${
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={toggleMenu}
+        aria-hidden="true"
+      />
 
-          {/* Drawer */}
-          <motion.div
-            key="mobile-drawer"
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-0 left-0 w-[85%] max-w-sm h-full bg-white z-[9999] shadow-2xl flex flex-col justify-between"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Mobile Navigation Menu"
-          >
+      {/* Drawer */}
+      <div
+        className={`fixed top-0 left-0 w-[85%] max-w-sm h-full bg-white z-[9999] shadow-xl flex flex-col justify-between ${
+          isOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+        style={{
+          transform: isOpen ? "translate3d(0, 0, 0)" : "translate3d(-100%, 0, 0)",
+          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+          willChange: "transform",
+        }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Mobile Navigation Menu"
+      >
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <Link href="/" onClick={toggleMenu} className="flex items-center">
@@ -275,10 +276,8 @@ const ResponsiveNavbarV2 = ({
             <span>Hotline tư vấn: 0988 02 7494</span>
           </a>
         </div>
-      </motion.div>
+      </div>
     </>
-  )}
-</AnimatePresence>
   );
 };
 

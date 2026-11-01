@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   ArrowRight,
 } from "lucide-react";
-import { Turnstile, TurnstileInstance } from "@marsidev/react-turnstile";
+
 import {
   isAnyPopupOpen,
   openGlobalPopup,
@@ -86,28 +86,12 @@ export const ContactFormPopup: React.FC<ContactFormPopupProps> = ({
   const [status, setStatus] = useState<string>("");
   const [submitted, setSubmitted] = useState(false);
 
-  // Turnstile state & ref
-  const [turnstileToken, setTurnstileToken] = useState<string>("");
-  const [turnstileError, setTurnstileError] = useState<string>("");
-  const turnstileRef = useRef<TurnstileInstance | null>(null);
-
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAAFk7BErWJX8MNwUU";
-
   // Countdown & Interaction state
   const [countdown, setCountdown] = useState<number>(effectiveAutoCloseSeconds);
   const [isInteracted, setIsInteracted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const modalRef = useRef<HTMLDivElement | null>(null);
-
-  const resetTurnstile = () => {
-    setTurnstileToken("");
-    try {
-      turnstileRef.current?.reset();
-    } catch (e) {
-      // ignore
-    }
-  };
 
   const handleClose = useCallback(() => {
     if (timerRef.current) {
@@ -298,10 +282,6 @@ export const ContactFormPopup: React.FC<ContactFormPopupProps> = ({
       newErrors.email = "Email không hợp lệ";
     }
 
-    if (siteKey && !turnstileToken) {
-      newErrors.turnstile = "Vui lòng xác minh bảo vệ Cloudflare Turnstile.";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -328,8 +308,6 @@ export const ContactFormPopup: React.FC<ContactFormPopupProps> = ({
           courseSlug: courseSlug || undefined,
           purpose: fullPurpose,
           source: source || (courseSlug ? `course_${courseSlug}_popup` : "homepage_simple_popup"),
-          turnstileToken: turnstileToken,
-          "cf-turnstile-response": turnstileToken,
         }),
       });
 
@@ -338,17 +316,14 @@ export const ContactFormPopup: React.FC<ContactFormPopupProps> = ({
       if (response.ok && (result.success || result.data || result._id || !result.message?.includes("thất bại"))) {
         setSubmitted(true);
         setStatus("");
-        resetTurnstile();
         setTimeout(() => {
           handleClose();
         }, 3500);
       } else {
         setStatus(`Lỗi: ${result.message || "Không thể gửi yêu cầu"}`);
-        resetTurnstile();
       }
     } catch (err: any) {
       setStatus("Lỗi kết nối máy chủ. Vui lòng thử lại sau.");
-      resetTurnstile();
     }
   };
 
@@ -514,46 +489,6 @@ export const ContactFormPopup: React.FC<ContactFormPopupProps> = ({
 
             </div>
 
-            {/* Cloudflare Turnstile Widget (Giống UniVi) */}
-            <div className="flex flex-col gap-1 min-h-[65px] justify-center py-1">
-              {siteKey ? (
-                <Turnstile
-                  ref={turnstileRef}
-                  siteKey={siteKey}
-                  onSuccess={(token) => {
-                    setTurnstileToken(token);
-                    setTurnstileError("");
-                    if (errors.turnstile) {
-                      setErrors((prev) => ({ ...prev, turnstile: "" }));
-                    }
-                  }}
-                  onError={() => {
-                    setTurnstileToken("");
-                    setTurnstileError("Xác minh thất bại. Vui lòng thử lại.");
-                  }}
-                  onExpire={() => {
-                    setTurnstileToken("");
-                  }}
-                  options={{
-                    theme: "light",
-                    size: "normal",
-                    language: "vi",
-                  }}
-                />
-              ) : null}
-
-              {errors.turnstile && (
-                <p className="text-xs text-red-500 font-medium">
-                  {errors.turnstile}
-                </p>
-              )}
-              {turnstileError && !errors.turnstile && (
-                <p className="text-xs text-red-500 font-medium">
-                  {turnstileError}
-                </p>
-              )}
-            </div>
-
             {/* Hàng 4: Chú thích & Nút Gửi CTA đơn sắc */}
             <div className="flex flex-col sm:flex-row items-center justify-between pt-1 gap-2">
               <span className="text-[11px] text-gray-400 hidden sm:inline">
@@ -562,7 +497,7 @@ export const ContactFormPopup: React.FC<ContactFormPopupProps> = ({
               <div className="w-full sm:w-auto">
                 <button
                   type="submit"
-                  disabled={status === "Đang gửi..." || (Boolean(siteKey) && !turnstileToken)}
+                  disabled={status === "Đang gửi..."}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-white text-gray-800 border-2 border-gray-300 rounded-full px-5 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-sm font-semibold cursor-pointer transition-colors hover:border-[#00502b] hover:text-[#00502b] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm group"
                 >
                   <span>
