@@ -23,7 +23,7 @@ export default function LienHe({ meta }) {
           "addressCountry": "VN"
         },
         {
-          "@type": "PostalAddress", 
+          "@type": "PostalAddress",
           "name": "CS2 - Thái Nguyên",
           "streetAddress": "Tòa nhà Viettel, Số 4 Hoàng Văn Thụ",
           "addressLocality": "Thái Nguyên",
@@ -47,7 +47,7 @@ export default function LienHe({ meta }) {
         },
         {
           "@type": "ContactPoint",
-          "email": "contact@btacademy.com.vn",
+          "email": "daotaogiongnoi@gmail.com",
           "contactType": "customer service"
         }
       ],
@@ -59,7 +59,7 @@ export default function LienHe({ meta }) {
   };
 
   return (
-    <DefaultLayout 
+    <DefaultLayout
       title={meta?.title}
       desc={meta?.description}
       thumbnail={meta?.og?.image}
@@ -76,7 +76,7 @@ export default function LienHe({ meta }) {
       <h1 className="sr-only">
         Liên hệ BT Academy - Tư vấn khóa học và chương trình đào tạo
       </h1>
-      
+
       <ContactPage />
     </DefaultLayout>
   );
@@ -86,7 +86,7 @@ export async function getServerSideProps() {
   const meta = {
     title: "Liên hệ BT Academy - Tư vấn khóa học và chương trình đào tạo",
     description:
-      "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline 0988027494. Email: contact@btacademy.com.vn. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
+      "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline 0988027494. Email: daotaogiongnoi@gmail.com. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
     keywords:
       "liên hệ BT Academy, tư vấn khóa học, hotline BT Academy, địa chỉ BT Academy, email BT Academy, đào tạo lập trình, khóa học công nghệ, học lập trình",
     robots: "index, follow",
@@ -95,7 +95,7 @@ export async function getServerSideProps() {
     og: {
       title: "Liên hệ BT Academy - Tư vấn khóa học và chương trình đào tạo",
       description:
-        "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline: 0988027494. Email: contact@btacademy.com.vn. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
+        "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline: 0988027494. Email: daotaogiongnoi@gmail.com. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
       type: "website",
       image: "https://btacademy.com.vn/images/banner-bta.jpg",
       imageWidth: "1200",
@@ -106,7 +106,7 @@ export async function getServerSideProps() {
       card: "summary_large_image",
       title: "Liên hệ BT Academy - Tư vấn khóa học và chương trình đào tạo",
       description:
-        "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline: 024.3333.4444. Email: contact@btacademy.com.vn. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
+        "Liên hệ ngay với BT Academy để được tư vấn về các khóa học và chương trình đào tạo. Hotline: 0988027494. Email: daotaogiongnoi@gmail.com. Đội ngũ tư vấn viên sẵn sàng hỗ trợ bạn.",
       image: "https://btacademy.com.vn/images/banner-bta.jpg",
     },
   };

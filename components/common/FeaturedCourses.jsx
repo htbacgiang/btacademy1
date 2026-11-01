@@ -5,8 +5,11 @@ import CourseCard from './CourseCard';
 import { toCloudinaryUrl } from '../../utils/cloudinary';
 import Link from 'next/link';
 
-const FeaturedCourses = ({ 
-  title = "Các khóa học nổi bật",
+const FeaturedCourses = ({
+  badge = "KHÓA HỌC TIÊU BIỂU",
+  title,
+  highlightTitle = "khóa học tiêu biểu nhất",
+  suffixTitle = "của BT Academy",
   courses = [],
   variant = 'default',
   showViewAll = true,
@@ -87,27 +90,49 @@ const FeaturedCourses = ({
   return (
     <section className="py-3 bg-white">
       <div className="container mx-auto px-4">
-        {/* Header */}
-           {/* Section Header */}
-        <section
-          className="py-8 px-4 flex flex-col items-center justify-center "
-          aria-labelledby="hero-heading"
-        >
-          {/* Label */}
-          <div className="text-green-700 uppercase text-lg md:text-xl font-bold tracking-wider mb-6 bg-slate-100 px-6 py-2 rounded-full shadow-xl">
-            {title}
+        {/* Section Header */}
+        <div className="mb-8 text-left">
+          {badge && (
+            <div className="flex items-center gap-1.5 text-xs md:text-sm font-semibold tracking-wider text-gray-500 uppercase mb-2">
+              <span>{badge}</span>
+              <span className="text-gray-400 font-normal text-base leading-none">→</span>
+            </div>
+          )}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 tracking-tight">
+              {title ? (
+                title
+              ) : (
+                <>
+                  Danh sách những{" "}
+                  <span className="text-green-600">
+                    {highlightTitle}
+                  </span>{" "}
+                  {suffixTitle}
+                </>
+              )}
+            </h2>
+
+            {showViewAll && displayCourses.length > 0 && (
+              <Link
+                href="/khoa-hoc"
+                className="hidden sm:inline-flex items-center gap-1.5 text-sm md:text-base font-semibold text-green-600 hover:text-green-700 transition-colors whitespace-nowrap group"
+              >
+                <span>Xem tất cả khóa học</span>
+                <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+              </Link>
+            )}
           </div>
-        </section>
+        </div>
 
         {/* Courses Grid */}
         {displayCourses.length > 0 ? (
-          <div className={`grid gap-8 ${
-            variant === 'compact' 
-              ? 'lg:grid-cols-2 grid-cols-1' 
-              : variant === 'minimal'
+          <div className={`grid gap-8 ${variant === 'compact'
+            ? 'lg:grid-cols-2 grid-cols-1'
+            : variant === 'minimal'
               ? 'lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1'
               : 'lg:grid-cols-3 md:grid-cols-2 grid-cols-1'
-          }`}>
+            }`}>
             {displayCourses.map((course) => (
               <CourseCard
                 key={course.id}
@@ -124,42 +149,23 @@ const FeaturedCourses = ({
           </div>
         )}
 
-        {/* View All Button */}
+        {/* Mobile View All - Bottom of Section */}
         {showViewAll && displayCourses.length > 0 && (
-          <div className="text-center mt-12">
+          <div className="mt-8 text-center sm:hidden">
             <Link
               href="/khoa-hoc"
-              className="inline-flex items-center space-x-2 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-600 hover:text-green-700 transition-colors py-2 px-4"
             >
               <span>Xem tất cả khóa học</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-              </svg>
+              <span>→</span>
             </Link>
           </div>
         )}
 
-        {/* Stats Section */}
-        <div className="mt-10 bg-gradient-to-r from-green-50 to-emerald-50 rounded-3xl p-8 border border-green-100">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-4xl font-bold text-green-600 mb-2">500+</div>
-              <div className="text-gray-600">Học viên đã tốt nghiệp</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-emerald-600 mb-2">6+</div>
-              <div className="text-gray-600">Khóa học chuyên nghiệp</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-green-700 mb-2">98%</div>
-              <div className="text-gray-600">Tỷ lệ hài lòng</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-emerald-700 mb-2">5+</div>
-              <div className="text-gray-600">Năm kinh nghiệm</div>
-            </div>
-          </div>
-        </div>
+
+
+
+
       </div>
     </section>
   );

@@ -54,7 +54,7 @@ export default function ClassSchedulePage() {
         <meta name="robots" content={meta.robots} />
         <meta name="author" content={meta.author} />
         <link rel="canonical" href={meta.canonical} />
-        
+
         {/* Open Graph */}
         <meta property="og:title" content={meta.og.title} />
         <meta property="og:description" content={meta.og.description} />
@@ -63,13 +63,13 @@ export default function ClassSchedulePage() {
         <meta property="og:image:width" content={meta.og.imageWidth} />
         <meta property="og:image:height" content={meta.og.imageHeight} />
         <meta property="og:url" content={meta.og.url} />
-        
+
         {/* Twitter */}
         <meta name="twitter:card" content={meta.twitter.card} />
         <meta name="twitter:title" content={meta.twitter.title} />
         <meta name="twitter:description" content={meta.twitter.description} />
         <meta name="twitter:image" content={meta.twitter.image} />
-        
+
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {/* JSON-LD Schema.org */}
@@ -91,7 +91,7 @@ export default function ClassSchedulePage() {
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "+84-", // Thay bằng số điện thoại thực tế
-                email: "contact@btacademy.com.vn", // Thay bằng email thực tế
+                email: "daotaogiongnoi@gmail.com", // Thay bằng email thực tế
                 contactType: "Customer Service",
               },
               offers: {
@@ -116,7 +116,6 @@ export default function ClassSchedulePage() {
           }}
         />
       </Head>
-      <div className="h-[80px] bg-white"></div>
 
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-8">
@@ -140,17 +139,16 @@ export default function ClassSchedulePage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              
+
             </div>
-            
+
             <div className="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setViewMode('calendar')}
-                className={`flex items-center space-x-2 px-4 py-2 text-sm md:text-base rounded-md transition-colors duration-200 ${
-                  viewMode === 'calendar'
-                    ? 'bg-white text-green-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`flex items-center space-x-2 px-4 py-2 text-sm md:text-base rounded-md transition-colors duration-200 ${viewMode === 'calendar'
+                  ? 'bg-white text-green-600 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+                  }`}
                 aria-pressed={viewMode === 'calendar'}
                 aria-label="Chuyển sang chế độ xem lịch"
               >
@@ -159,11 +157,10 @@ export default function ClassSchedulePage() {
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`flex items-center space-x-2 px-4 py-2 text-sm md:text-base rounded-md transition-colors duration-200 ${
-                  viewMode === 'list'
-                    ? 'bg-white text-green-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`flex items-center space-x-2 px-4 py-2 text-sm md:text-base rounded-md transition-colors duration-200 ${viewMode === 'list'
+                  ? 'bg-white text-green-600 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+                  }`}
                 aria-pressed={viewMode === 'list'}
                 aria-label="Chuyển sang chế độ xem danh sách"
               >
@@ -213,7 +210,7 @@ export default function ClassSchedulePage() {
             <Link href="/khoa-hoc" className="text-green-600 hover:underline">
               Xem tất cả khóa học
             </Link>{' '}
-           
+
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <button

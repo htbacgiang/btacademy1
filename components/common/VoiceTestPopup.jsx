@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Mic, MicOff, Upload, Play, Pause, Square, Send, CheckCircle } from 'lucide-react';
 
 const VoiceTestPopup = ({ isOpen, onClose }) => {
+  const [mounted, setMounted] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
@@ -65,32 +67,30 @@ LƯU Ý:
     }
   }, []);
 
-  // Prevent body scroll when popup is open (works on iOS Safari too)
   useEffect(() => {
-    if (isOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-    } else {
-      const scrollY = document.body.style.top;
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
-    }
+    setMounted(true);
+  }, []);
+
+  // Prevent body scroll when popup is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   // Cleanup audio URL when component unmounts
   useEffect(() => {
@@ -280,28 +280,28 @@ LƯU Ý:
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center popup-voice-test p-2 sm:p-4" style={{ zIndex: 2147483647 }}>
-      {/* Nút đóng cố định - luôn hiển thị trên mobile */}
-      <button
-        onClick={onClose}
-        className="fixed top-3 right-3 sm:hidden w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-colors"
-        aria-label="Đóng"
+  return createPortal(
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center popup-voice-test p-2 sm:p-4 z-[99999]"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        className="relative bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col z-10"
+        onClick={(e) => e.stopPropagation()}
       >
-        <X size={20} />
-      </button>
-
-      <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4 sm:p-6">
+        <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4 sm:p-6 flex-shrink-0">
           <div className="flex justify-between items-center">
             <h2 className="text-lg sm:text-2xl font-bold">Test Giọng MC - BT Academy</h2>
-            {/* Nút đóng trong header - chỉ desktop */}
+            {/* Nút đóng */}
             <button
               onClick={onClose}
-              className="text-white hover:text-gray-200 transition-colors hidden sm:block"
+              className="text-white hover:text-gray-200 transition-colors p-1 rounded-lg hover:bg-white/10 cursor-pointer"
+              aria-label="Đóng"
             >
               <X size={24} />
             </button>
@@ -541,7 +541,8 @@ LƯU Ý:
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

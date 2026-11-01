@@ -1,20 +1,25 @@
 import React from "react";
 import TeacherCard from "./TeacherCard";
 
-const TeachersSection = ({ teachers, title = "Đội ngũ giảng viên", subtitle = "Những chuyên gia hàng đầu trong lĩnh vực MC và truyền thông" }) => {
+const TeachersSection = ({
+  teachers,
+  badge,
+  title = "Đội ngũ giảng viên",
+  highlightTitle = "chuyên gia hàng đầu",
+  suffixTitle = "của BT Academy",
+  subtitle = "Những chuyên gia hàng đầu trong lĩnh vực MC và truyền thông"
+}) => {
   return (
-    <section className="py-8">
+    <section id="giang-vien" className="py-8 scroll-mt-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <section
-          className="py-8 px-4 flex flex-col items-center justify-center "
-          aria-labelledby="hero-heading"
-        >
-          {/* Label */}
-          <div className="text-green-700 uppercase text-lg md:text-xl font-bold tracking-wider mb-6 bg-slate-100 px-6 py-2 rounded-full shadow-xl">
-            {title}
+        <div className="mb-8 text-left">
+          <div className="flex items-center gap-1.5 text-xl md:text-xl font-semibold tracking-wider text-gray-500 uppercase mb-2">
+            <span>{badge || title || "ĐỘI NGŨ GIẢNG VIÊN"}</span>
+            <span className="text-gray-400 font-normal text-base leading-none">→</span>
           </div>
-        </section>
+
+        </div>
 
         {/* Teachers Grid */}
         {teachers && teachers.length > 0 ? (

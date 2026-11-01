@@ -118,10 +118,6 @@ const HocMCThuyetTrinhThaiNguyenPage = () => {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </Head>
-      <div className='h-[80px]'></div>
-
-
-
       <style jsx>{`
         @keyframes float {
           0% { transform: translateY(0px) rotate(0deg); }

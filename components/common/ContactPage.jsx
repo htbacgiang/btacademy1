@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Image from "next/image";
-import { 
-  FaMapMarkerAlt, 
-  FaPhone, 
-  FaEnvelope, 
+import {
+  FaMapMarkerAlt,
+  FaPhone,
+  FaEnvelope,
   FaClock,
   FaFacebookF,
   FaYoutube,
@@ -37,12 +37,12 @@ export default function ContactPage() {
         address: "19 Nguyễn Gia Thiều, Hoàn Kiếm, Hà Nội"
       },
       {
-        name: "CS2 - Thái Nguyên", 
+        name: "CS2 - Thái Nguyên",
         address: "Tòa nhà Viettel, Số 4 Hoàng Văn Thụ, Thái Nguyên"
       }
     ],
     phone: "0988 02 7494",
-    email: "contact@btacademy.com.vn",
+    email: "daotaogiongnoi@gmail.com",
     fanpage: "https://www.facebook.com/profile.php?id=61564432965502",
     workingHours: {
       weekdays: "Thứ 2 - Thứ 7: 8:00 - 20:00",
@@ -88,7 +88,7 @@ export default function ContactPage() {
       const selectedDate = new Date(formData.consultationDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       if (selectedDate < today) {
         newErrors.consultationDate = 'Ngày tư vấn phải là ngày trong tương lai';
       }
@@ -116,7 +116,7 @@ export default function ContactPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate form before submitting
     if (!validateForm()) {
       return;
@@ -124,7 +124,7 @@ export default function ContactPage() {
 
     setIsSubmitting(true);
     setSubmitStatus(null);
-    
+
     try {
       const response = await fetch('/api/consultation/submit', {
         method: 'POST',
@@ -178,7 +178,7 @@ export default function ContactPage() {
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
                 Thông tin liên hệ
               </h2>
-              
+
               <div className="space-y-6 mb-8">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -201,7 +201,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-gray-900 mb-2">Hotline</h3>
-                    <a 
+                    <a
                       href={`tel:${contactInfo.phone}`}
                       className="text-green-500 hover:text-green-600 font-bold text-lg transition-colors"
                     >
@@ -240,40 +240,40 @@ export default function ContactPage() {
                 </div>
               </div>
 
-        
+
             </div>
 
             {/* Map */}
             <div className="space-y-6">
               <h3 className="text-2xl font-bold text-gray-900">Vị trí các cơ sở</h3>
-              
+
               {/* CS1 - Hà Nội Map */}
               <div>
                 <h4 className="text-lg font-semibold text-blue-800 mb-3">CS1 - Hà Nội</h4>
                 <div className="bg-white rounded-3xl overflow-hidden shadow-lg">
-                  <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.309861592884!2d105.84330317559623!3d21.020284180626888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab9a62f8ad67%3A0xc0d673a4940ea1d6!2zQlQgQWNhZGVteSAtIMSQw6BvIHThuqFvIGdp4buNbmcgbsOzaSB2w6AgdGjhuqduIHRow6FpIGRvYW5oIG5naGnhu4dw!5e0!3m2!1svi!2s!4v1757508252499!5m2!1svi!2s" 
-                    width="100%" 
-                    height="200" 
-                    style={{border:0}} 
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.309861592884!2d105.84330317559623!3d21.020284180626888!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab9a62f8ad67%3A0xc0d673a4940ea1d6!2zQlQgQWNhZGVteSAtIMSQw6BvIHThuqFvIGdp4buNbmcgbsOzaSB2w6AgdGjhuqduIHRow6FpIGRvYW5oIG5naGnhu4dw!5e0!3m2!1svi!2s!4v1757508252499!5m2!1svi!2s"
+                    width="100%"
+                    height="200"
+                    style={{ border: 0 }}
                     allowFullScreen={true}
-                    loading="lazy" 
+                    loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                   ></iframe>
                 </div>
               </div>
-              
+
               {/* CS2 - Thái Nguyên Map */}
               <div>
                 <h4 className="text-lg font-semibold text-green-800 mb-3">CS2 - Thái Nguyên</h4>
                 <div className="bg-white rounded-3xl overflow-hidden shadow-lg">
-                  <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3709.7792792051196!2d105.8367287!3d21.594537100000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135271ea3d9bd6b%3A0xfaa8f55caebc0043!2zVmlldHRlbCBUaMOhaSBOZ3V5w6puIC0gQ2hpIG5ow6FuaCBU4bqtcCDEkW_DoG4gQ8O0bmcgbmdoaeG7h3AgLSBWaeG7hW4gdGjhu5FuZyBRdcOibiDEkeG7mWk!5e0!3m2!1svi!2s!4v1758653790741!5m2!1svi!2s" 
-                    width="100%" 
-                    height="200" 
-                    style={{border:0}} 
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3709.7792792051196!2d105.8367287!3d21.594537100000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135271ea3d9bd6b%3A0xfaa8f55caebc0043!2zVmlldHRlbCBUaMOhaSBOZ3V5w6puIC0gQ2hpIG5ow6FuaCBU4bqtcCDEkW_DoG4gQ8O0bmcgbmdoaeG7h3AgLSBWaeG7hW4gdGjhu5FuZyBRdcOibiDEkeG7mWk!5e0!3m2!1svi!2s!4v1758653790741!5m2!1svi!2s"
+                    width="100%"
+                    height="200"
+                    style={{ border: 0 }}
                     allowFullScreen={true}
-                    loading="lazy" 
+                    loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                   ></iframe>
                 </div>

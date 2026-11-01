@@ -1,7 +1,8 @@
 // pages/index.js
 import Head from "next/head";
+import Link from "next/link";
 import DefaultLayout from "../components/layout/DefaultLayout";
-import HeroBanner from "../components/common/HeroBanner";
+import HeroBannerV2 from "../components/common/HeroBannerV2";
 import AboutSection from "../components/common/AboutSection";
 import OrganicProcess from "../components/about/OrganicProcess";
 import PostCard from "../components/common/PostCard";
@@ -48,7 +49,7 @@ export default function Home({ posts, meta }) {
   };
 
   return (
-    <DefaultLayout meta={meta}>
+    <DefaultLayout meta={meta} navbarVersion="v2">
       <Head>
         {/* JSON-LD */}
         <script
@@ -57,10 +58,7 @@ export default function Home({ posts, meta }) {
         />
       </Head>
       {/* <BirthdayPopup /> */}
-      <h1 className="sr-only">
-        BT Academy - Trung tâm đào tạo MC chuyên nghiệp - Khóa học dẫn chương trình, phát thanh viên, luyện giọng nói hàng đầu tại Hà Nội và Thái Nguyên
-      </h1>
-      <HeroBanner />
+      <HeroBannerV2 />
       <AboutSection />
       <FeaturedCourses />
       <TeachersSection
@@ -78,6 +76,16 @@ export default function Home({ posts, meta }) {
           {posts.slice(0, 3).map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}
+        </div>
+        {/* Mobile View All - Bottom of Section */}
+        <div className="text-center pb-8 sm:hidden">
+          <Link
+            href="/bai-viet"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-green-600 hover:text-green-700 transition-colors py-2 px-4"
+          >
+            <span>Xem tất cả bài viết</span>
+            <span>→</span>
+          </Link>
         </div>
       </div>
       <NewsletterSignup />

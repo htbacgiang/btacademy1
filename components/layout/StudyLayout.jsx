@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import ModernNavbar from "../header/ModernNavbar";
+import NavbarV2 from "../header/NavbarV2";
 
 const StudyLayout = ({ children, meta = {} }) => {
   const {
@@ -55,7 +55,7 @@ const StudyLayout = ({ children, meta = {} }) => {
       </Head>
 
       <div className="min-h-screen bg-white">
-        <ModernNavbar />
+        <NavbarV2 />
         <main>{children}</main>
       </div>
     </>

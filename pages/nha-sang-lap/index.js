@@ -78,8 +78,6 @@ const FounderPage = () => {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </Head>
-      <div className="h-[80px] bg-white"></div>
-      
       <h1 className="visually-hidden">{meta.title}</h1>
       <FounderProfile />
       <EducationExperience />

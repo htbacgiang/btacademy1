@@ -241,7 +241,6 @@ const CourseDetail = ({ course, relatedCourses, meta }) => {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       )}
-      <div className="h-[80px] bg-white"></div>
       <div className="min-h-screen ">
         {/* Breadcrumb */}
         <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-b-2 border-green-200 shadow-sm">
@@ -532,7 +531,7 @@ const CourseDetail = ({ course, relatedCourses, meta }) => {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
-                      <span>Email:contact@btacademy.com.vn</span>
+                      <span>Email:daotaogiongnoi@gmail.com</span>
                     </div>
                   </div>
                 </div>

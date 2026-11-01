@@ -6,7 +6,7 @@ import VoiceTestPopup from "./VoiceTestPopup";
 
 const HeroBanner = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  
+
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -48,38 +48,38 @@ const HeroBanner = () => {
             {/* Course Benefits Card */}
             <div className="bg-white/40 backdrop-blur-md border border-green-200 rounded-3xl p-4 shadow-2xl max-w-full mx-auto lg:mx-0">
               <div className="flex items-center gap-3 mb-3">
-               
+
                 <h3 className="text-xl font-bold text-gray-800">
                   BT Academy sẽ giúp bạn những gì?
                 </h3>
               </div>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 mb-4">
                 <div className="bg-white/80 border border-green-100 rounded-xl p-3 hover:bg-green-50 transition-all duration-300 shadow-sm hover:shadow-md">
                   <span className="text-gray-800 font-semibold text-sm">Cải thiện giọng nói</span>
                 </div>
-                
+
                 <div className="bg-white/80 border border-green-100 rounded-xl p-3 hover:bg-green-50 transition-all duration-300 shadow-sm hover:shadow-md">
                   <span className="text-gray-800 font-semibold text-sm">Giải phóng hình thể</span>
                 </div>
-                
+
                 <div className="bg-white/80 border border-green-100 rounded-xl p-3 hover:bg-green-50 transition-all duration-300 shadow-sm hover:shadow-md">
                   <span className="text-gray-800 font-semibold text-sm">Tự tin trước đám đông</span>
                 </div>
-                
+
                 <div className="bg-white/80 border border-green-100 rounded-xl p-3 hover:bg-green-50 transition-all duration-300 shadow-sm hover:shadow-md">
                   <span className="text-gray-800 font-semibold text-sm">Xử lý tình huống giao tiếp</span>
                 </div>
-                
+
                 <div className="bg-white/80 border border-green-100 rounded-xl p-3 hover:bg-green-50 transition-all duration-300 shadow-sm hover:shadow-md">
                   <span className="text-gray-800 font-semibold text-sm ">Xây dựng hình ảnh chuyên nghiệp</span>
                 </div>
-                
+
                 <div className="bg-white/80 border border-green-100 rounded-xl p-3 hover:bg-green-50 transition-all duration-300 shadow-sm hover:shadow-md">
                   <span className="text-gray-800 font-semibold text-sm">Thực hành trước camera</span>
                 </div>
               </div>
-              
+
               {/* Contact Card */}
               <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 rounded-2xl p-4 sm:p-3 border border-green-200 shadow-lg hover:shadow-xl transition-all duration-300 mx-2 sm:mx-0">
                 <div className="space-y-2">
@@ -98,7 +98,7 @@ const HeroBanner = () => {
                         <p className="text-sm sm:text-base text-green-700 font-semibold">CS1 - Hà Nội</p>
                         <p className="text-sm text-gray-600 leading-relaxed">19 Nguyễn Gia Thiều, Hoàn Kiếm</p>
                       </div>
-                      
+
                       <div>
                         <p className="text-sm sm:text-base text-emerald-700 font-semibold">CS2 - Thái Nguyên</p>
                         <p className="text-sm text-gray-600 leading-relaxed">Tòa nhà Viettel, Số 4 Hoàng Văn Thụ</p>
@@ -110,7 +110,7 @@ const HeroBanner = () => {
             </div>
           </div>
 
-       
+
 
           {/* Student Testimonials */}
           {/* <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4">
@@ -131,20 +131,20 @@ const HeroBanner = () => {
               </div>
             </div>
             <div className="text-center sm:text-left">
-              <p className="text-gray-900 font-semibold text-base sm:text-base">Tham gia cùng 500+ Học viên</p>
+              <p className="text-gray-900 font-semibold text-base sm:text-base">Tham gia cùng 1000+ Học viên</p>
               <p className="text-gray-600 text-base sm:text-base">Nâng cao kỹ năng giao tiếp mỗi tuần 📈</p>
             </div>
           </div> */}
 
           {/* Action Buttons */}
           <div className="flex grid-cols-2 sm:flex-row gap-3 pt-3">
-            <button 
+            <button
               onClick={handleOpenPopup}
               className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 md:px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-transform shadow-xl flex-1"
             >
-           Test Giọng Ngay
+              Test Giọng Ngay
             </button>
-            
+
             <Link href="/khoa-hoc" className="flex-1">
               <button className="w-full bg-white border-2 border-green-200 hover:border-green-300 text-gray-700 hover:text-green-600 px-4 md:px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-all shadow-lg">
                 Tìm hiểu khóa học
@@ -152,14 +152,38 @@ const HeroBanner = () => {
             </Link>
           </div>
 
-      
+
         </div>
 
         {/* Right Content - Images Grid */}
         <div className="relative flex flex-row gap-4 h-auto lg:h-[500px] mt-8 lg:mt-0">
           {/* Left Section - Main Image */}
-          <div className="w-1/2 relative">
-            <div className="relative rounded-3xl h-[350px] lg:h-full shadow-xl overflow-hidden">
+          <div className="w-1/2 relative group">
+            {/* Hiệu ứng ma trận dấu chấm trang trí phía trên bên trái (Top-Left Dot Matrix) */}
+            <div className="absolute -top-7 -left-7 w-36 h-44 z-0 pointer-events-none opacity-80 animate-pulse">
+              <svg width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <pattern id="dot-matrix-left" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                  <circle cx="2.5" cy="2.5" r="2.5" fill="#22c55e" />
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#dot-matrix-left)" />
+              </svg>
+            </div>
+
+            {/* Hiệu ứng ma trận dấu chấm trang trí phía dưới bên phải (Bottom-Right Dot Matrix) */}
+            <div className="absolute -bottom-6 -right-6 w-28 h-28 z-0 pointer-events-none opacity-60">
+              <svg width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <pattern id="dot-matrix-bottom" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+                  <circle cx="2" cy="2" r="2" fill="#16a34a" />
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#dot-matrix-bottom)" />
+              </svg>
+            </div>
+
+            {/* Vầng sáng xanh dịu tạo chiều sâu */}
+            <div className="absolute -top-10 -left-10 w-48 h-48 bg-[#22c55e]/15 rounded-full blur-2xl pointer-events-none z-0"></div>
+
+            {/* Main Image Box */}
+            <div className="relative rounded-3xl h-[350px] lg:h-full shadow-xl overflow-hidden z-10 transition-transform duration-300 group-hover:scale-[1.01]">
               <Image
                 src="/images/mc-bich-thuy.jpg"
                 alt="MC Bích Thủy - Giảng viên chuyên nghiệp"
@@ -168,7 +192,7 @@ const HeroBanner = () => {
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-3 left-4 right-4">
-                <div className="bg-white/90 rounded-2xl p-3 opacity-80">
+                <div className="bg-white/90 rounded-2xl p-3 opacity-80 backdrop-blur-sm">
                   <p className="text-gray-800 font-bold text-sm">BTV/MC Bích Thủy</p>
                   <p className="text-gray-600 text-xs hidden md:block">Giảng viên chuyên nghiệp</p>
                 </div>
@@ -187,7 +211,7 @@ const HeroBanner = () => {
                 height={250}
                 className="w-full h-full object-cover"
               />
-            
+
             </div>
 
             {/* Bottom Right Image */}
@@ -199,7 +223,7 @@ const HeroBanner = () => {
                 height={250}
                 className="w-full h-full object-cover"
               />
-              
+
             </div>
           </div>
 
@@ -216,10 +240,10 @@ const HeroBanner = () => {
       <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-emerald-400 rounded-full opacity-60 animate-ping"></div>
       <div className="absolute bottom-1/3 left-1/3 w-3 h-3 bg-green-500 rounded-full opacity-60 animate-ping delay-75"></div>
       <div className="absolute top-2/3 right-1/4 w-5 h-5 bg-green-300 rounded-full opacity-60 animate-ping delay-150"></div>
-      
+
       {/* Voice Test Popup */}
-      <VoiceTestPopup 
-        isOpen={isPopupOpen} 
+      <VoiceTestPopup
+        isOpen={isPopupOpen}
         onClose={handleClosePopup}
       />
     </div>

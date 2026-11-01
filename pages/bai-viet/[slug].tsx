@@ -295,7 +295,6 @@ const SinglePost: NextPage<Props> = ({ post, meta }) => {
       </Head>
 
       <div className="min-h-screen">
-        <div className="h-[80px]"></div>
         <div className="container mx-auto">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Main Content */}
@@ -667,11 +666,11 @@ export const getServerSideProps: GetServerSideProps<
     const faqs =
       Array.isArray(rawFaqs) && rawFaqs.length > 0
         ? rawFaqs
-            .map((item: any) => ({
-              question: item?.question || "",
-              answer: item?.answer || "",
-            }))
-            .filter((item: any) => item.question && item.answer)
+          .map((item: any) => ({
+            question: item?.question || "",
+            answer: item?.answer || "",
+          }))
+          .filter((item: any) => item.question && item.answer)
         : [];
 
     // ── Schema: Article + BreadcrumbList + FAQPage ──
@@ -715,19 +714,19 @@ export const getServerSideProps: GetServerSideProps<
       },
       ...(faqs.length > 0
         ? [
-            {
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: faqs.map((faq: any) => ({
-                "@type": "Question",
-                name: faq.question,
-                acceptedAnswer: {
-                  "@type": "Answer",
-                  text: faq.answer,
-                },
-              })),
-            },
-          ]
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqs.map((faq: any) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
+          },
+        ]
         : []),
     ];
 

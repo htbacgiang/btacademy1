@@ -93,7 +93,6 @@ export default function VideoPage() {
         />
       </Head>
 
-      <div className="h-[70px] md:h-[90px] bg-white"></div>
       <main className="min-h-screen bg-white">
         <section className="py-8">
           <div className="container mx-auto ">

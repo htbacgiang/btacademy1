@@ -20,7 +20,7 @@ const AboutBTAcademyPage = () => {
   };
 
 
-// 2. Đồng bộ JSON-LD (Schema chuẩn EducationalOrganization)
+  // 2. Đồng bộ JSON-LD (Schema chuẩn EducationalOrganization)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
@@ -66,7 +66,7 @@ const AboutBTAcademyPage = () => {
         <meta name="description" content={meta.description} />
         <meta name="keywords" content={meta.keywords} />
         <meta name="author" content="MC Bích Thủy" />
-        
+
         {/* Open Graph Meta Tags */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={meta.ogTitle} />
@@ -74,51 +74,50 @@ const AboutBTAcademyPage = () => {
         <meta property="og:image" content={meta.ogImage} />
         <meta property="og:url" content="https://btacademy.com.vn/gioi-thieu" />
         <meta property="og:site_name" content="BT Academy" />
-        
+
         {/* Twitter Card Meta Tags */}
         <meta name="twitter:card" content={meta.twitterCard} />
         <meta name="twitter:title" content={meta.ogTitle} />
         <meta name="twitter:description" content={meta.ogDescription} />
         <meta name="twitter:image" content={meta.ogImage} />
-        
+
         {/* Canonical URL */}
         <link rel="canonical" href="https://btacademy.com.vn/gioi-thieu" />
-        
+
         {/* JSON-LD */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        
+
       </Head>
-      <div className='h-[80px]'></div>
       <h1 className="visually-hidden">
-     BT Academy: Trung tâm Đào tạo MC, Giọng nói và thần thái doanh nghiệp tại Hà Nội và Thái Nguyên
+        BT Academy: Trung tâm Đào tạo MC, Giọng nói và thần thái doanh nghiệp tại Hà Nội và Thái Nguyên
       </h1>
-         {/* Breadcrumb */}
-         <div className="">
-          <div className="container mx-auto px-4 py-2">
-            <div className="flex items-center gap-3 text-base">
-              <Link href="/" className="font-semibold text-gray-700 whitespace-nowrap transition-colors duration-200">
-                Trang chủ
-              </Link>
-              <span className="text-green-400 font-bold text-lg">›</span>
-              <span className="font-bold text-gray-800 px-1 py-1 rounded-full text-base">
-                Giới thiệu BT Academy
-              </span>
-            </div>
+      {/* Breadcrumb */}
+      <div className="">
+        <div className="container mx-auto px-4 py-2">
+          <div className="flex items-center gap-3 text-base">
+            <Link href="/" className="font-semibold text-gray-700 whitespace-nowrap transition-colors duration-200">
+              Trang chủ
+            </Link>
+            <span className="text-green-400 font-bold text-lg">›</span>
+            <span className="font-bold text-gray-800 px-1 py-1 rounded-full text-base">
+              Giới thiệu BT Academy
+            </span>
           </div>
         </div>
+      </div>
       <div className="container mx-auto ">
         {/* Main Content */}
         <div className="prose prose-lg blog max-w-none px-4 py-2">
-          
+
           {/* Section I: Introduction */}
           <div className="bg-white mt-2 rounded-lg mb-2">
-            <h2 style={{fontWeight: 'bold'}}>
+            <h2 style={{ fontWeight: 'bold' }}>
               I. Trung Tâm Đào Tạo MC BT Academy: Bệ Phóng Cho Sự Tự Tin Tuyệt Đối
             </h2>
-        
+
             <div className="space-y-2">
               <p>
                 Chào mừng bạn đến với <strong className="text-green-700">Trung tâm Đào tạo MC BT Academy</strong>, đơn vị đào tạo tiên phong chuyên sâu về <strong>Nghệ thuật Giao tiếp, Dẫn chương trình (MC), Luyện Giọng và Sửa Ngọng</strong> tại khu vực Hà Nội và Thái Nguyên.
@@ -141,7 +140,7 @@ const AboutBTAcademyPage = () => {
                 <p className="mb-1">• Cơ sở 1: 19 Nguyễn Gia Thiều, Quận Hoàn Kiếm, Hà Nội.</p>
                 <p>• Cơ sở 2: Tầng 3, Tòa nhà Viettel, Hoàng Văn Thụ, TP. Thái Nguyên.</p>
               </div>
-               <p><strong>📞 Hotline tư vấn:</strong> <a href="tel:0988027494">098 802 7494</a></p>
+              <p><strong>📞 Hotline tư vấn:</strong> <a href="tel:0988027494">098 802 7494</a></p>
 
             </div>
             <div className="my-3">
@@ -154,137 +153,137 @@ const AboutBTAcademyPage = () => {
               />
             </div>
           </div>
-          
-           {/* Section II: Vision Mission Values Section */}
-           <section>
-             <div className="">
-               <h2 style={{fontWeight: 'bold'}}>
-                 II. Tầm Nhìn, Sứ Mệnh Và Giá Trị Cốt Lõi
-               </h2>
-               <p className="mt-2">
-                 Trung tâm MC BT Academy không chỉ là một cơ sở đào tạo, mà còn là một tổ chức mang trong mình khát vọng nâng tầm kỹ năng giao tiếp cho cộng đồng tại khu vực Hà Nội và Thái Nguyên.
-               </p>
-             </div>
 
-             {/* Vision Mission Image */}
-             <div className="mb-6">
-               <Image
-                 src="/images/tam-nhin-su-menh.jpg"
-                 alt="Tầm nhìn và Sứ mệnh của BT Academy"
-                 width={1200}
-                 height={400}
-                 className="w-full h-auto rounded-lg"
-               />
-             </div>
-             
-             {/* Vision */}
-             <div className="mb-4">
-             <div className="bg-white rounded-lg mb-1">
-             <div className="flex items-center mb-3">
-                   <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                 <Target className="w-5 h-5 text-white" />
-                   </div>
-                   <h3>
-                     1. Tầm Nhìn Chiến Lược 
-                   </h3>
-                 </div>
+          {/* Section II: Vision Mission Values Section */}
+          <section>
+            <div className="">
+              <h2 style={{ fontWeight: 'bold' }}>
+                II. Tầm Nhìn, Sứ Mệnh Và Giá Trị Cốt Lõi
+              </h2>
+              <p className="mt-2">
+                Trung tâm MC BT Academy không chỉ là một cơ sở đào tạo, mà còn là một tổ chức mang trong mình khát vọng nâng tầm kỹ năng giao tiếp cho cộng đồng tại khu vực Hà Nội và Thái Nguyên.
+              </p>
+            </div>
+
+            {/* Vision Mission Image */}
+            <div className="mb-6">
+              <Image
+                src="/images/tam-nhin-su-menh.jpg"
+                alt="Tầm nhìn và Sứ mệnh của BT Academy"
+                width={1200}
+                height={400}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+
+            {/* Vision */}
+            <div className="mb-4">
+              <div className="bg-white rounded-lg mb-1">
+                <div className="flex items-center mb-3">
+                  <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                    <Target className="w-5 h-5 text-white" />
+                  </div>
+                  <h3>
+                    1. Tầm Nhìn Chiến Lược
+                  </h3>
+                </div>
                 <p className="italic">
                   &quot;Trở thành Học viện Đào tạo Kỹ năng Giao tiếp và MC hàng đầu khu vực Hà Nội và Thái Nguyên, là chuẩn mực về sự Tự tin và Chuyên nghiệp trong nghệ thuật nói, được cộng đồng tại Hà Nội và Thái Nguyên tin tưởng lựa chọn số một.&quot;
                 </p>
-                 <p className="mt-1">
-                   Chúng tôi hướng đến việc xây dựng một thương hiệu vững mạnh, nơi mọi cá nhân muốn làm chủ giọng nói và sân khấu đều tìm đến, được công nhận bởi chất lượng đào tạo vượt trội và đội ngũ chuyên gia uy tín.
-                 </p>
-               </div>
-             </div>
+                <p className="mt-1">
+                  Chúng tôi hướng đến việc xây dựng một thương hiệu vững mạnh, nơi mọi cá nhân muốn làm chủ giọng nói và sân khấu đều tìm đến, được công nhận bởi chất lượng đào tạo vượt trội và đội ngũ chuyên gia uy tín.
+                </p>
+              </div>
+            </div>
 
-             {/* Mission */}
-             <div className="mb-4">
-               <div className="bg-white rounded-lg mb-1">
-                 <div className="flex items-center mb-3">
-                   <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                     <Rocket className="w-5 h-5 text-white" />
-                   </div>
-                   <h3>
-                     2. Sứ Mệnh Cốt Lõi 
-                   </h3>
-                 </div>
+            {/* Mission */}
+            <div className="mb-4">
+              <div className="bg-white rounded-lg mb-1">
+                <div className="flex items-center mb-3">
+                  <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                    <Rocket className="w-5 h-5 text-white" />
+                  </div>
+                  <h3>
+                    2. Sứ Mệnh Cốt Lõi
+                  </h3>
+                </div>
                 <p className="mb-3 italic">
                   &quot;Sứ mệnh của chúng tôi là Kiến tạo một thế hệ người Việt tự tin, có khả năng giao tiếp, thuyết trình và dẫn dắt câu chuyện một cách truyền cảm, hiệu quả, sử dụng giọng nói khỏe mạnh và chuẩn mực.&quot;
                 </p>
-                 <p className="mb-4">
-                   BT Academy cam kết:
-                 </p>
-                 <div className="grid md:grid-cols-1 gap-4">
-                   <div className="flex items-start">
-                     <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
-                       <CheckCircle className="w-4 h-4 text-white" />
-                     </div>
-                     <span>Đào tạo ra những MC sự kiện và MC Truyền hình chuyên nghiệp, thực chiến.</span>
-                   </div>
-                   <div className="flex items-start">
-                     <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
-                       <CheckCircle className="w-4 h-4 text-white" />
-                     </div>
-                     <span>Cung cấp giải pháp Sửa ngọng và Luyện giọng hiệu quả nhất, giúp học viên tự tin thăng tiến.</span>
-                   </div>
-                   <div className="flex items-start">
-                     <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
-                       <CheckCircle className="w-4 h-4 text-white" />
-                     </div>
-                     <span>Tạo ra một môi trường học tập Thực chiến giúp mỗi cá nhân khai phá tối đa tiềm năng ngôn ngữ và làm chủ mọi rào cản tâm lý.</span>
-                   </div>
-                 </div>
-               </div>
-             </div>
+                <p className="mb-4">
+                  BT Academy cam kết:
+                </p>
+                <div className="grid md:grid-cols-1 gap-4">
+                  <div className="flex items-start">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <span>Đào tạo ra những MC sự kiện và MC Truyền hình chuyên nghiệp, thực chiến.</span>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <span>Cung cấp giải pháp Sửa ngọng và Luyện giọng hiệu quả nhất, giúp học viên tự tin thăng tiến.</span>
+                  </div>
+                  <div className="flex items-start">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <span>Tạo ra một môi trường học tập Thực chiến giúp mỗi cá nhân khai phá tối đa tiềm năng ngôn ngữ và làm chủ mọi rào cản tâm lý.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-             {/* Core Values */}
-             <div className="mb-4">
-               <div className="bg-white rounded-lg">
-                 <div className="flex items-center mb-1">
-                   <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                     <Gem className="w-5 h-5 text-white" />
-                   </div>
-                   <h3>
-                     3. Giá Trị Cốt Lõi (Our Core Values)
-                   </h3>
-                 </div>
-                 <p className="">
-                   Để thực hiện Tầm nhìn và Sứ mệnh, BT Academy luôn lấy 4 giá trị sau làm kim chỉ nam cho mọi hoạt động đào tạo và vận hành:
-                 </p>
-                 <div className="overflow-x-auto">
-                   <table className="w-full border-collapse bg-white rounded-lg shadow-base">
-                     <thead>
+            {/* Core Values */}
+            <div className="mb-4">
+              <div className="bg-white rounded-lg">
+                <div className="flex items-center mb-1">
+                  <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                    <Gem className="w-5 h-5 text-white" />
+                  </div>
+                  <h3>
+                    3. Giá Trị Cốt Lõi (Our Core Values)
+                  </h3>
+                </div>
+                <p className="">
+                  Để thực hiện Tầm nhìn và Sứ mệnh, BT Academy luôn lấy 4 giá trị sau làm kim chỉ nam cho mọi hoạt động đào tạo và vận hành:
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse bg-white rounded-lg shadow-base">
+                    <thead>
                       <tr className="bg-green-600 text-white">
-                         <th className="p-2 text-left border text-white border-gray-300">Giá Trị Cốt Lõi</th>
-                         <th className="p-2 text-left border text-white border-gray-300">Mô Tả Cam Kết</th>
-                       </tr>
-                     </thead>
-                     <tbody>
-                       <tr className="hover:bg-gray-50">
-                         <td className="p-2 border border-gray-200 font-semibold">Chuyên Nghiệp (Professionalism)</td>
-                         <td className="p-2 border border-gray-200">Nội dung đào tạo được xây dựng từ kinh nghiệm thực tiễn của đội ngũ MC/BTV Truyền hình, đảm bảo tính ứng dụng cao và cập nhật xu hướng mới nhất của ngành.</td>
-                       </tr>
-                       <tr className="hover:bg-gray-50">
-                         <td className="p-2 border border-gray-200 font-semibold">Thực Chiến (Practicality)</td>
-                         <td className="p-2 border border-gray-200">Lấy thực hành là trọng tâm. Học viên được trải nghiệm trực tiếp tại phòng thu, trường quay mô phỏng, đảm bảo làm chủ kỹ năng nói trước đám đông và ống kính ngay tại lớp.</td>
-                       </tr>
-                       <tr className="hover:bg-gray-50">
-                         <td className="p-2 border border-gray-200 font-semibold">Tận Tâm (Dedication)</td>
-                         <td className="p-2 border border-gray-200">Cam kết đồng hành, hỗ trợ và theo sát sự tiến bộ của từng học viên. Chúng tôi coi sự thành công của học viên trong cuộc sống và công việc là thành tựu lớn nhất của trung tâm.</td>
-                       </tr>
-                       <tr className="hover:bg-gray-50">
-                         <td className="p-2 border border-gray-200 font-semibold">Khai Phóng Tự Tin (Unlocking Confidence)</td>
-                         <td className="p-2 border border-gray-200">Mục tiêu cuối cùng là giúp học viên vượt qua mọi rào cản tâm lý, tự tin làm chủ giọng nói, ngôn ngữ cơ thể và kỹ năng ứng biến, từ đó làm chủ mọi tình huống giao tiếp.</td>
-                       </tr>
-                     </tbody>
-                   </table>
-                 </div>
-               </div>
-             </div>
+                        <th className="p-2 text-left border text-white border-gray-300">Giá Trị Cốt Lõi</th>
+                        <th className="p-2 text-left border text-white border-gray-300">Mô Tả Cam Kết</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="hover:bg-gray-50">
+                        <td className="p-2 border border-gray-200 font-semibold">Chuyên Nghiệp (Professionalism)</td>
+                        <td className="p-2 border border-gray-200">Nội dung đào tạo được xây dựng từ kinh nghiệm thực tiễn của đội ngũ MC/BTV Truyền hình, đảm bảo tính ứng dụng cao và cập nhật xu hướng mới nhất của ngành.</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="p-2 border border-gray-200 font-semibold">Thực Chiến (Practicality)</td>
+                        <td className="p-2 border border-gray-200">Lấy thực hành là trọng tâm. Học viên được trải nghiệm trực tiếp tại phòng thu, trường quay mô phỏng, đảm bảo làm chủ kỹ năng nói trước đám đông và ống kính ngay tại lớp.</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="p-2 border border-gray-200 font-semibold">Tận Tâm (Dedication)</td>
+                        <td className="p-2 border border-gray-200">Cam kết đồng hành, hỗ trợ và theo sát sự tiến bộ của từng học viên. Chúng tôi coi sự thành công của học viên trong cuộc sống và công việc là thành tựu lớn nhất của trung tâm.</td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="p-2 border border-gray-200 font-semibold">Khai Phóng Tự Tin (Unlocking Confidence)</td>
+                        <td className="p-2 border border-gray-200">Mục tiêu cuối cùng là giúp học viên vượt qua mọi rào cản tâm lý, tự tin làm chủ giọng nói, ngôn ngữ cơ thể và kỹ năng ứng biến, từ đó làm chủ mọi tình huống giao tiếp.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
 
-           </section>
-      {/* Section: Teaching Methodology */}
-      <section className="my-8">
+          </section>
+          {/* Section: Teaching Methodology */}
+          <section className="my-8">
             <div className="bg-white rounded-lg ">
               {/* Title */}
               <div className="text-center mb-8">
@@ -386,11 +385,11 @@ const AboutBTAcademyPage = () => {
           {/* Section III: Expert Team */}
           <section className="mb-6">
             <div className="mb-4">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1" style={{fontWeight: 'bold'}}>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-1" style={{ fontWeight: 'bold' }}>
                 III. Đội Ngũ Giảng Viên Chuyên Nghiệp
               </h2>
             </div>
-            
+
             <p className="text-gray-700 mb-6 leading-relaxed">
               Lợi thế cạnh tranh lớn nhất của Trung tâm MC BT Academy nằm ở đội ngũ giảng viên. Họ không chỉ là những nhà giáo dục, mà còn là những chuyên gia, Biên tập viên (BTV) đang hoạt động và có thâm niên trong ngành Truyền hình và Sự kiện.
             </p>
@@ -491,11 +490,11 @@ const AboutBTAcademyPage = () => {
           {/* Section IV: Main Courses */}
           <section className="mb-6">
             <div className="mb-2">
-              <h2 className="text-xl  md:text-2xl font-bold text-gray-800 mb-1" style={{fontWeight: 'bold'}}>
+              <h2 className="text-xl  md:text-2xl font-bold text-gray-800 mb-1" style={{ fontWeight: 'bold' }}>
                 IV. Các Khóa Học Trọng Tâm Của BT Academy
               </h2>
             </div>
-            
+
             <p className="text-gray-700 mb-6 leading-relaxed">
               Trung tâm MC BT Academy mang đến hệ sinh thái khóa học đa dạng, được thiết kế chuyên biệt để giải quyết mọi nhu cầu về kỹ năng giao tiếp, giọng nói và dẫn chương trình, tại cả Hà Nội và Thái Nguyên.
             </p>
@@ -505,14 +504,14 @@ const AboutBTAcademyPage = () => {
               <h3 className="text-lg font-bold text-gray-800 mb-3">
                 1. Khóa Học Làm Chủ Giọng Nói, Sửa Ngọng (Dành cho mọi lứa tuổi)
               </h3>
-           
+
               <p className="text-gray-700 mb-4 leading-relaxed">
                 Đây là chương trình cốt lõi, tập trung vào việc cải thiện chất giọng, độ rõ ràng và tính chuyên nghiệp trong lời nói.
               </p>
               <div className="overflow-x-auto mb-3">
                 <table className="w-full border-collapse bg-white rounded-lg shadow-sm">
                   <thead>
-                       <tr className="bg-green-600 text-white">
+                    <tr className="bg-green-600 text-white">
                       <th className="p-2 text-left border text-white border-gray-300">Khóa học</th>
                       <th className="p-2 text-left border text-white border-gray-300">Đối Tượng Mục Tiêu</th>
                       <th className="p-2 text-left border text-white border-gray-300">Lợi Ích Cốt Lõi</th>
@@ -542,7 +541,7 @@ const AboutBTAcademyPage = () => {
               <p className="">
                 Nhóm khóa học dành cho người đi làm, sinh viên hoặc những người muốn tăng thu nhập từ nghề MC.
               </p>
-              
+
               <div className="space-y-1">
                 <div className="bg-white rounded-lg">
                   <h4 className="mb-2">A. Tự tin Giao tiếp & Thuyết trình</h4>
@@ -571,8 +570,8 @@ const AboutBTAcademyPage = () => {
 
               <div className="text-center py-3">
                 <Link href="/khoa-hoc/khoa-hoc-mc-co-ban">
-                <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-base">
-                TƯ VẤN KHÓA HỌC MC NGƯỜI LỚN & LỊCH KHAI GIẢNG
+                  <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-base">
+                    TƯ VẤN KHÓA HỌC MC NGƯỜI LỚN & LỊCH KHAI GIẢNG
                   </button>
                 </Link>
               </div>
@@ -583,11 +582,11 @@ const AboutBTAcademyPage = () => {
               <h3 className="mb-2">
                 3. Khóa Học MC Nhí & Kỹ Năng Mềm Cho Trẻ Em (Độ tuổi 4-15)
               </h3>
-           
+
               <p className="mb-1">
                 Lộ trình phát triển toàn diện, giúp con bạn tự tin và nổi trội trong mọi môi trường học tập.
               </p>
-              
+
               <div className="bg-white  rounded-lg mb-3">
                 <ul className="space-y-2">
                   <li className="flex items-start">
@@ -607,8 +606,8 @@ const AboutBTAcademyPage = () => {
 
               <div className="text-center py-3">
                 <Link href="/khoa-hoc/mc-nhi-co-ban">
-                <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-base">
-                XEM LỘ TRÌNH ĐÀO TẠO MC NHÍ ĐẦY ĐỦ
+                  <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-base">
+                    XEM LỘ TRÌNH ĐÀO TẠO MC NHÍ ĐẦY ĐỦ
                   </button>
                 </Link>
               </div>
@@ -618,11 +617,11 @@ const AboutBTAcademyPage = () => {
           {/* Section V: Proof and Achievements */}
           <section className="">
             <div className="">
-            <h2 className="text-xl md:text-2xl text-gray-800 mb-1" style={{fontWeight: 'bold'}}>
-              V. Minh Chứng Và Thành Tự 
+              <h2 className="text-xl md:text-2xl text-gray-800 mb-1" style={{ fontWeight: 'bold' }}>
+                V. Minh Chứng Và Thành Tự
               </h2>
             </div>
-            
+
             <p className="mb-4 mx-auto">
               Những thành quả đạt được là lời khẳng định rõ ràng nhất cho chất lượng đào tạo và sự tận tâm của Trung tâm Đào tạo MC BT Academy. Chúng tôi tự hào đồng hành cùng sự thay đổi của hàng trăm học viên.
             </p>
@@ -643,7 +642,7 @@ const AboutBTAcademyPage = () => {
               <h3 className="mb-2 flex items-center">
                 1. Cảm Nhận Từ Học Viên & Phụ Huynh
               </h3>
-             
+
               <div className="space-y-3">
                 <div className="bg-white p-4 rounded-lg border-l-4 border-green-600">
                   <h4 className="mb-2">Cảm nhận từ Phụ huynh có con học MC Nhí</h4>
@@ -668,10 +667,10 @@ const AboutBTAcademyPage = () => {
               <h3 className="mb-6 flex items-center">
                 2. Hình Ảnh Thành Quả Thực Chiến
               </h3>
-              <div className="not-prose"> 
-               <ScrollingGallery />
+              <div className="not-prose">
+                <ScrollingGallery />
               </div>
-             
+
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li><strong>Bộ sưu tập ảnh &quot;TRƯỚC &amp; SAU&quot;:</strong> Hình ảnh học viên trước và sau khóa học (nếu có sự đồng ý).</li>
                 <li><strong>Video Sản phẩm MC Nhí:</strong> Trích đoạn clip MC nhí tự tin dẫn chương trình, làm phóng sự.</li>
@@ -695,11 +694,11 @@ const AboutBTAcademyPage = () => {
           {/* Section VI: Conclusion and CTA */}
           <section className="">
             <div className="">
-              <h2 style={{fontWeight: 'bold'}}>
+              <h2 style={{ fontWeight: 'bold' }}>
                 VI. Kết Luận
               </h2>
             </div>
-            
+
             <p className="mb-6">
               BT Academy cam kết là người bạn đồng hành tin cậy, giúp bạn và con bạn kiến tạo kỹ năng giao tiếp bền vững tại Hà Nội, Thái Nguyên. Đừng để sự tự ti cản trở thành công của bạn!
             </p>
@@ -729,8 +728,8 @@ const AboutBTAcademyPage = () => {
 
           {/* Contact Information Section */}
           <section className="mt-4 mb-4">
-                <div className="bg-white p-4 rounded-lg">
-              
+            <div className="bg-white p-4 rounded-lg">
+
               <div className="space-y-1.5">
                 <p><strong>Trung Tâm Đào Tạo MC BT Academy</strong> – Đào tạo MC, Luyện Giọng & Kỹ năng giao tiếp</p>
                 <p><strong>📍 Trụ sở chính:</strong> 19 Nguyễn Gia Thiều, Quận Hoàn Kiếm, Hà Nội.</p>

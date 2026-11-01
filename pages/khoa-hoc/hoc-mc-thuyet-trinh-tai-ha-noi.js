@@ -92,7 +92,7 @@ const HocMCThuyetTrinhHaNoiPage = () => {
       "addressCountry": "VN"
     },
     "telephone": "0988027494",
-    "email": "contact@btacademy.com.vn"
+    "email": "daotaogiongnoi@gmail.com"
   };
 
   const courseCards = [
@@ -226,8 +226,6 @@ const HocMCThuyetTrinhHaNoiPage = () => {
         />
       </Head>
 
-      <div className="h-[80px]" />
-
       <style jsx>{`
         @keyframes float {
           0% { transform: translateY(0px) rotate(0deg); }
@@ -302,7 +300,7 @@ const HocMCThuyetTrinhHaNoiPage = () => {
                     ))}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-[#131a53] sm:text-base">500+ học viên</p>
+                    <p className="text-sm font-bold text-[#131a53] sm:text-base">1000+ học viên</p>
                   </div>
                 </div>
               </div>
@@ -830,7 +828,7 @@ const HocMCThuyetTrinhHaNoiPage = () => {
                 <p><strong>Trung Tâm Đào Tạo MC BT Academy</strong> – Đào tạo MC, Luyện Giọng & Kỹ năng giao tiếp</p>
                 <p><strong>📍 Trụ sở chính:</strong> 19 Nguyễn Gia Thiều, Quận Hoàn Kiếm, Hà Nội.</p>
                 <p><strong>📞 Hotline tư vấn:</strong> <a href="tel:0988027494">098 802 7494</a></p>
-                <p><strong>📧 Email:</strong> <a href="mailto:contact@btacademy.com.vn">contact@btacademy.com.vn</a></p>
+                <p><strong>📧 Email:</strong> <a href="mailto:daotaogiongnoi@gmail.com">daotaogiongnoi@gmail.com</a></p>
               </div>
             </div>
           </section>

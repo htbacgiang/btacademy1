@@ -191,7 +191,6 @@ const Blogs: NextPage<Props> = ({ initialPosts = [] }) => {
         />
       </Head>
       <DefaultLayout>
-      <div className="h-[80px] bg-white"></div>
         <div className="pb-12 mt-6 container mx-auto px-4">
           <div className="flex flex-col gap-4 justify-center w-full">
             <div className="flex gap-2 uppercase">
@@ -204,229 +203,228 @@ const Blogs: NextPage<Props> = ({ initialPosts = [] }) => {
               </Link>
             </div>
             <>
-            {featuredPosts.length > 0 && (
-            <div className="flex flex-col lg:flex-row gap-6 justify-between">
-              {featuredPosts[0]?.thumbnail && (
-                <div className="w-full lg:w-8/12 flex flex-col gap-2">
-                  <Link href={`/bai-viet/${featuredPosts[0].slug}`}>
-                    <div className="aspect-video relative cursor-pointer rounded shadow-sm overflow-hidden group">
-                      <Image
-                        src={featuredPosts[0].thumbnail}
-                        layout="fill"
-                        className="object-cover group-hover:scale-105 transition-all ease duration-300"
-                        alt={featuredPosts[0].title}
-                      />
+              {featuredPosts.length > 0 && (
+                <div className="flex flex-col lg:flex-row gap-6 justify-between">
+                  {featuredPosts[0]?.thumbnail && (
+                    <div className="w-full lg:w-8/12 flex flex-col gap-2">
+                      <Link href={`/bai-viet/${featuredPosts[0].slug}`}>
+                        <div className="aspect-video relative cursor-pointer rounded shadow-sm overflow-hidden group">
+                          <Image
+                            src={featuredPosts[0].thumbnail}
+                            layout="fill"
+                            className="object-cover group-hover:scale-105 transition-all ease duration-300"
+                            alt={featuredPosts[0].title}
+                          />
+                        </div>
+                      </Link>
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={`/bai-viet/${featuredPosts[0].slug}`}
+                          className="text-gray-900 lg:text-lg uppercase font-bold hover:text-green-700 transition-colors"
+                        >
+                          {featuredPosts[0].title}
+                        </Link>
+                      </div>
+                      <p className="text-base font-medium line-clamp-2 text-gray-600">
+                        {trimText(featuredPosts[0].meta, 160)}
+                      </p>
+                      <div className="text-sm text-gray-500">
+                        {formatDate(featuredPosts[0].createdAt)}
+                      </div>
                     </div>
-                  </Link>
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/bai-viet/${featuredPosts[0].slug}`}
-                      className="text-gray-900 lg:text-lg uppercase font-bold hover:text-green-700 transition-colors"
-                    >
-                      {featuredPosts[0].title}
-                    </Link>
-                  </div>
-                  <p className="text-base font-medium line-clamp-2 text-gray-600">
-                    {trimText(featuredPosts[0].meta, 160)}
-                  </p>
-                  <div className="text-sm text-gray-500">
-                    {formatDate(featuredPosts[0].createdAt)}
+                  )}
+                  <div className="w-full lg:w-6/12 flex flex-col gap-4">
+                    {featuredPosts.slice(1, 4).map((post) => (
+                      post.thumbnail && (
+                        <div key={post.id} className="flex justify-between gap-4 h-auto lg:h-1/3">
+                          <Link href={`/bai-viet/${post.slug}`} className="w-1/3 aspect-video relative cursor-pointer rounded shadow-sm overflow-hidden group">
+                            <Image
+                              src={post.thumbnail}
+                              layout="fill"
+                              className="object-cover group-hover:scale-105 transition-all ease duration-300"
+                              alt={post.title}
+                            />
+                          </Link>
+                          <div className="w-2/3 flex flex-col justify-center">
+                            <div className="flex items-center gap-2 text-sm lg:text-base mb-1">
+                              <Link href={`/bai-viet/${post.slug}`} className="text-gray-900 uppercase font-bold hover:text-green-700 transition-colors">
+                                {post.title}
+                              </Link>
+                            </div>
+                            <p className="text-sm font-medium line-clamp-2 text-gray-600">
+                              {trimText(post.meta, 100)}
+                            </p>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {formatDate(post.createdAt)}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    ))}
                   </div>
                 </div>
               )}
-              <div className="w-full lg:w-6/12 flex flex-col gap-4">
-                {featuredPosts.slice(1, 4).map((post) => (
-                  post.thumbnail && (
-                    <div key={post.id} className="flex justify-between gap-4 h-auto lg:h-1/3">
-                      <Link href={`/bai-viet/${post.slug}`} className="w-1/3 aspect-video relative cursor-pointer rounded shadow-sm overflow-hidden group">
-                        <Image
-                          src={post.thumbnail}
-                          layout="fill"
-                          className="object-cover group-hover:scale-105 transition-all ease duration-300"
-                          alt={post.title}
-                        />
-                      </Link>
-                      <div className="w-2/3 flex flex-col justify-center">
-                        <div className="flex items-center gap-2 text-sm lg:text-base mb-1">
-                          <Link href={`/bai-viet/${post.slug}`} className="text-gray-900 uppercase font-bold hover:text-green-700 transition-colors">
-                            {post.title}
-                          </Link>
-                        </div>
-                        <p className="text-sm font-medium line-clamp-2 text-gray-600">
-                          {trimText(post.meta, 100)}
-                        </p>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {formatDate(post.createdAt)}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                ))}
+              <div ref={filterBarRef}>
+                <MainCategories onCategorySelect={handleCategorySelect} />
               </div>
-            </div>
-            )}
-                <div ref={filterBarRef}>
-                  <MainCategories onCategorySelect={handleCategorySelect} />
-                </div>
-                {recentPosts.length > 0 && (
-                  <div className="mb-12">
-                    <div className="flex items-center justify-between mb-8">
-                      <h2 className="text-2xl font-bold text-gray-900">Bài viết gần đây</h2>
-                      <p className="text-gray-600">
-                        {recentPosts.length} bài viết
-                      </p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {recentPosts.map((post) => (
-                        <article
-                          key={post.id}
-                          className="group bg-white overflow-hidden transition-all duration-500 transform"
-                        >
-                          <div className="relative aspect-video overflow-hidden">
-                            {post.thumbnail ? (
-                              <Image
-                                src={post.thumbnail}
-                                alt={post.title}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
-                                <span className="text-green-600 text-3xl">📝</span>
-                              </div>
-                            )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                          </div>
-                          <div className="py-6">
-                            <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-green-700 transition-colors line-clamp-2">
-                              <Link href={`/bai-viet/${post.slug}`}>
-                                {post.title}
-                              </Link>
-                            </h3>
-                            <div className="flex items-center mt-2 justify-between text-sm text-gray-500">
-                              <div className="flex items-center">
-                                <FaCalendarAlt className="mr-1" />
-                                <span>{formatDate(post.createdAt)}</span>
-                              </div>
-                              <Link
-                                href={`/bai-viet/${post.slug}`}
-                                className="inline-flex items-center text-green-600 hover:text-green-700 font-medium transition-colors group/link"
-                              >
-                                Đọc thêm
-                              </Link>
-                            </div>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {(filteredPosts.length === 0 || (recentPosts.length === 0 && featuredPosts.length === 0)) && (
-                  <div className="text-center py-16 px-4">
-                    <div className="w-24 h-24 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
-                      <span className="text-green-600 text-4xl">📝</span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                      {selectedCategory ? "Không có bài viết nào trong danh mục này" : "Chưa có bài viết nào"}
-                    </h3>
-                    <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                      {selectedCategory ? "Hãy thử chọn danh mục khác hoặc quay lại sau để xem nội dung mới." : "Chúng tôi đang chuẩn bị những nội dung thú vị. Hãy quay lại sau nhé!"}
+              {recentPosts.length > 0 && (
+                <div className="mb-12">
+                  <div className="flex items-center justify-between mb-8">
+                    <h2 className="text-2xl font-bold text-gray-900">Bài viết gần đây</h2>
+                    <p className="text-gray-600">
+                      {recentPosts.length} bài viết
                     </p>
-                    {selectedCategory && (
-                      <button
-                        onClick={() => handleCategorySelect(null)}
-                        className="inline-flex items-center px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full transition-colors duration-300"
-                      >
-                        Xem tất cả bài viết
-                        <FaArrowRight className="ml-2" />
-                      </button>
-                    )}
                   </div>
-                )}
-                <div className="flex flex-col items-center gap-6 mt-12 px-4 lg:px-12">
-                  {actualTotalPages > 1 && (
-                    <div className="flex justify-center items-center gap-2">
-                      <button
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="px-4 py-2 bg-white text-gray-700 rounded-full border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:text-green-700 hover:border-gray-300 transition-colors font-medium flex items-center gap-2"
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {recentPosts.map((post) => (
+                      <article
+                        key={post.id}
+                        className="group bg-white overflow-hidden transition-all duration-500 transform"
                       >
-                        <FaArrowRight className="rotate-180 text-sm" />
-                        Trước
-                      </button>
-                      <div className="flex items-center gap-1">
-                        {(() => {
-                          const pages = [];
-                          const maxVisiblePages = 5;
-                          let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-                          let endPage = Math.min(actualTotalPages, startPage + maxVisiblePages - 1);
-                          if (endPage - startPage + 1 < maxVisiblePages) {
-                            startPage = Math.max(1, endPage - maxVisiblePages + 1);
-                          }
-                          if (startPage > 1) {
-                            pages.push(
-                              <button
-                                key={1}
-                                onClick={() => handlePageChange(1)}
-                                className="w-10 h-10 bg-white text-gray-700 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors font-medium flex items-center justify-center"
-                              >
-                                1
-                              </button>
-                            );
-                            if (startPage > 2) {
-                              pages.push(
-                                <span key="start-ellipsis" className="px-2 text-gray-400">...</span>
-                              );
-                            }
-                          }
-                          for (let i = startPage; i <= endPage; i++) {
-                            pages.push(
-                              <button
-                                key={i}
-                                onClick={() => handlePageChange(i)}
-                                className={`w-10 h-10 rounded-full font-medium transition-colors flex items-center justify-center ${
-                                  i === currentPage
-                                    ? "bg-green-600 text-white shadow-lg"
-                                    : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
-                                }`}
-                              >
-                                {i}
-                              </button>
-                            );
-                          }
-                          if (endPage < actualTotalPages) {
-                            if (endPage < actualTotalPages - 1) {
-                              pages.push(
-                                <span key="end-ellipsis" className="px-2 text-gray-400">...</span>
-                              );
-                            }
-                            pages.push(
-                              <button
-                                key={actualTotalPages}
-                                onClick={() => handlePageChange(actualTotalPages)}
-                                className="w-10 h-10 bg-white text-gray-700 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors font-medium flex items-center justify-center"
-                              >
-                                {actualTotalPages}
-                              </button>
-                            );
-                          }
-                          return pages;
-                        })()}
-                      </div>
-                      <button
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === actualTotalPages}
-                        className="px-4 py-2 bg-white text-gray-700 rounded-full border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:text-green-700 hover:border-gray-300 transition-colors font-medium flex items-center gap-2"
-                      >
-                        Sau
-                        <FaArrowRight className="text-sm" />
-                      </button>
-                    </div>
+                        <div className="relative aspect-video overflow-hidden">
+                          {post.thumbnail ? (
+                            <Image
+                              src={post.thumbnail}
+                              alt={post.title}
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
+                              <span className="text-green-600 text-3xl">📝</span>
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <div className="py-6">
+                          <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-green-700 transition-colors line-clamp-2">
+                            <Link href={`/bai-viet/${post.slug}`}>
+                              {post.title}
+                            </Link>
+                          </h3>
+                          <div className="flex items-center mt-2 justify-between text-sm text-gray-500">
+                            <div className="flex items-center">
+                              <FaCalendarAlt className="mr-1" />
+                              <span>{formatDate(post.createdAt)}</span>
+                            </div>
+                            <Link
+                              href={`/bai-viet/${post.slug}`}
+                              className="inline-flex items-center text-green-600 hover:text-green-700 font-medium transition-colors group/link"
+                            >
+                              Đọc thêm
+                            </Link>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {(filteredPosts.length === 0 || (recentPosts.length === 0 && featuredPosts.length === 0)) && (
+                <div className="text-center py-16 px-4">
+                  <div className="w-24 h-24 mx-auto mb-6 bg-green-100 rounded-full flex items-center justify-center">
+                    <span className="text-green-600 text-4xl">📝</span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    {selectedCategory ? "Không có bài viết nào trong danh mục này" : "Chưa có bài viết nào"}
+                  </h3>
+                  <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                    {selectedCategory ? "Hãy thử chọn danh mục khác hoặc quay lại sau để xem nội dung mới." : "Chúng tôi đang chuẩn bị những nội dung thú vị. Hãy quay lại sau nhé!"}
+                  </p>
+                  {selectedCategory && (
+                    <button
+                      onClick={() => handleCategorySelect(null)}
+                      className="inline-flex items-center px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full transition-colors duration-300"
+                    >
+                      Xem tất cả bài viết
+                      <FaArrowRight className="ml-2" />
+                    </button>
                   )}
                 </div>
-                </>
+              )}
+              <div className="flex flex-col items-center gap-6 mt-12 px-4 lg:px-12">
+                {actualTotalPages > 1 && (
+                  <div className="flex justify-center items-center gap-2">
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="px-4 py-2 bg-white text-gray-700 rounded-full border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:text-green-700 hover:border-gray-300 transition-colors font-medium flex items-center gap-2"
+                    >
+                      <FaArrowRight className="rotate-180 text-sm" />
+                      Trước
+                    </button>
+                    <div className="flex items-center gap-1">
+                      {(() => {
+                        const pages = [];
+                        const maxVisiblePages = 5;
+                        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                        let endPage = Math.min(actualTotalPages, startPage + maxVisiblePages - 1);
+                        if (endPage - startPage + 1 < maxVisiblePages) {
+                          startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                        }
+                        if (startPage > 1) {
+                          pages.push(
+                            <button
+                              key={1}
+                              onClick={() => handlePageChange(1)}
+                              className="w-10 h-10 bg-white text-gray-700 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors font-medium flex items-center justify-center"
+                            >
+                              1
+                            </button>
+                          );
+                          if (startPage > 2) {
+                            pages.push(
+                              <span key="start-ellipsis" className="px-2 text-gray-400">...</span>
+                            );
+                          }
+                        }
+                        for (let i = startPage; i <= endPage; i++) {
+                          pages.push(
+                            <button
+                              key={i}
+                              onClick={() => handlePageChange(i)}
+                              className={`w-10 h-10 rounded-full font-medium transition-colors flex items-center justify-center ${i === currentPage
+                                  ? "bg-green-600 text-white shadow-lg"
+                                  : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+                                }`}
+                            >
+                              {i}
+                            </button>
+                          );
+                        }
+                        if (endPage < actualTotalPages) {
+                          if (endPage < actualTotalPages - 1) {
+                            pages.push(
+                              <span key="end-ellipsis" className="px-2 text-gray-400">...</span>
+                            );
+                          }
+                          pages.push(
+                            <button
+                              key={actualTotalPages}
+                              onClick={() => handlePageChange(actualTotalPages)}
+                              className="w-10 h-10 bg-white text-gray-700 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors font-medium flex items-center justify-center"
+                            >
+                              {actualTotalPages}
+                            </button>
+                          );
+                        }
+                        return pages;
+                      })()}
+                    </div>
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === actualTotalPages}
+                      className="px-4 py-2 bg-white text-gray-700 rounded-full border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 hover:text-green-700 hover:border-gray-300 transition-colors font-medium flex items-center gap-2"
+                    >
+                      Sau
+                      <FaArrowRight className="text-sm" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
           </div>
-          </div>
+        </div>
       </DefaultLayout>
     </>
   );

@@ -240,10 +240,10 @@ const Footer: React.FC = () => {
                     <FaEnvelope className="text-green-500 flex-shrink-0" />
                     <div>
                       <a
-                        href="mailto:contact@btacademy.com.vn"
+                        href="mailto:daotaogiongnoi@gmail.com"
                         className="text-gray-300 hover:text-green-400 transition-colors text-sm"
                       >
-                        contact@btacademy.com.vn
+                        daotaogiongnoi@gmail.com
                       </a>
                     </div>
                   </div>

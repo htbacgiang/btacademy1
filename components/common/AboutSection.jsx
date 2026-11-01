@@ -1,134 +1,140 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { motion } from "framer-motion";
+import { CheckCircle2, GraduationCap, PhoneCall, Mail, Award, Users } from "lucide-react";
 
 const AboutSection = () => {
-  const features = [
-    "Đội ngũ giảng viên chuyên nghiệp",
-    "Học online từ xa linh hoạt",
-    "Chương trình đào tạo dễ theo dõi", 
-    "Hỗ trợ trọn đời"
+  const benefits = [
+    { title: "Cải thiện giọng nói" },
+    { title: "Giải phóng hình thể" },
+    { title: "Tự tin trước đám đông" },
+    { title: "Xử lý tình huống giao tiếp" },
+    { title: "Xây dựng hình ảnh chuyên nghiệp" },
+    { title: "Thực hành trước camera" },
   ];
 
   return (
-    <section className="py-8 ">
-      <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content - Image */}
-          <div className="relative">
-            {/* Decorative dots */}
-            <div className="absolute -top-6 -left-6 grid grid-cols-4 gap-2 opacity-30">
-              {[...Array(16)].map((_, i) => (
-                <div key={i} className="w-2 h-2 bg-green-500 rounded-full"></div>
-              ))}
+    <section className="py-12 sm:py-16 lg:py-20 bg-white relative overflow-hidden">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          {/* ======================================================== */}
+          {/* CỘT TRÁI: 2 HÌNH ẢNH HỌC VIÊN + THẺ THỐNG KÊ NỔI        */}
+          {/* ======================================================== */}
+          <div className="lg:col-span-6 relative">
+            {/* Ma trận dấu chấm trang trí phía trên bên trái (Dot Matrix) */}
+            <div className="absolute -top-7 -left-7 w-36 h-44 z-0 pointer-events-none opacity-60">
+              <svg width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <pattern id="about-dot-matrix" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                  <circle cx="2.5" cy="2.5" r="2.5" fill="#22c55e" />
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#about-dot-matrix)" />
+              </svg>
             </div>
-            
-            {/* Main Image */}
-            <div className="relative bg-white rounded-2xl p-3 shadow-xl border border-green-100">
-              <Image
-                src="/images/mc-bich-thut-1.jpg"
-                alt="MC Training at BT Academy"
-                width={500}
-                height={400}
-                className="w-full h-auto rounded-xl object-cover"
-              />
-              
-              {/* Stats Card */}
-              <div className="absolute -bottom-6 -left-6 bg-white rounded-xl p-4 shadow-lg border border-green-100">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-gray-900">500+</div>
-                    <div className="text-sm text-gray-600">Học viên đã đăng ký</div>
-                  </div>
-                </div>
+
+            {/* Bố cục 2 ảnh ghép so le (Staggered Image Cards) */}
+            <div className="relative z-10 grid grid-cols-2 gap-4 sm:gap-6 items-center max-w-[540px] mx-auto lg:max-w-none">
+              {/* Ảnh 1 - Bên trái */}
+              <div className="relative rounded-3xl overflow-hidden shadow-xl aspect-[3/4] group">
+                <Image
+                  src="/images/hoc-vien-bt-23.png"
+                  alt="Học viên luyện giọng tại BT Academy"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 300px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+              </div>
+
+              {/* Ảnh 2 - Bên phải (Hơi so le xuống) */}
+              <div className="relative rounded-3xl overflow-hidden shadow-xl aspect-[3/4] mt-6 sm:mt-10 group">
+                <Image
+                  src="/images/hoc-vien-bt-26.jpg"
+                  alt="Học viên thực hành MC tại BT Academy"
+                  fill
+                  sizes="(max-width: 768px) 50vw, 300px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
-
-            {/* Decorative elements */}
-            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-green-200 rounded-full opacity-80"></div>
-            <div className="absolute top-1/2 -right-8 w-16 h-16 bg-emerald-200 rounded-full opacity-60"></div>
           </div>
 
-          {/* Right Content */}
-          <div className="space-y-8">
-            {/* Badge */}
-            <div className="inline-block mt-4">
-              <span className="bg-green-50 text-green-700 border border-green-200 px-4 py-3 rounded-full text-sm font-bold tracking-wider uppercase">
-                Chào mừng đến với BT Academy
+          {/* ======================================================== */}
+          {/* CỘT PHẢI: NỘI DUNG VỀ BT ACADEMY & 6 LỢI ÍCH             */}
+          {/* ======================================================== */}
+          <div className="lg:col-span-6 flex flex-col space-y-6 sm:space-y-7 text-left">
+            {/* 1. Eyebrow Badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f0fdf4] border border-[#dcfce7] text-[#15803d] w-fit">
+              <GraduationCap className="w-4 h-4 text-[#22c55e] stroke-[2.2]" />
+              <span className="text-xs sm:text-[13px] font-bold tracking-wider uppercase">
+                Về Chúng Tôi - BT Academy
               </span>
             </div>
 
-            {/* Main Heading */}
-            <div className="space-y-4">
-              <h2 className="text-3xl lg:text-3xl font-bold text-gray-900 leading-tight">
-                Trung tâm MC BT Academy:{" "}
-                <span className="inline-block bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                  Con đường
-                </span>{" "}
-                đến sự{" "}
-                <span className="inline-block bg-gradient-to-r from-emerald-600 to-green-400 bg-clip-text text-transparent">
-                  Xuất sắc
-                </span>{" "}
-                trong Giao tiếp
+            {/* 2. Main Heading */}
+            <div className="space-y-3">
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] leading-[1.2] tracking-tight">
+                BT Academy Sẽ Giúp Bạn Những Gì?
               </h2>
-              
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Chúng tôi đào tạo những MC và diễn giả tự tin, chuyên nghiệp với khả năng giao tiếp xuất sắc, 
-                giúp bạn tỏa sáng ở mọi nơi bạn đến.
+              <p className="text-[#4b5563] text-sm sm:text-base lg:text-lg leading-relaxed max-w-[620px]">
+                Với lộ trình thực chiến chuyên sâu cùng đội ngũ giảng viên truyền hình giàu kinh nghiệm, BT Academy đồng hành giúp bạn bứt phá giọng nói và hoàn thiện kỹ năng giao tiếp đỉnh cao.
               </p>
             </div>
 
-            {/* Features List */}
-            <div className="space-y-4">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-center space-x-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
-                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                      </svg>
-                    </div>
+            {/* 3. 6 Lợi ích cốt lõi (2 Cột x 3 Dòng) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3.5 gap-x-6 pt-1 pb-2">
+              {benefits.map((item, index) => (
+                <div key={index} className="flex items-center gap-3 group">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center text-[#22c55e] flex-shrink-0 transition-transform duration-200 group-hover:scale-110">
+                    <CheckCircle2 className="w-5 h-5 stroke-[2.4]" />
                   </div>
-                  <span className="text-gray-700 font-medium text-lg">{feature}</span>
+                  <span className="text-sm sm:text-base font-bold text-[#111827] group-hover:text-[#16a34a] transition-colors">
+                    {item.title}
+                  </span>
                 </div>
               ))}
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex mx-auto sm:flex-row gap-4 pt-2">
-              <Link href="/gioi-thieu">
-                <button className="text-white px-5 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
-                  Tìm hiểu thêm
-                </button>
-              </Link>
+            {/* 4. Vách ngăn ngang */}
+            <div className="w-full h-px bg-gray-100" />
 
-              <Link href="/khoa-hoc">
-                <button className="btn-white text-gray-700 hover:text-green-600 border border-green-200 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105">
-                  Xem khóa học
-                </button>
-              </Link>
-
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">500+</div>
-                <div className="text-sm text-gray-600">Học viên tốt nghiệp</div>
+            {/* 5. Khối liên hệ chân mục: Hotline & Email */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+              {/* Hotline */}
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-full bg-[#22c55e] flex items-center justify-center text-white flex-shrink-0 shadow-sm">
+                  <PhoneCall className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <span className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                    Hotline tư vấn:
+                  </span>
+                  <a
+                    href="tel:0988027494"
+                    className="text-base sm:text-lg font-bold text-[#111827] hover:text-[#16a34a] transition-colors leading-none"
+                  >
+                    0988 02 7494
+                  </a>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-600">10+</div>
-                <div className="text-sm text-gray-600">Năm kinh nghiệm</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-700">98%</div>
-                <div className="text-sm text-gray-600">Hài lòng</div>
+
+              {/* Email */}
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-full bg-[#22c55e] flex items-center justify-center text-white flex-shrink-0 shadow-sm">
+                  <Mail className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <span className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                    Hỗ trợ & Đăng ký:
+                  </span>
+                  <a
+                    href="mailto:daotaogiongnoi@gmail.com"
+                    className="text-sm sm:text-base font-bold text-[#111827] hover:text-[#16a34a] transition-colors leading-none"
+                  >
+                    daotaogiongnoi@gmail.com
+                  </a>
+                </div>
               </div>
             </div>
           </div>

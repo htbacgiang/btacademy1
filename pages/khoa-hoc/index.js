@@ -69,7 +69,6 @@ const AllCoursesPage = ({ meta, courses }) => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <div className="h-[80px] bg-white"></div>
 
       <section className="min-h-screen">
         {/* Header */}
@@ -162,53 +161,6 @@ const AllCoursesPage = ({ meta, courses }) => {
             </div>
           )}
         </div>
-
-        {/* Visible Content Section for SEO and Users */}
-        <section className="py-16 bg-white border-t border-gray-150 mt-12">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-              Học MC & Đào tạo Kỹ năng Giao tiếp chuyên nghiệp tại BT Academy
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-6 text-center text-lg">
-              BT Academy là trung tâm hàng đầu chuyên đào tạo MC, luyện giọng nói truyền cảm và mài giũa kỹ năng giao tiếp thực chiến tại Hà Nội và Thái Nguyên. 
-              Dưới sự dẫn dắt của BTV truyền hình Bích Thủy, chúng tôi cung cấp lộ trình học bài bản giúp học viên khai phóng giọng nói, định hình bản sắc cá nhân 
-              và tự tin tỏa sáng trước đám đông thông qua phương pháp thực hành - thu hình - phản hồi độc quyền.
-            </p>
-            <div className="grid md:grid-cols-2 gap-8 mt-10">
-              <div className="bg-green-50/50 p-6 rounded-xl border border-green-100">
-                <h3 className="text-xl font-bold text-green-800 mb-4">Các khóa học nổi bật</h3>
-                <ul className="space-y-3 text-gray-750">
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-550 font-bold">✓</span>
-                    <span><strong>MC Nhí (BT Kids):</strong> Ươm mầm tự tin và tư duy ngôn ngữ cho trẻ từ 5-12 tuổi.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-550 font-bold">✓</span>
-                    <span><strong>MC Cơ bản & Nâng cao:</strong> Đào tạo dẫn chương trình truyền hình, sự kiện chuyên nghiệp.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-550 font-bold">✓</span>
-                    <span><strong>Luyện giọng nói truyền cảm:</strong> Khắc phục lỗi ngọng L/N, giọng địa phương và gia cố nền móng giọng nói nội lực.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-550 font-bold">✓</span>
-                    <span><strong>Kỹ năng thuyết trình & Giao tiếp:</strong> Làm chủ thần thái và ngôn ngữ hình thể dành cho người đi làm.</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="bg-green-50/50 p-6 rounded-xl border border-green-100">
-                <h3 className="text-xl font-bold text-green-800 mb-4">Tại sao nên chọn BT Academy?</h3>
-                <p className="text-gray-750 leading-relaxed mb-4">
-                  Với triết lý "Móng vững - Nhà sang", mỗi khóa học tại BT Academy được thiết kế để học viên không chỉ biết cách nói 
-                  mà còn làm chủ được tư duy biên tập và bản lĩnh xử lý tình huống.
-                </p>
-                <p className="text-gray-750 leading-relaxed">
-                  Hệ thống Studio hiện đại tại Hoàn Kiếm (Hà Nội) và Thái Nguyên giúp học viên tiếp cận môi trường truyền hình thực tế ngay từ buổi học đầu tiên.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
       </section>
     </DefaultLayout>
   );
