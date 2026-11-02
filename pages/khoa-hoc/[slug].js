@@ -243,33 +243,177 @@ const CourseDetail = ({ course, relatedCourses, meta }) => {
       )}
       <div className="min-h-screen ">
         {/* Breadcrumb */}
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-b-2 border-green-200 shadow-sm">
-          <div className="container mx-auto px-4 py-5">
-            <div className="flex items-center gap-3 text-base">
-              <Link href="/khoa-hoc" className="font-semibold text-gray-700 hover:text-green-600 hover:underline whitespace-nowrap transition-colors duration-200">
-                📚 Khóa học
+        <div className="bg-gray-50/80 border-b border-gray-100">
+          <div className="container mx-auto px-4 py-2.5">
+            <nav aria-label="Breadcrumb" className="flex items-center flex-wrap gap-2 text-sm text-gray-500">
+              <Link href="/" className="hover:text-green-600 transition-colors whitespace-nowrap">
+                Trang chủ
               </Link>
-              <span className="text-green-400 font-bold text-lg">›</span>
-              <span className="font-bold text-gray-800 bg-green-100 px-3 py-1 rounded-full text-sm">
-                {trimText(course.title, 35)}
+              <span className="text-gray-400 text-xs">›</span>
+              <Link href="/khoa-hoc" className="hover:text-green-600 transition-colors whitespace-nowrap">
+                Khóa học
+              </Link>
+              <span className="text-gray-400 text-xs">›</span>
+              <span className="text-gray-800 font-medium truncate max-w-[200px] sm:max-w-md md:max-w-xl" aria-current="page" title={course.title}>
+                {course.title}
               </span>
-            </div>
+            </nav>
           </div>
         </div>
 
 
         {/* Main Content */}
         <div className="container mx-auto px-4 py-4">
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-1 md:gap-8">
+            {/* Right Column - Course Details Card */}
+            <div className="lg:col-span-1 lg:order-2">
+              <div className="bg-white py-4 sticky top-8">
+                {/* Course Thumbnail */}
+                <div className="mb-6">
+                  <div className="relative h-48 rounded-lg overflow-hidden shadow-md">
+                    {(() => {
+                      const imageUrl = toCloudinaryUrl(course.image);
+                      console.log('Final image URL being used:', imageUrl);
+                      return (
+                        <Image
+                          src={imageUrl}
+                          alt={course.title}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            console.log('Image load error, falling back to default');
+                            e.target.src = '/images/default-course.jpg';
+                          }}
+                        />
+                      );
+                    })()}
+                    {/* Course Level Badge */}
+                    <div className="absolute top-3 left-3">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getLevelColor(course.level)}`}>
+                        {course.level || 'Tất cả cấp độ'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+
+                {/* Course Details */}
+                <div className="mb-6">
+                  <b className="text-lg font-semibold text-gray-900 mb-4">Thông tin khóa học</b>
+                  <div className="space-y-4">
+
+                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                      <div className="flex items-center space-x-2 text-gray-600">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span>Học viên:</span>
+                      </div>
+                      <span className="font-semibold text-gray-900">{course.students || 0} người</span>
+                    </div>
+
+                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                      <div className="flex items-center space-x-2 text-gray-600">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <span>Buổi học:</span>
+                      </div>
+                      <span className="font-semibold text-gray-900">
+                        {typeof course.sessions === 'string' && course.sessions.toLowerCase().includes('nhu cầu')
+                          ? course.sessions
+                          : `${course.sessions || 0} buổi`}
+                      </span>
+                    </div>
+
+                    <div className="flex items-start justify-between py-3 border-b border-gray-100">
+                      <div className="flex items-center space-x-2 text-gray-600">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span>Địa điểm:</span>
+                      </div>
+                      <div className="text-right flex-1 ml-4">
+                        {course.locations && course.locations.length > 0 ? (
+                          <div className="space-y-2">
+                            {course.locations
+                              .sort((a, b) => {
+                                // Sắp xếp để CS1 - Hà Nội luôn ở trên
+                                if (a === 'CS1 - Hà Nội') return -1;
+                                if (b === 'CS1 - Hà Nội') return 1;
+                                return a.localeCompare(b);
+                              })
+                              .map((locationCode, index) => {
+                                const locationInfo = getLocationInfo(locationCode);
+                                return (
+                                  <LocationCard key={index} location={locationInfo} index={index} />
+                                );
+                              })}
+                          </div>
+                        ) : (
+                          <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <span className="font-semibold text-gray-900 text-sm">Chưa cập nhật địa điểm</span>
+                            <div className="text-xs text-gray-600 mt-1">
+                              Liên hệ hotline: 0988 02 7494 để biết thêm chi tiết
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                      <div className="flex items-center space-x-2 text-gray-600">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <span>Lịch học:</span>
+                      </div>
+                      <span className="font-semibold text-gray-900">{course.schedule || 'Linh hoạt'}</span>
+                    </div>
+
+                  </div>
+                </div>
+
+                {/* Enroll Button */}
+                <button
+                  onClick={handleOpenPopup}
+                  className="w-full text-white py-4 px-6 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg mb-6 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                >
+                  Đăng ký ngay
+                </button>
+
+                {/* Contact Info */}
+                <div className="p-4 bg-gray-50 rounded-lg hidden md:block">
+                  <b className="font-semibold text-base text-gray-900 mb-2">Cần hỗ trợ?</b>
+                  <p className="text-base text-gray-600 mb-3">Liên hệ với chúng tôi để được tư vấn chi tiết</p>
+                  <div className="space-y-2 text-base">
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      <span>Hotline: 0988 02 7494</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-600">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      <span>Email:daotaogiongnoi@gmail.com</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Left Column - Course Content */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-6 lg:order-1">
               {/* Course Overview */}
               <div className="bg-white rounded-xl shadow-sm">
-                <div className="px-3 py-1">
+                <div className="py-1">
                   <div className="">
                     {/* Course Info */}
                     <div className="">
-                      <h1 className="text-3xl font-bold text-gray-900 mb-2 leading-tight mt-0 md:mt-2">
+                      <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 leading-tight mt-0 md:mt-2">
                         {course.title}
                       </h1>
                       {/* Course Meta Info */}
@@ -406,146 +550,6 @@ const CourseDetail = ({ course, relatedCourses, meta }) => {
                   </div>
                 </div>
               )}
-            </div>
-
-            {/* Right Column - Course Details Card */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl shadow-sm p-6 sticky top-8">
-                {/* Course Thumbnail */}
-                <div className="mb-6">
-                  <div className="relative h-48 rounded-lg overflow-hidden shadow-md">
-                    {(() => {
-                      const imageUrl = toCloudinaryUrl(course.image);
-                      console.log('Final image URL being used:', imageUrl);
-                      return (
-                        <Image
-                          src={imageUrl}
-                          alt={course.title}
-                          fill
-                          className="object-cover"
-                          onError={(e) => {
-                            console.log('Image load error, falling back to default');
-                            e.target.src = '/images/default-course.jpg';
-                          }}
-                        />
-                      );
-                    })()}
-                    {/* Course Level Badge */}
-                    <div className="absolute top-3 left-3">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getLevelColor(course.level)}`}>
-                        {course.level || 'Tất cả cấp độ'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-
-                {/* Course Details */}
-                <div className="mb-6">
-                  <b className="text-lg font-semibold text-gray-900 mb-4">Thông tin khóa học</b>
-                  <div className="space-y-4">
-
-                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                      <div className="flex items-center space-x-2 text-gray-600">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <span>Học viên:</span>
-                      </div>
-                      <span className="font-semibold text-gray-900">{course.students || 0} người</span>
-                    </div>
-
-                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                      <div className="flex items-center space-x-2 text-gray-600">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                        <span>Buổi học:</span>
-                      </div>
-                      <span className="font-semibold text-gray-900">
-                        {typeof course.sessions === 'string' && course.sessions.toLowerCase().includes('nhu cầu')
-                          ? course.sessions
-                          : `${course.sessions || 0} buổi`}
-                      </span>
-                    </div>
-
-                    <div className="flex items-start justify-between py-3 border-b border-gray-100">
-                      <div className="flex items-center space-x-2 text-gray-600">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>Địa điểm:</span>
-                      </div>
-                      <div className="text-right flex-1 ml-4">
-                        {course.locations && course.locations.length > 0 ? (
-                          <div className="space-y-2">
-                            {course.locations
-                              .sort((a, b) => {
-                                // Sắp xếp để CS1 - Hà Nội luôn ở trên
-                                if (a === 'CS1 - Hà Nội') return -1;
-                                if (b === 'CS1 - Hà Nội') return 1;
-                                return a.localeCompare(b);
-                              })
-                              .map((locationCode, index) => {
-                                const locationInfo = getLocationInfo(locationCode);
-                                return (
-                                  <LocationCard key={index} location={locationInfo} index={index} />
-                                );
-                              })}
-                          </div>
-                        ) : (
-                          <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                            <span className="font-semibold text-gray-900 text-sm">Chưa cập nhật địa điểm</span>
-                            <div className="text-xs text-gray-600 mt-1">
-                              Liên hệ hotline: 0988 02 7494 để biết thêm chi tiết
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                      <div className="flex items-center space-x-2 text-gray-600">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                        <span>Lịch học:</span>
-                      </div>
-                      <span className="font-semibold text-gray-900">{course.schedule || 'Linh hoạt'}</span>
-                    </div>
-
-                  </div>
-                </div>
-
-                {/* Enroll Button */}
-                <button
-                  onClick={handleOpenPopup}
-                  className="w-full text-white py-4 px-6 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg mb-6 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-                >
-                  Đăng ký ngay
-                </button>
-
-                {/* Contact Info */}
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <b className="font-semibold text-base text-gray-900 mb-2">Cần hỗ trợ?</b>
-                  <p className="text-base text-gray-600 mb-3">Liên hệ với chúng tôi để được tư vấn chi tiết</p>
-                  <div className="space-y-2 text-base">
-                    <div className="flex items-center space-x-2 text-gray-600">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      <span>Hotline: 0988 02 7494</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-gray-600">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      <span>Email:daotaogiongnoi@gmail.com</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

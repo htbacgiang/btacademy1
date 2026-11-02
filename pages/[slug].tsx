@@ -55,18 +55,15 @@ const DirectPost: NextPage<Props> = ({ post }) => {
           <div className="w-full md:w-3/4 pr-0 md:pr-8 mb-4 md:mb-0">
             <div className="md:pb-20 pb-6 container mx-auto mt-[60px] sm:mt-[91px]">
               {/* Breadcrumb */}
-              <div className="flex font-semibold gap-2 text-base text-gray-600">
-                <Link href="/" className="hover:text-blue-800 whitespace-nowrap">
+              <nav aria-label="Breadcrumb" className="flex items-center flex-wrap gap-2 text-sm text-gray-500 mb-4">
+                <Link href="/" className="hover:text-green-600 transition-colors whitespace-nowrap">
                   Trang chủ
                 </Link>
-                <span>›</span>
-                <span className="flex hidden md:block font-semibold gap-2 mb-4 text-base text-gray-600">
-                  {trimText(title, 100)}
+                <span className="text-gray-400 text-xs">›</span>
+                <span className="text-gray-800 font-medium truncate max-w-xs sm:max-w-md md:max-w-xl" aria-current="page" title={title}>
+                  {title}
                 </span>
-                <span className="flex block md:hidden font-semibold gap-2 mb-4 text-base text-gray-600">
-                  {trimText(title, 35)}
-                </span>
-              </div>
+              </nav>
 
               {/* Tiêu đề bài viết */}
               <h1 className="md:text-3xl text-xl font-bold text-primary-dark dark:text-primary">

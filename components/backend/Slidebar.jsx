@@ -23,6 +23,7 @@ import {
   Sparkles,
   Images,
   Menu as MenuIcon,
+  Mic,
 } from "lucide-react";
 
 import { useRouter } from "next/router";
@@ -64,6 +65,7 @@ const NAV_GROUPS = [
     label: "Khách hàng",
     items: [
       { title: "Email đăng ký", icon: Mail, href: "/dashboard/danh-sach-email" },
+      { title: "Test giọng (Voice Test)", icon: Mic, href: "/dashboard/voice-test" },
     ],
   },
   {
@@ -82,7 +84,11 @@ export default function Sidebar({ showSidebar, setShowSidebar, collapsed, setCol
 
   if (status === "loading") return null;
 
-  const isActive = (href) => pathname === href;
+  const isActive = (href) => {
+    if (pathname === href) return true;
+    if (href === "/dashboard/voice-test" && pathname.startsWith("/dashboard/voice-test")) return true;
+    return false;
+  };
 
   return (
     <aside

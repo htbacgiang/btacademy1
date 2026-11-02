@@ -95,17 +95,17 @@ const AboutBTAcademyPage = () => {
         BT Academy: Trung tâm Đào tạo MC, Giọng nói và thần thái doanh nghiệp tại Hà Nội và Thái Nguyên
       </h1>
       {/* Breadcrumb */}
-      <div className="">
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex items-center gap-3 text-base">
-            <Link href="/" className="font-semibold text-gray-700 whitespace-nowrap transition-colors duration-200">
+      <div className="bg-gray-50/80 border-b border-gray-100">
+        <div className="container mx-auto px-4 py-2.5">
+          <nav aria-label="Breadcrumb" className="flex items-center flex-wrap gap-2 text-sm text-gray-500">
+            <Link href="/" className="hover:text-green-600 transition-colors whitespace-nowrap">
               Trang chủ
             </Link>
-            <span className="text-green-400 font-bold text-lg">›</span>
-            <span className="font-bold text-gray-800 px-1 py-1 rounded-full text-base">
+            <span className="text-gray-400 text-xs">›</span>
+            <span className="text-gray-800 font-medium" aria-current="page">
               Giới thiệu BT Academy
             </span>
-          </div>
+          </nav>
         </div>
       </div>
       <div className="container mx-auto ">

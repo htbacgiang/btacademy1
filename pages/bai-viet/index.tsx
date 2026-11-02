@@ -193,15 +193,16 @@ const Blogs: NextPage<Props> = ({ initialPosts = [] }) => {
       <DefaultLayout>
         <div className="pb-12 mt-6 container mx-auto px-4">
           <div className="flex flex-col gap-4 justify-center w-full">
-            <div className="flex gap-2 uppercase">
-              <Link href="/" className="hover:text-green-700 transition-colors">
+            {/* Breadcrumb */}
+            <nav aria-label="Breadcrumb" className="flex items-center flex-wrap gap-2 text-sm text-gray-500 mb-2">
+              <Link href="/" className="hover:text-green-600 transition-colors whitespace-nowrap">
                 Trang chủ
               </Link>
-              <span>•</span>
-              <Link href="/bai-viet" className="text-green-700 uppercase">
+              <span className="text-gray-400 text-xs">›</span>
+              <span className="text-gray-800 font-medium" aria-current="page">
                 Bài viết & Chia Sẻ
-              </Link>
-            </div>
+              </span>
+            </nav>
             <>
               {featuredPosts.length > 0 && (
                 <div className="flex flex-col lg:flex-row gap-6 justify-between">

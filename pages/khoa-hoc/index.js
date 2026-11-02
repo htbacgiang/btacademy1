@@ -71,21 +71,18 @@ const AllCoursesPage = ({ meta, courses }) => {
       />
 
       <section className="min-h-screen">
-        {/* Header */}
-        <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200">
-          {/* Breadcrumb */}
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-b-2 border-green-200 shadow-sm">
-            <div className="container mx-auto px-4 py-5">
-              <div className="flex items-center gap-3 text-base">
-                <Link href="/" className="font-semibold text-gray-700 hover:text-green-600 hover:underline whitespace-nowrap transition-colors duration-200">
-                  Trang chủ
-                </Link>
-                <span className="text-green-400 font-bold text-lg">›</span>
-                <span className="font-bold text-gray-800 bg-green-100 px-3 py-1 rounded-full text-sm">
-                  Khóa học
-                </span>
-              </div>
-            </div>
+        {/* Breadcrumb */}
+        <div className="bg-gray-50/80 border-b border-gray-100">
+          <div className="container mx-auto px-4 py-2.5">
+            <nav aria-label="Breadcrumb" className="flex items-center flex-wrap gap-2 text-sm text-gray-500">
+              <Link href="/" className="hover:text-green-600 transition-colors whitespace-nowrap">
+                Trang chủ
+              </Link>
+              <span className="text-gray-400 text-xs">›</span>
+              <span className="text-gray-800 font-medium" aria-current="page">
+                Khóa học
+              </span>
+            </nav>
           </div>
         </div>
 
