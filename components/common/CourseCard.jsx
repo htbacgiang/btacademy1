@@ -28,6 +28,12 @@ const CourseCard = ({
     slug
   } = course;
 
+  const [imgSrc, setImgSrc] = React.useState(() => toCloudinaryUrl(image));
+
+  React.useEffect(() => {
+    setImgSrc(toCloudinaryUrl(image));
+  }, [image]);
+
   // ==================== HELPER FUNCTIONS ====================
 
 
@@ -81,11 +87,15 @@ const CourseCard = ({
           {/* ===== PHẦN HÌNH ẢNH ===== */}
           <div className="relative w-full sm:w-64 h-48 sm:h-40 flex-shrink-0 overflow-hidden">
             <Image
-              src={toCloudinaryUrl(image)}
+              src={imgSrc || '/images/default-course.jpg'}
               alt={title}
               width={256}
               height={160}
               className="w-full h-full object-cover"
+              unoptimized={Boolean(imgSrc && (imgSrc.startsWith('http') || imgSrc.startsWith('//')))}
+              onError={() => {
+                setImgSrc('/images/default-course.jpg');
+              }}
             />
 
             {/* Badge loại khóa học */}
@@ -168,11 +178,15 @@ const CourseCard = ({
         {/* ===== PHẦN HÌNH ẢNH ===== */}
         <div className="relative h-40 overflow-hidden">
           <Image
-            src={toCloudinaryUrl(image)}
+            src={imgSrc || '/images/default-course.jpg'}
             alt={title}
             width={300}
             height={160}
             className="w-full h-full object-cover"
+            unoptimized={Boolean(imgSrc && (imgSrc.startsWith('http') || imgSrc.startsWith('//')))}
+            onError={() => {
+              setImgSrc('/images/default-course.jpg');
+            }}
           />
         </div>
 
@@ -211,11 +225,15 @@ const CourseCard = ({
       <div className="relative">
         <div className="relative h-64 overflow-hidden">
           <Image
-            src={toCloudinaryUrl(image)}
+            src={imgSrc || '/images/default-course.jpg'}
             alt={title}
             width={400}
             height={250}
             className="w-full h-full object-cover"
+            unoptimized={Boolean(imgSrc && (imgSrc.startsWith('http') || imgSrc.startsWith('//')))}
+            onError={() => {
+              setImgSrc('/images/default-course.jpg');
+            }}
           />
 
           {/* Badge loại khóa học */}

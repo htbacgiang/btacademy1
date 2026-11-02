@@ -101,27 +101,57 @@ const toRelativePath = (url) => {
 
 // Transform relative path to full Cloudinary URL
 const toCloudinaryUrl = (relativePath) => {
-  if (!relativePath) return '';
+  if (!relativePath || typeof relativePath !== 'string') return '';
 
-  // If it's already a full URL, return as is
-  if (relativePath.startsWith('http')) {
-    return relativePath;
+  if (
+    relativePath.startsWith('/images/') ||
+    relativePath.startsWith('/img/') ||
+    relativePath.startsWith('/static/') ||
+    relativePath === '/images/default-course.jpg' ||
+    relativePath === 'default-course.jpg'
+  ) {
+    return relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
   }
 
-  // If it's already a Cloudinary URL, return as is
-  if (relativePath.includes('res.cloudinary.com')) {
-    return relativePath;
+  // If it's already a full URL, return as is
+  if (relativePath.startsWith('http') || relativePath.startsWith('//')) {
+    let normalized = relativePath;
+    if (normalized.includes('/image/upload/btacademy/mcbacgiang/')) {
+      normalized = normalized.replace('/image/upload/btacademy/mcbacgiang/', '/image/upload/mcbacgiang/');
+    }
+    if (normalized.includes('/image/upload/btacademy/btacademy/')) {
+      normalized = normalized.replace('/image/upload/btacademy/btacademy/', '/image/upload/btacademy/');
+    }
+    return normalized;
   }
 
   // Convert relative path to full Cloudinary URL
-  const cloudName = process.env.NEXT_PUBLIC_CLOUD_NAME || 'ds3hfu1uz';
-  const folder = process.env.CLOUDINARY_FOLDER || 'btacademy';
+  const cloudName =
+    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
+    process.env.NEXT_PUBLIC_CLOUD_NAME ||
+    process.env.CLOUD_NAME ||
+    'cmgsweyq';
+  const folder =
+    process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER ||
+    process.env.CLOUDINARY_FOLDER ||
+    'btacademy';
 
   // Clean the path
   let cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
 
+  if (cleanPath.startsWith('btacademy/mcbacgiang/')) {
+    cleanPath = cleanPath.replace('btacademy/mcbacgiang/', 'mcbacgiang/');
+  }
+  if (cleanPath.startsWith('btacademy/btacademy/')) {
+    cleanPath = cleanPath.replace('btacademy/btacademy/', 'btacademy/');
+  }
+
   // If the path already contains the folder, don't add it again
-  if (cleanPath.startsWith(`${folder}/`)) {
+  if (
+    cleanPath.startsWith(`${folder}/`) ||
+    cleanPath.startsWith('mcbacgiang/') ||
+    cleanPath.startsWith('btacademy/')
+  ) {
     return `https://res.cloudinary.com/${cloudName}/image/upload/${cleanPath}`;
   }
 

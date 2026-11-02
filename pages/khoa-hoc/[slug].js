@@ -18,6 +18,11 @@ const CourseDetail = ({ course, relatedCourses, meta }) => {
   const { slug } = router.query;
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [imgSrc, setImgSrc] = useState(() => toCloudinaryUrl(course?.image));
+
+  useEffect(() => {
+    setImgSrc(toCloudinaryUrl(course?.image));
+  }, [course?.image]);
 
   // Dynamic location schema mapping
   const courseLocations = Array.isArray(course.locations) && course.locations.length > 0
@@ -271,22 +276,17 @@ const CourseDetail = ({ course, relatedCourses, meta }) => {
                 {/* Course Thumbnail */}
                 <div className="mb-6">
                   <div className="relative h-48 rounded-lg overflow-hidden shadow-md">
-                    {(() => {
-                      const imageUrl = toCloudinaryUrl(course.image);
-                      console.log('Final image URL being used:', imageUrl);
-                      return (
-                        <Image
-                          src={imageUrl}
-                          alt={course.title}
-                          fill
-                          className="object-cover"
-                          onError={(e) => {
-                            console.log('Image load error, falling back to default');
-                            e.target.src = '/images/default-course.jpg';
-                          }}
-                        />
-                      );
-                    })()}
+                    <Image
+                      src={imgSrc || '/images/default-course.jpg'}
+                      alt={course.title}
+                      fill
+                      className="object-cover"
+                      unoptimized={Boolean(imgSrc && (imgSrc.startsWith('http') || imgSrc.startsWith('//')))}
+                      onError={() => {
+                        console.log('Image load error, falling back to default');
+                        setImgSrc('/images/default-course.jpg');
+                      }}
+                    />
                     {/* Course Level Badge */}
                     <div className="absolute top-3 left-3">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getLevelColor(course.level)}`}>

@@ -360,6 +360,8 @@ export default function CoursesListPage() {
                                height={64}
                                loading="lazy"
                                className="rounded-lg object-cover w-full h-full shadow-sm"
+                                unoptimized={true}
+                                onError={(e) => { e.currentTarget.src = "/images/default-course.jpg"; }}
                              />
                            </div>
                            <div className="max-w-xs">

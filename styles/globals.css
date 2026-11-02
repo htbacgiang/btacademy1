@@ -3416,6 +3416,16 @@ video[paused] {
   border-radius: 0 12px 12px 0;
 }
 
+.ProseMirror blockquote p:first-of-type::before,
+.ProseMirror blockquote p:last-of-type::after,
+.prose blockquote p:first-of-type::before,
+.prose blockquote p:last-of-type::after,
+.blog blockquote p:first-of-type::before,
+.blog blockquote p:last-of-type::after {
+  content: "" !important;
+  content: none !important;
+}
+
 .ProseMirror ul,
 .ProseMirror ol {
   margin: 1rem 0;

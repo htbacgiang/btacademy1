@@ -11,32 +11,51 @@ export const toCloudinaryUrl = (relativePath) => {
   if (!relativePath || typeof relativePath !== "string") {
     return "/images/default-course.jpg";
   }
+
+  // If already a local image path, don't convert to Cloudinary!
+  if (
+    relativePath.startsWith('/images/') ||
+    relativePath.startsWith('/img/') ||
+    relativePath.startsWith('/static/') ||
+    relativePath === '/images/default-course.jpg' ||
+    relativePath === 'default-course.jpg'
+  ) {
+    return relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
+  }
   
   const cloudName =
     process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
     process.env.NEXT_PUBLIC_CLOUD_NAME ||
-    'ds3hfu1uz';
+    process.env.CLOUD_NAME ||
+    process.env.CLOUDINARY_CLOUD_NAME ||
+    'cmgsweyq';
 
   const folder =
     process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER ||
     process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_FOLDER ||
     process.env.CLOUDINARY_FOLDER ||
-    'mcbacgiang';
+    'btacademy';
 
   const normalizeCloudinaryUrl = (url) => {
     if (!url || typeof url !== "string") return url;
     if (!url.includes("res.cloudinary.com")) return url;
     if (!url.includes("/image/upload/")) return url;
 
-    const doubleFolder = `/image/upload/btacademy/${folder}/`;
-    if (url.includes(doubleFolder)) {
-      return url.replace(doubleFolder, `/image/upload/${folder}/`);
+    let normalized = url;
+    if (normalized.includes('/image/upload/btacademy/mcbacgiang/')) {
+      normalized = normalized.replace('/image/upload/btacademy/mcbacgiang/', '/image/upload/mcbacgiang/');
+    }
+    if (normalized.includes('/image/upload/btacademy/btacademy/')) {
+      normalized = normalized.replace('/image/upload/btacademy/btacademy/', '/image/upload/btacademy/');
+    }
+    if (normalized.includes('/image/upload/mcbacgiang/mcbacgiang/')) {
+      normalized = normalized.replace('/image/upload/mcbacgiang/mcbacgiang/', '/image/upload/mcbacgiang/');
     }
 
-    return url;
+    return normalized;
   };
 
-  if (relativePath.startsWith('http')) {
+  if (relativePath.startsWith('http') || relativePath.startsWith('//')) {
     return normalizeCloudinaryUrl(relativePath);
   }
   
@@ -47,12 +66,22 @@ export const toCloudinaryUrl = (relativePath) => {
   // Clean the path
   let cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
 
-  if (cleanPath.startsWith(`btacademy/${folder}/`)) {
-    cleanPath = cleanPath.replace(`btacademy/${folder}/`, `${folder}/`);
+  if (cleanPath.startsWith('btacademy/mcbacgiang/')) {
+    cleanPath = cleanPath.replace('btacademy/mcbacgiang/', 'mcbacgiang/');
+  }
+  if (cleanPath.startsWith('btacademy/btacademy/')) {
+    cleanPath = cleanPath.replace('btacademy/btacademy/', 'btacademy/');
+  }
+  if (cleanPath.startsWith('mcbacgiang/mcbacgiang/')) {
+    cleanPath = cleanPath.replace('mcbacgiang/mcbacgiang/', 'mcbacgiang/');
   }
   
-  // If the path already contains the folder, don't add it again
-  if (cleanPath.startsWith(`${folder}/`)) {
+  // If the path already contains a known folder, don't add it again
+  if (
+    cleanPath.startsWith(`${folder}/`) ||
+    cleanPath.startsWith('mcbacgiang/') ||
+    cleanPath.startsWith('btacademy/')
+  ) {
     return `https://res.cloudinary.com/${cloudName}/image/upload/${cleanPath}`;
   }
   

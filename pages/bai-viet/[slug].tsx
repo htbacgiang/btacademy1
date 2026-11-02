@@ -392,6 +392,10 @@ const SinglePost: NextPage<Props> = ({ post, meta }) => {
                       text-align: left !important;
                       margin: 0;
                     }
+                    .blog :global(blockquote p:first-of-type::before),
+                    .blog :global(blockquote p:last-of-type::after) {
+                      content: none !important;
+                    }
                     .blog :global(h1),
                     .blog :global(h2),
                     .blog :global(h3),

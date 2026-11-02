@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { toCloudinaryUrl } from '../../utils/cloudinary';
@@ -7,6 +7,11 @@ import RegistrationPopup from './RegistrationPopup';
 
 const ClassScheduleCard = ({ schedule }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [imgSrc, setImgSrc] = useState(() => toCloudinaryUrl(schedule.courseId?.image));
+
+  useEffect(() => {
+    setImgSrc(toCloudinaryUrl(schedule.courseId?.image));
+  }, [schedule.courseId?.image]);
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -53,10 +58,14 @@ const ClassScheduleCard = ({ schedule }) => {
       {/* Course Image */}
       <div className="relative h-48 w-full">
         <Image
-          src={toCloudinaryUrl(schedule.courseId?.image)}
+          src={imgSrc || '/images/default-course.jpg'}
           alt={schedule.courseId?.title || 'Khóa học'}
           fill
           className="object-cover rounded-t-lg"
+          unoptimized={Boolean(imgSrc && (imgSrc.startsWith('http') || imgSrc.startsWith('//')))}
+          onError={() => {
+            setImgSrc('/images/default-course.jpg');
+          }}
         />
         <div className="absolute top-3 right-3">
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(schedule.status)}`}>

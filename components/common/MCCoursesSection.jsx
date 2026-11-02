@@ -6,6 +6,27 @@ import Link from "next/link";
 import coursesData from '../../data/courses.json';
 
 // Gradient styles to ensure cross-browser compatibility
+const MCCourseImage = ({ src, alt }) => {
+  const [imgSrc, setImgSrc] = React.useState(() => toCloudinaryUrl(src));
+  React.useEffect(() => {
+    setImgSrc(toCloudinaryUrl(src));
+  }, [src]);
+
+  return (
+    <Image
+      src={imgSrc || '/images/default-course.jpg'}
+      alt={alt}
+      width={400}
+      height={250}
+      className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+      unoptimized={Boolean(imgSrc && (imgSrc.startsWith('http') || imgSrc.startsWith('//')))}
+      onError={() => {
+        setImgSrc('/images/default-course.jpg');
+      }}
+    />
+  );
+};
+
 const gradientPurpleBlue = {
   background: 'linear-gradient(135deg, #9333ea 0%, #2563eb 100%)',
   backgroundSize: '100%',
@@ -91,13 +112,7 @@ const MCCoursesSection = () => {
             <div key={course.id} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
               {/* Course Image */}
               <div className="relative overflow-hidden rounded-t-2xl">
-                <Image
-                  src={toCloudinaryUrl(course.image)}
-                  alt={course.title}
-                  width={400}
-                  height={250}
-                  className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
-                />
+                <MCCourseImage src={course.image} alt={course.title} />
                 <div className="absolute top-4 left-4">
                   <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
                     {course.level}

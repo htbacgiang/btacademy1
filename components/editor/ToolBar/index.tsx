@@ -29,6 +29,7 @@ import EmbedCloudinaryVideo from "./EmbedCloudinaryVideo";
 import EmbedImage from "./EmbedImage";
 import InsertTable from "./InsertTable";
 import FindReplace from "./FindReplace";
+import InsertCTA from "./InsertCTA";
 
 interface Props {
   editor: Editor | null;
@@ -409,6 +410,7 @@ const ToolBar: FC<Props> = ({
         <InsertTable editor={editor} />
         <InsertLink onSubmit={handleLinkSubmit} onToggle={onDropdownToggle} />
         <FindReplace editor={editor} onToggle={onDropdownToggle} />
+        <InsertCTA editor={editor} onToggle={onDropdownToggle} />
 
         {/* Nút Xóa ảnh đã chọn (xuất hiện khi nhấp chọn bất kỳ ảnh nào trong nội dung) */}
         {isImageActive && (
