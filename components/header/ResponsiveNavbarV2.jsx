@@ -3,13 +3,15 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { HiOutlineX, HiChevronDown, HiOutlinePhone } from "react-icons/hi";
-import { ArrowRight, Search, Mic } from "lucide-react";
+import { ArrowRight, Search, ExternalLink } from "lucide-react";
+import { DEFAULT_NAV_MENU_ITEMS } from "../../data/defaultNavMenuItems";
 
 const ResponsiveNavbarV2 = ({
   isOpen,
   toggleMenu,
   onRegisterClick,
   onOpenSearch,
+  menuItems = DEFAULT_NAV_MENU_ITEMS,
 }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -45,24 +47,9 @@ const ResponsiveNavbarV2 = ({
     setOpenDropdown(openDropdown === key ? null : key);
   };
 
-  const courseItems = [
-    { name: "Làm chủ giọng nói (Cơ bản)", href: "/khoa-hoc/khoa-hoc-mc-co-ban" },
-    { name: "MC Nâng cao", href: "/khoa-hoc/mc-nang-cao" },
-    { name: "Giao tiếp & Thuyết trình", href: "/khoa-hoc/giao-tiep-thuyet-trinh" },
-    { name: "MC Nhí Cơ bản", href: "/khoa-hoc/mc-nhi-co-ban" },
-    { name: "MC Nhí Nâng cao", href: "/khoa-hoc/mc-nhi-nang-cao" },
-    { name: "Xem tất cả khóa học", href: "/khoa-hoc", isAll: true },
-  ];
-
-  const blogItems = [
-    { name: "Bài viết & Tin tức", href: "/bai-viet" },
-    { name: "Video học viên", href: "/video-hoc-vien" },
-  ];
-
-  const aboutItems = [
-    { name: "Giới thiệu BT Academy", href: "/gioi-thieu" },
-    { name: "Nhà sáng lập", href: "/nha-sang-lap" },
-  ];
+  const displayItems = Array.isArray(menuItems) && menuItems.length > 0
+    ? menuItems
+    : DEFAULT_NAV_MENU_ITEMS;
 
   return (
     <>
@@ -125,132 +112,76 @@ const ResponsiveNavbarV2 = ({
             </button>
           )}
 
-          {/* 1. Trang chủ */}
-          <Link
-            href="/"
-            onClick={toggleMenu}
-            className="flex items-center justify-between py-3 px-3 rounded-lg text-base font-semibold text-gray-900 hover:text-[#22c55e] hover:bg-[#f0fdf4] transition-colors"
-          >
-            <span>Trang chủ</span>
-          </Link>
+          {/* Dynamic Menu Items */}
+          {displayItems.map((item, index) => {
+            const dropdownKey = item._id || item.name || `menu-${index}`;
+            const isDropdownOpen = openDropdown === dropdownKey;
+            const subItems = Array.isArray(item.dropdownItems)
+              ? item.dropdownItems.filter((sub) => sub.isActive !== false)
+              : [];
 
-          {/* 2. Khóa học (Dropdown) */}
-          <div className="border-b border-gray-50 pb-1">
-            <button
-              onClick={() => toggleDropdown("khoa-hoc")}
-              className="w-full flex items-center justify-between py-3 px-3 rounded-lg text-base font-semibold text-gray-900 hover:text-[#22c55e] transition-colors"
-            >
-              <span>Khóa học</span>
-              <HiChevronDown
-                className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                  openDropdown === "khoa-hoc" ? "rotate-180 text-[#22c55e]" : ""
-                }`}
-              />
-            </button>
-            {openDropdown === "khoa-hoc" && (
-              <div className="pl-4 pr-2 py-1 space-y-1 bg-[#f0fdf4]/50 rounded-xl mb-2">
-                {courseItems.map((course) => (
-                  <Link
-                    key={course.href}
-                    href={course.href}
-                    onClick={toggleMenu}
-                    className={`block py-2 px-3 text-sm rounded-lg transition-colors ${
-                      course.isAll
-                        ? "font-semibold text-[#16a34a] hover:bg-white"
-                        : "text-gray-700 hover:text-[#22c55e] hover:bg-white"
-                    }`}
+            if (item.hasDropdown && subItems.length > 0) {
+              return (
+                <div key={dropdownKey} className="border-b border-gray-50 pb-1">
+                  <button
+                    type="button"
+                    onClick={() => toggleDropdown(dropdownKey)}
+                    className="w-full flex items-center justify-between py-3 px-3 rounded-lg text-base font-semibold text-gray-900 hover:text-[#22c55e] transition-colors"
                   >
-                    {course.name}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+                    <span>{item.name}</span>
+                    <HiChevronDown
+                      className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
+                        isDropdownOpen ? "rotate-180 text-[#22c55e]" : ""
+                      }`}
+                    />
+                  </button>
 
-          {/* 3. Giảng viên */}
-          <Link
-            href="/#giang-vien"
-            onClick={toggleMenu}
-            className="flex items-center justify-between py-3 px-3 rounded-lg text-base font-semibold text-gray-900 hover:text-[#22c55e] hover:bg-[#f0fdf4] transition-colors"
-          >
-            <span>Giảng viên</span>
-          </Link>
+                  {isDropdownOpen && (
+                    <div className="pl-4 pr-2 py-1 space-y-1 bg-[#f0fdf4]/50 rounded-xl mb-2">
+                      {subItems.map((sub, sIdx) => (
+                        <Link
+                          key={sub._id || sub.href || sIdx}
+                          href={sub.href}
+                          onClick={toggleMenu}
+                          target={sub.openInNewTab ? "_blank" : undefined}
+                          rel={sub.openInNewTab ? "noopener noreferrer" : undefined}
+                          className={`block py-2 px-3 text-sm rounded-lg transition-colors ${
+                            sub.isHighlight
+                              ? "font-semibold text-[#16a34a] hover:bg-white"
+                              : "text-gray-700 hover:text-[#22c55e] hover:bg-white"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span>{sub.name}</span>
+                            {sub.openInNewTab && <ExternalLink className="w-3 h-3 text-gray-400" />}
+                          </div>
+                          {sub.desc && (
+                            <p className="text-xs text-gray-500 font-normal mt-0.5 line-clamp-1">
+                              {sub.desc}
+                            </p>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
 
-          {/* 4. Lịch khai giảng */}
-          <Link
-            href="/lich-khai-giang"
-            onClick={toggleMenu}
-            className="flex items-center justify-between py-3 px-3 rounded-lg text-base font-semibold text-gray-900 hover:text-[#22c55e] hover:bg-[#f0fdf4] transition-colors"
-          >
-            <span>Lịch khai giảng</span>
-          </Link>
-
-          {/* 5. Blog (Dropdown) */}
-          <div className="border-b border-gray-50 pb-1">
-            <button
-              onClick={() => toggleDropdown("blog")}
-              className="w-full flex items-center justify-between py-3 px-3 rounded-lg text-base font-semibold text-gray-900 hover:text-[#22c55e] transition-colors"
-            >
-              <span>Blog</span>
-              <HiChevronDown
-                className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                  openDropdown === "blog" ? "rotate-180 text-[#22c55e]" : ""
-                }`}
-              />
-            </button>
-            {openDropdown === "blog" && (
-              <div className="pl-4 pr-2 py-1 space-y-1 bg-[#f0fdf4]/50 rounded-xl mb-2">
-                {blogItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={toggleMenu}
-                    className="block py-2 px-3 text-sm text-gray-700 hover:text-[#22c55e] hover:bg-white rounded-lg transition-colors"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* 6. Giới thiệu (Dropdown) */}
-          <div className="border-b border-gray-50 pb-1">
-            <button
-              onClick={() => toggleDropdown("gioi-thieu")}
-              className="w-full flex items-center justify-between py-3 px-3 rounded-lg text-base font-semibold text-gray-900 hover:text-[#22c55e] transition-colors"
-            >
-              <span>Giới thiệu</span>
-              <HiChevronDown
-                className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                  openDropdown === "gioi-thieu" ? "rotate-180 text-[#22c55e]" : ""
-                }`}
-              />
-            </button>
-            {openDropdown === "gioi-thieu" && (
-              <div className="pl-4 pr-2 py-1 space-y-1 bg-[#f0fdf4]/50 rounded-xl mb-2">
-                {aboutItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={toggleMenu}
-                    className="block py-2 px-3 text-sm text-gray-700 hover:text-[#22c55e] hover:bg-white rounded-lg transition-colors"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* 7. Liên hệ */}
-          <Link
-            href="/lien-he"
-            onClick={toggleMenu}
-            className="flex items-center justify-between py-3 px-3 rounded-lg text-base font-semibold text-gray-900 hover:text-[#22c55e] hover:bg-[#f0fdf4] transition-colors"
-          >
-            <span>Liên hệ</span>
-          </Link>
+            return (
+              <Link
+                key={dropdownKey}
+                href={item.href}
+                onClick={toggleMenu}
+                target={item.openInNewTab ? "_blank" : undefined}
+                rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                className="flex items-center justify-between py-3 px-3 rounded-lg text-base font-semibold text-gray-900 hover:text-[#22c55e] hover:bg-[#f0fdf4] transition-colors"
+              >
+                <span>{item.name}</span>
+                {item.openInNewTab && <ExternalLink className="w-4 h-4 text-gray-400" />}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Drawer Footer CTA */}
@@ -282,4 +213,3 @@ const ResponsiveNavbarV2 = ({
 };
 
 export default ResponsiveNavbarV2;
-

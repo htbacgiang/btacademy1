@@ -8,6 +8,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import Editor from '../../../components/univisport/Editor';
 import { debounce } from 'lodash';
 import { locationOptions } from '../../../utils/locationMapping';
+import R2ImageModal from '../../../components/editor/R2ImageModal';
+import {
+  FiZap,
+  FiUploadCloud,
+  FiImage,
+  FiTrash2,
+  FiExternalLink,
+  FiRefreshCw,
+  FiFolder,
+} from 'react-icons/fi';
 
 // Vietnamese to ASCII for slug generation
 const vietnameseToAscii = (str) => {
@@ -167,8 +177,10 @@ export default function CreateCoursePage() {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [cloudinaryImages, setCloudinaryImages] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showR2Modal, setShowR2Modal] = useState(false);
+  const [r2InitialTab, setR2InitialTab] = useState('manage');
+  const [generatingDesc, setGeneratingDesc] = useState(false);
+  const [generatingFaqs, setGeneratingFaqs] = useState(false);
   const [isSlugEdited, setIsSlugEdited] = useState(false);
   const [originalSlug, setOriginalSlug] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -183,7 +195,7 @@ export default function CreateCoursePage() {
 
   // Prevent body scroll when modal is open
   useEffect(() => {
-    if (isModalOpen) {
+    if (showR2Modal) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -191,7 +203,7 @@ export default function CreateCoursePage() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isModalOpen]);
+  }, [showR2Modal]);
 
   // Clean up blob URLs
   useEffect(() => {
@@ -220,7 +232,7 @@ export default function CreateCoursePage() {
           content: course.content || '',
           description: course.description || '',
           locations: course.locations || [],
-          sessions: course.sessions || 1,
+          sessions: course.sessions !== undefined && course.sessions !== null ? course.sessions : 1,
           level: course.level || 'Cơ bản',
           rating: course.rating || 0,
           reviews: course.reviews || 0,
@@ -249,20 +261,9 @@ export default function CreateCoursePage() {
     }
   }, [_id]);
 
-  // Fetch Cloudinary images
-  const fetchCloudinaryImages = useCallback(async () => {
-    try {
-      const res = await axios.get('/api/image');
-      setCloudinaryImages(res.data.images.map((img) => img.src));
-    } catch (err) {
-      addError('Không thể tải danh sách ảnh');
-    }
-  }, []);
-
   useEffect(() => {
     if (_id) fetchCourse();
-    fetchCloudinaryImages();
-  }, [_id, fetchCourse, fetchCloudinaryImages]);
+  }, [_id, fetchCourse]);
 
   // Handle title change
   const handleTitleChange = (e) => {
@@ -350,67 +351,192 @@ export default function CreateCoursePage() {
   };
 
 
-  // Handle image drop and upload
+  // Direct upload to Cloudflare R2
+  const uploadFileToR2 = async (file) => {
+    setUploading(true);
+    try {
+      // 1. Try presigned PUT
+      const { data: presignedData } = await axios.post('/api/r2/upload', {
+        filename: file.name,
+        contentType: file.type || 'application/octet-stream',
+        folder: 'courses',
+      });
+
+      try {
+        await axios.put(presignedData.uploadUrl, file, {
+          headers: {
+            'Content-Type': file.type || 'application/octet-stream',
+          },
+        });
+        return { url: presignedData.publicUrl, key: presignedData.key };
+      } catch (putErr) {
+        // Fallback to proxy upload
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('folder', 'courses');
+        const { data: proxyData } = await axios.post('/api/r2/upload-proxy', fd, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return { url: proxyData.publicUrl, key: proxyData.key };
+      }
+    } catch (err) {
+      // Direct proxy fallback
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('folder', 'courses');
+      const { data: proxyData } = await axios.post('/api/r2/upload-proxy', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return { url: proxyData.publicUrl, key: proxyData.key };
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Handle image drop and upload to Cloudflare R2
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       'image/*': ['.jpeg', '.jpg', '.png', '.webp'],
     },
     multiple: false,
-    maxSize: 5 * 1024 * 1024,
+    maxSize: 10 * 1024 * 1024,
     onDrop: async (acceptedFiles, rejectedFiles) => {
       if (rejectedFiles.length > 0) {
-        addError('Chỉ hỗ trợ file JPEG, JPG, PNG, WEBP dưới 5MB');
+        addError('Chỉ hỗ trợ file JPEG, JPG, PNG, WEBP dưới 10MB');
         return;
       }
-      setErrors((prev) => prev.filter((err) => err !== 'Chỉ hỗ trợ file JPEG, JPG, PNG, WEBP dưới 5MB'));
+      setErrors((prev) => prev.filter((err) => !err.includes('JPEG')));
 
       const file = acceptedFiles[0];
-      const newImage = {
+      const previewUrl = URL.createObjectURL(file);
+      setImage({
         src: '',
-        preview: URL.createObjectURL(file),
+        preview: previewUrl,
         file,
-      };
-      setImage(newImage);
+      });
 
-      setUploading(true);
       try {
-        const uploadFormData = new FormData();
-        uploadFormData.append('image', file);
-        const response = await axios.post('/api/image', uploadFormData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        const relativePath = toRelativePath(response.data.src);
+        const result = await uploadFileToR2(file);
         setImage({
-          src: relativePath,
-          preview: response.data.src,
+          src: result.url,
+          preview: result.url,
           file: null,
         });
         dispatch({
           type: 'UPDATE_FIELD',
           field: 'image',
-          value: relativePath,
+          value: result.url,
         });
+        toast.success('Đã tải ảnh lên Cloudflare R2 thành công!');
       } catch (error) {
-        console.error('Error uploading image:', error.response?.data || error.message);
-        addError('Không thể upload ảnh');
+        console.error('Error uploading image to R2:', error);
+        addError('Không thể tải ảnh lên R2');
         setImage(null);
         dispatch({ type: 'UPDATE_FIELD', field: 'image', value: '' });
-      } finally {
-        setUploading(false);
       }
     },
   });
 
-  // Handle Cloudinary image selection
-  const handleSelectImage = (src) => {
-    const relativePath = toRelativePath(src);
-    setImage({ src: relativePath, preview: src });
-    dispatch({
-      type: 'UPDATE_FIELD',
-      field: 'image',
-      value: relativePath,
-    });
-    setIsModalOpen(false);
+  // Handle R2 image selection from modal
+  const handleR2Select = (result) => {
+    if (result?.src) {
+      setImage({
+        src: result.src,
+        preview: result.src,
+        file: null,
+      });
+      dispatch({
+        type: 'UPDATE_FIELD',
+        field: 'image',
+        value: result.src,
+      });
+      setShowR2Modal(false);
+      toast.success('Đã chọn ảnh từ Cloudflare R2!');
+    }
+  };
+
+  const handleOpenR2 = (tab = 'manage') => {
+    setR2InitialTab(tab);
+    setShowR2Modal(true);
+  };
+
+  // AI Generation for Course Description
+  const handleGenerateAiDescription = async () => {
+    const cleanContent = formData.content ? formData.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+    if (!formData.title?.trim() && cleanContent.length < 20) {
+      toast.warning('Vui lòng nhập tên khóa học hoặc nội dung chi tiết trước khi tạo mô tả bằng Gemini AI!');
+      return;
+    }
+
+    setGeneratingDesc(true);
+    try {
+      const combinedContent = [
+        formData.subtitle,
+        cleanContent,
+        Array.isArray(formData.curriculum) && formData.curriculum.length > 0
+          ? formData.curriculum.map((c) => `${c.title}: ${c.description}`).join('. ')
+          : '',
+      ].filter(Boolean).join('\n');
+
+      const { data } = await axios.post('/api/ai/generate', {
+        type: 'description',
+        itemType: 'course',
+        title: formData.title || '',
+        content: combinedContent,
+      });
+
+      if (data?.description) {
+        dispatch({ type: 'UPDATE_FIELD', field: 'description', value: data.description });
+        toast.success('Đã tạo mô tả khóa học bằng Gemini AI thành công!');
+      }
+    } catch (err) {
+      console.error('Lỗi tạo mô tả AI:', err);
+      toast.error(err.response?.data?.error || 'Không thể tạo mô tả bằng Gemini AI. Vui lòng thử lại!');
+    } finally {
+      setGeneratingDesc(false);
+    }
+  };
+
+  // AI Generation for Course FAQ
+  const handleGenerateAiFaqs = async () => {
+    const cleanContent = formData.content ? formData.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+    if (!formData.title?.trim() && cleanContent.length < 20) {
+      toast.warning('Vui lòng nhập tên khóa học hoặc nội dung chi tiết trước khi tạo FAQ bằng Gemini AI!');
+      return;
+    }
+
+    setGeneratingFaqs(true);
+    try {
+      const combinedContent = [
+        formData.subtitle,
+        formData.description,
+        cleanContent,
+        Array.isArray(formData.curriculum) && formData.curriculum.length > 0
+          ? formData.curriculum.map((c) => `${c.title}: ${c.description}`).join('. ')
+          : '',
+      ].filter(Boolean).join('\n');
+
+      const { data } = await axios.post('/api/ai/generate', {
+        type: 'faqs',
+        itemType: 'course',
+        title: formData.title || '',
+        content: combinedContent,
+      });
+
+      if (data?.faqs && Array.isArray(data.faqs) && data.faqs.length > 0) {
+        if (formData.faq && formData.faq.length > 0) {
+          dispatch({ type: 'UPDATE_FIELD', field: 'faq', value: [...formData.faq, ...data.faqs] });
+        } else {
+          dispatch({ type: 'UPDATE_FIELD', field: 'faq', value: data.faqs });
+        }
+        toast.success(`Đã tạo ${data.faqs.length} câu hỏi thường gặp bằng Gemini AI thành công!`);
+      }
+    } catch (err) {
+      console.error('Lỗi tạo FAQ bằng AI:', err);
+      toast.error(err.response?.data?.error || 'Không thể tạo FAQ bằng Gemini AI. Vui lòng thử lại!');
+    } finally {
+      setGeneratingFaqs(false);
+    }
   };
 
   // Check slug availability
@@ -528,8 +654,9 @@ export default function CreateCoursePage() {
         setIsSubmitting(false);
         return;
       }
-      if (!formData.sessions || formData.sessions < 1) {
-        addError('Số buổi học là bắt buộc và phải lớn hơn 0');
+      const isCustomSessions = formData.sessions === 'Tùy nhu cầu';
+      if (!isCustomSessions && (!formData.sessions || Number(formData.sessions) < 1)) {
+        addError('Số buổi học là bắt buộc (nhập số buổi hoặc chọn "Tùy nhu cầu")');
         setIsSubmitting(false);
         return;
       }
@@ -725,9 +852,24 @@ export default function CreateCoursePage() {
               </div>
 
               <div className="form-group">
-                <label className="form-label required" htmlFor="description">
-                  Mô tả
-                </label>
+                <div className="flex items-center justify-between mb-1.5 flex-wrap gap-2">
+                  <label className="form-label required mb-0" htmlFor="description">
+                    Mô tả khóa học (Chuẩn SEO)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleGenerateAiDescription}
+                    disabled={generatingDesc}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:text-purple-300 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800 rounded-lg transition-all shadow-2xs disabled:opacity-50 cursor-pointer"
+                    title="Dùng Gemini AI tự động tạo mô tả khóa học chuẩn SEO"
+                  >
+                    <FiZap
+                      size={13}
+                      className={generatingDesc ? 'animate-spin text-purple-600' : 'text-purple-600'}
+                    />
+                    <span>{generatingDesc ? 'Đang viết mô tả...' : '✨ Tạo với Gemini AI'}</span>
+                  </button>
+                </div>
                 <textarea
                   id="description"
                   value={formData.description}
@@ -739,86 +881,220 @@ export default function CreateCoursePage() {
                   aria-label="Mô tả khóa học"
                   aria-describedby={errors.some((e) => e.includes('Mô tả')) ? 'error-description' : undefined}
                 />
-                <div className="mt-2 text-sm">
+                <div className="mt-2 text-sm flex items-center justify-between">
                   <span className={`${formData.description.length < 160 ? 'text-red-500' : formData.description.length > 300 ? 'text-red-500' : 'text-green-600'}`}>
                     {formData.description.length}/300 ký tự
                   </span>
-                  <span className="ml-2 text-gray-500">
+                  <span className="text-gray-500 text-xs">
                     (Tối thiểu 160 ký tự cho SEO)
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Image Upload Section */}
+            {/* Image Upload Section - Cloudflare R2 (Gọn gàng) */}
             <div className="form-section">
-              <h3 className="form-section-title">🖼️ Hình ảnh khóa học</h3>
-
-              <div className="image-upload-section">
-                <div
-                  {...getRootProps()}
-                  className={`dropzone-area ${isDragActive ? 'drag-active' : ''}`}
-                  role="button"
-                  aria-label="Tải lên hoặc thả hình ảnh"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      document.querySelector('input[type="file"]').click();
-                    }
-                  }}
-                >
-                  <input {...getInputProps()} />
-                  <div className="upload-icon">📸</div>
-                  <p className="upload-text">
-                    Thả tập tin hoặc nhấp để tải lên
-                  </p>
-                  <p className="upload-hint">
-                    (JPEG, PNG, WEBP dưới 5MB)
-                  </p>
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+                <div className="flex items-center gap-2">
+                  <h3 className="form-section-title !mb-0 text-base">Hình ảnh khóa học</h3>
+                  <span className="hidden sm:inline-flex items-center gap-1 font-mono text-[11px] font-bold text-[#105d97] dark:text-sky-400 bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800 px-2 py-0.5 rounded">
+                    <FiFolder size={11} /> courses
+                  </span>
                 </div>
-
-                {image && (
-                  <div className="image-preview-item">
-                    <img
-                      src={image.preview}
-                      alt="Ảnh khóa học"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleRemoveImage}
-                      className="remove-image-btn"
-                      aria-label="Xóa ảnh"
-                    >
-                      ×
-                    </button>
-                  </div>
-                )}
-
-                <div className="image-upload-actions">
+                <div className="flex items-center gap-1.5">
                   <button
                     type="button"
-                    onClick={() => setIsModalOpen(true)}
-                    className="select-existing-btn"
+                    onClick={() => handleOpenR2('manage')}
+                    className="text-xs px-2.5 py-1 bg-sky-50 hover:bg-sky-100 text-[#105d97] dark:bg-sky-950/60 dark:text-sky-300 rounded-lg font-semibold flex items-center gap-1 transition-colors border border-sky-200 dark:border-sky-800 shadow-2xs cursor-pointer"
+                    title="Chọn ảnh khóa học có sẵn từ kho Cloudflare R2"
                   >
-                    🖼️ Chọn ảnh đã upload
+                    <FiImage size={13} />
+                    <span>Chọn từ R2</span>
                   </button>
-
-                  {uploading && (
-                    <div className="uploading-indicator">
-                      <div className="loading-spinner"></div>
-                      <span>Đang tải ảnh...</span>
-                    </div>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => handleOpenR2('upload')}
+                    className="text-xs px-2.5 py-1 bg-[#105d97] hover:bg-[#0c4a7c] text-white rounded-lg font-semibold flex items-center gap-1 transition-colors shadow-2xs cursor-pointer"
+                    title="Tải ảnh mới lên thư mục courses trên Cloudflare R2"
+                  >
+                    <FiUploadCloud size={13} />
+                    <span>Tải ảnh lên R2</span>
+                  </button>
                 </div>
               </div>
+
+              {formData.image ? (
+                <div className="p-3 bg-gray-50/80 dark:bg-gray-800/60 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-center gap-3.5 shadow-2xs">
+                  {/* Thumbnail xem trước gọn gàng */}
+                  <div className="relative w-full sm:w-44 h-28 shrink-0 rounded-lg overflow-hidden bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 flex items-center justify-center group shadow-xs">
+                    <img
+                      src={toCloudinaryUrl(formData.image)}
+                      alt="Ảnh đại diện khóa học"
+                      className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                    />
+                    <div className="absolute top-1.5 left-1.5 bg-black/70 backdrop-blur-xs text-white text-[10px] font-mono px-1.5 py-0.5 rounded flex items-center gap-1 shadow-xs">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                      <span>R2</span>
+                    </div>
+                  </div>
+
+                  {/* Thông tin & nút thao tác */}
+                  <div className="flex-1 min-w-0 w-full space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-1">
+                      <span className="text-xs font-bold text-gray-800 dark:text-gray-200">
+                        Ảnh khóa học đã chọn
+                      </span>
+                      <a
+                        href={toCloudinaryUrl(formData.image)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[11px] font-mono text-[#105d97] dark:text-sky-400 hover:underline inline-flex items-center gap-1 max-w-[220px] truncate"
+                        title={formData.image}
+                      >
+                        <span className="truncate">{formData.image.split('/').pop()}</span>
+                        <FiExternalLink size={11} className="shrink-0" />
+                      </a>
+                    </div>
+
+                    {/* Dải nút bấm gọn gàng */}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenR2('manage')}
+                        className="text-xs px-2.5 py-1 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
+                      >
+                        <FiRefreshCw size={12} className="text-[#105d97]" />
+                        <span>Đổi ảnh từ R2</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenR2('upload')}
+                        className="text-xs px-2.5 py-1 bg-[#105d97] hover:bg-[#0c4a7c] text-white rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
+                      >
+                        <FiUploadCloud size={12} />
+                        <span>Tải ảnh mới</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        className="text-xs px-2 py-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                        title="Xóa ảnh này"
+                      >
+                        <FiTrash2 size={13} />
+                        <span>Xóa</span>
+                      </button>
+                    </div>
+
+                    <p className="text-[11px] text-gray-400 dark:text-gray-500 font-mono truncate" title={formData.image}>
+                      {formData.image}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  {...getRootProps()}
+                  className={`border-2 border-dashed rounded-xl p-3.5 text-center cursor-pointer transition-all duration-200 ${isDragActive
+                      ? 'border-[#105d97] bg-blue-50/70 dark:bg-gray-700/60 scale-[1.005]'
+                      : 'border-gray-300 dark:border-gray-700 hover:border-[#105d97] bg-gray-50/50 dark:bg-gray-800/50 hover:bg-blue-50/20'
+                    }`}
+                >
+                  <input {...getInputProps()} />
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 text-left">
+                      <div className="w-9 h-9 rounded-lg bg-sky-100 dark:bg-sky-950/60 text-[#105d97] dark:text-sky-300 flex items-center justify-center shrink-0 shadow-2xs">
+                        <FiUploadCloud size={18} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-gray-800 dark:text-gray-200 leading-tight">
+                          Kéo thả ảnh vào đây hoặc bấm để chọn tệp
+                        </p>
+                        <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 leading-snug">
+                          Tự động lưu vào Cloudflare R2 / <span className="font-mono font-semibold text-[#105d97] dark:text-sky-400">courses</span> (JPEG, PNG, WEBP dưới 10MB)
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenR2('manage');
+                      }}
+                      className="text-xs font-semibold px-2.5 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-200 hover:border-[#105d97] hover:text-[#105d97] inline-flex items-center gap-1.5 cursor-pointer shadow-2xs shrink-0"
+                    >
+                      <FiImage size={13} className="text-[#105d97]" />
+                      <span>Chọn từ R2</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {uploading && (
+                <div className="uploading-indicator mt-2 flex items-center gap-2 text-xs text-[#105d97] font-medium">
+                  <div className="loading-spinner !w-3 !h-3"></div>
+                  <span>Đang tải ảnh lên Cloudflare R2...</span>
+                </div>
+              )}
             </div>
 
             {/* Course Details Section */}
             <div className="form-section">
               <h3 className="form-section-title">⚙️ Chi tiết khóa học</h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* 1. ĐỊA ĐIỂM - SẮP XẾP THEO HÀNG NGANG GỌN GÀNG */}
+              <div className="form-group mb-5">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="form-label required mb-0">
+                    Địa điểm học
+                  </label>
+                  <span className="text-xs text-gray-500">
+                    Đã chọn {formData.locations.length} địa điểm
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {locationOptions.map((option, index) => {
+                    const isChecked = formData.locations.includes(option.code);
+                    return (
+                      <label
+                        key={option.code}
+                        htmlFor={`location-${index}`}
+                        className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all select-none ${isChecked
+                          ? 'border-green-600 bg-green-50/70 dark:bg-green-950/40 text-green-950 dark:text-green-100 shadow-sm ring-1 ring-green-500'
+                          : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 text-gray-700 dark:text-gray-300'
+                          }`}
+                      >
+                        <input
+                          type="checkbox"
+                          id={`location-${index}`}
+                          checked={isChecked}
+                          onChange={(e) => {
+                            const newLocations = e.target.checked
+                              ? [...formData.locations, option.code]
+                              : formData.locations.filter((loc) => loc !== option.code);
+                            dispatch({ type: 'UPDATE_FIELD', field: 'locations', value: newLocations });
+                          }}
+                          className="mt-0.5 rounded text-green-600 focus:ring-green-500 w-4 h-4 shrink-0"
+                          aria-label={option.label}
+                        />
+                        <div className="min-w-0 flex-1 text-xs">
+                          <strong className="block font-semibold text-gray-900 dark:text-white leading-tight">
+                            {option.code}
+                          </strong>
+                          <span className="block text-[11px] text-gray-500 dark:text-gray-400 mt-1 leading-snug">
+                            {option.address}
+                          </span>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+                {errors.some((e) => e.includes('địa điểm')) && (
+                  <p className="text-xs text-red-500 mt-1">Vui lòng chọn ít nhất một địa điểm</p>
+                )}
+              </div>
+
+              {/* 2. CẤP ĐỘ, SỐ BUỔI HỌC, LỊCH HỌC */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                {/* Cấp độ */}
                 <div className="form-group">
                   <label className="form-label required" htmlFor="level">
                     Cấp độ
@@ -840,51 +1116,169 @@ export default function CreateCoursePage() {
                   </select>
                 </div>
 
+                {/* Số buổi học */}
                 <div className="form-group">
-                  <label className="form-label required">
-                    Địa điểm
-                  </label>
-                  <div className="space-y-2">
-                    {locationOptions.map((option, index) => (
-                      <div className="form-checkbox" key={option.code}>
-                        <input
-                          type="checkbox"
-                          id={`location-${index}`}
-                          checked={formData.locations.includes(option.code)}
-                          onChange={(e) => {
-                            const newLocations = e.target.checked
-                              ? [...formData.locations, option.code]
-                              : formData.locations.filter(loc => loc !== option.code);
-                            dispatch({ type: 'UPDATE_FIELD', field: 'locations', value: newLocations });
-                          }}
-                          aria-label={option.label}
-                        />
-                        <label htmlFor={`location-${index}`}>
-                          <strong>{option.code}</strong><br />
-                          <span className="text-sm text-gray-600">{option.address}</span>
-                        </label>
-                      </div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="form-label required mb-0" htmlFor="sessions">
+                      Số buổi học
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (formData.sessions === 'Tùy nhu cầu') {
+                          dispatch({ type: 'UPDATE_FIELD', field: 'sessions', value: 10 });
+                        } else {
+                          dispatch({ type: 'UPDATE_FIELD', field: 'sessions', value: 'Tùy nhu cầu' });
+                        }
+                      }}
+                      className={`text-[11px] px-2 py-0.5 rounded font-medium transition ${formData.sessions === 'Tùy nhu cầu'
+                        ? 'bg-green-600 text-white shadow-xs'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200'
+                        }`}
+                    >
+                      {formData.sessions === 'Tùy nhu cầu' ? '✓ Đang chọn: Tùy nhu cầu' : '+ Chọn: Tùy nhu cầu'}
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <input
+                      id="sessions"
+                      type={formData.sessions === 'Tùy nhu cầu' ? 'text' : 'number'}
+                      value={formData.sessions}
+                      readOnly={formData.sessions === 'Tùy nhu cầu'}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        dispatch({
+                          type: 'UPDATE_FIELD',
+                          field: 'sessions',
+                          value: val === 'Tùy nhu cầu' ? val : (isNaN(Number(val)) ? val : Number(val)),
+                        });
+                      }}
+                      className={`form-input ${errors.some((e) => e.includes('Số buổi')) ? 'error' : ''} ${formData.sessions === 'Tùy nhu cầu' ? 'bg-green-50 font-semibold text-green-800' : ''
+                        }`}
+                      min="1"
+                      required
+                      placeholder="Ví dụ: 10 hoặc Tùy nhu cầu"
+                      aria-label="Số buổi học"
+                      aria-describedby={errors.some((e) => e.includes('Số buổi')) ? 'error-sessions' : undefined}
+                    />
+                    {formData.sessions === 'Tùy nhu cầu' && (
+                      <button
+                        type="button"
+                        onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'sessions', value: 10 })}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-blue-600 hover:underline"
+                      >
+                        Đổi sang số
+                      </button>
+                    )}
+                  </div>
+                  {/* Preset chips for Số buổi học */}
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {[8, 10, 12, 16].map((num) => (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'sessions', value: num })}
+                        className={`text-[11px] px-2 py-0.5 rounded border transition ${formData.sessions === num
+                          ? 'bg-blue-50 border-blue-400 text-blue-700 font-semibold'
+                          : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-600'
+                          }`}
+                      >
+                        {num} buổi
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'sessions', value: 'Tùy nhu cầu' })}
+                      className={`text-[11px] px-2 py-0.5 rounded border transition ${formData.sessions === 'Tùy nhu cầu'
+                        ? 'bg-green-100 border-green-500 text-green-800 font-bold ring-1 ring-green-400'
+                        : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-600'
+                        }`}
+                    >
+                      Tùy nhu cầu
+                    </button>
+                  </div>
+                </div>
+
+                {/* Lịch học */}
+                <div className="form-group">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="form-label required mb-0" htmlFor="schedule">
+                      Lịch học
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (formData.schedule === 'Thỏa thuận') {
+                          dispatch({ type: 'UPDATE_FIELD', field: 'schedule', value: '' });
+                        } else {
+                          dispatch({ type: 'UPDATE_FIELD', field: 'schedule', value: 'Thỏa thuận' });
+                        }
+                      }}
+                      className={`text-[11px] px-2 py-0.5 rounded font-medium transition ${formData.schedule === 'Thỏa thuận'
+                        ? 'bg-green-600 text-white shadow-xs'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200'
+                        }`}
+                    >
+                      {formData.schedule === 'Thỏa thuận' ? '✓ Đang chọn: Thỏa thuận' : '+ Chọn: Thỏa thuận'}
+                    </button>
+                  </div>
+                  <input
+                    id="schedule"
+                    type="text"
+                    value={formData.schedule}
+                    onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'schedule', value: e.target.value })}
+                    className={`form-input ${errors.some((e) => e.includes('Lịch học')) ? 'error' : ''} ${formData.schedule === 'Thỏa thuận' ? 'bg-green-50 font-semibold text-green-800' : ''
+                      }`}
+                    required
+                    placeholder="Ví dụ: Thứ 7 - 14:00-16:00 hoặc Thỏa thuận"
+                    aria-label="Lịch học"
+                    aria-describedby={errors.some((e) => e.includes('Lịch học')) ? 'error-schedule' : undefined}
+                  />
+                  {/* Preset chips for Lịch học */}
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'schedule', value: 'Thỏa thuận' })}
+                      className={`text-[11px] px-2 py-0.5 rounded border transition ${formData.schedule === 'Thỏa thuận'
+                        ? 'bg-green-100 border-green-500 text-green-800 font-bold ring-1 ring-green-400'
+                        : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-600'
+                        }`}
+                    >
+                      Thỏa thuận
+                    </button>
+                    {['Linh hoạt theo học viên', 'Thứ 7 & Chủ Nhật', 'Buổi tối (19h30 - 21h30)'].map((sc) => (
+                      <button
+                        key={sc}
+                        type="button"
+                        onClick={() => dispatch({ type: 'UPDATE_FIELD', field: 'schedule', value: sc })}
+                        className={`text-[11px] px-2 py-0.5 rounded border transition ${formData.schedule === sc
+                          ? 'bg-blue-50 border-blue-400 text-blue-700 font-semibold'
+                          : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-600'
+                          }`}
+                      >
+                        {sc}
+                      </button>
                     ))}
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+              {/* 3. SỐ HỌC VIÊN, ĐÁNH GIÁ, SỐ ĐÁNH GIÁ */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div className="form-group">
-                  <label className="form-label required" htmlFor="sessions">
-                    Số buổi học
+                  <label className="form-label" htmlFor="students">
+                    Số học viên
                   </label>
                   <input
-                    id="sessions"
+                    id="students"
                     type="number"
-                    value={formData.sessions}
-                    onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'sessions', value: Number(e.target.value) })}
-                    className={`form-input ${errors.some((e) => e.includes('Số buổi')) ? 'error' : ''}`}
-                    min="1"
-                    required
-                    placeholder="10"
-                    aria-label="Số buổi học"
-                    aria-describedby={errors.some((e) => e.includes('Số buổi')) ? 'error-sessions' : undefined}
+                    value={formData.students}
+                    onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'students', value: Number(e.target.value) })}
+                    className={`form-input ${errors.some((e) => e.includes('Số học viên')) ? 'error' : ''}`}
+                    min="0"
+                    placeholder="0"
+                    aria-label="Số học viên"
+                    aria-describedby={errors.some((e) => e.includes('Số học viên')) ? 'error-students' : undefined}
                   />
                 </div>
 
@@ -901,7 +1295,7 @@ export default function CreateCoursePage() {
                     min="0"
                     max="5"
                     step="0.1"
-                    placeholder="0"
+                    placeholder="5.0"
                     aria-label="Đánh giá"
                     aria-describedby={errors.some((e) => e.includes('Đánh giá')) ? 'error-rating' : undefined}
                   />
@@ -921,42 +1315,6 @@ export default function CreateCoursePage() {
                     placeholder="0"
                     aria-label="Số lượng đánh giá"
                     aria-describedby={errors.some((e) => e.includes('Số lượng đánh giá')) ? 'error-reviews' : undefined}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label" htmlFor="students">
-                    Số học viên
-                  </label>
-                  <input
-                    id="students"
-                    type="number"
-                    value={formData.students}
-                    onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'students', value: Number(e.target.value) })}
-                    className={`form-input ${errors.some((e) => e.includes('Số học viên')) ? 'error' : ''}`}
-                    min="0"
-                    placeholder="0"
-                    aria-label="Số học viên"
-                    aria-describedby={errors.some((e) => e.includes('Số học viên')) ? 'error-students' : undefined}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div className="form-group">
-                  <label className="form-label required" htmlFor="schedule">
-                    Lịch học
-                  </label>
-                  <input
-                    id="schedule"
-                    type="text"
-                    value={formData.schedule}
-                    onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'schedule', value: e.target.value })}
-                    className={`form-input ${errors.some((e) => e.includes('Lịch học')) ? 'error' : ''}`}
-                    required
-                    placeholder="Ví dụ: Thứ 7 - 14:00-16:00"
-                    aria-label="Lịch học"
-                    aria-describedby={errors.some((e) => e.includes('Lịch học')) ? 'error-schedule' : undefined}
                   />
                 </div>
               </div>
@@ -1002,17 +1360,32 @@ export default function CreateCoursePage() {
 
             {/* FAQ Section */}
             <div className="form-section">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <h2 className="form-section-title mb-0">❓ Câu hỏi thường gặp (FAQ)</h2>
-                {formData.faq.length === 0 && (
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
-                    onClick={addSampleFAQ}
-                    className="px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
+                    onClick={handleGenerateAiFaqs}
+                    disabled={generatingFaqs}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:text-purple-300 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800 rounded-lg transition-all shadow-2xs disabled:opacity-50 cursor-pointer"
+                    title="Dùng Gemini AI tự động phân tích khóa học và tạo các câu hỏi thường gặp FAQ"
                   >
-                    📝 Thêm FAQ mẫu
+                    <FiZap
+                      size={13}
+                      className={generatingFaqs ? 'animate-spin text-purple-600' : 'text-purple-600'}
+                    />
+                    <span>{generatingFaqs ? 'Đang tạo FAQ...' : '✨ Tạo FAQ tự động với Gemini AI'}</span>
                   </button>
-                )}
+                  {formData.faq.length === 0 && (
+                    <button
+                      type="button"
+                      onClick={addSampleFAQ}
+                      className="px-3 py-1.5 text-xs bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-semibold"
+                    >
+                      📝 Thêm FAQ mẫu
+                    </button>
+                  )}
+                </div>
               </div>
 
               {formData.faq.map((faqItem, index) => (
@@ -1108,35 +1481,14 @@ export default function CreateCoursePage() {
           </form>
         )}
 
-        {/* Image Selection Modal */}
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" role="dialog" aria-modal="true" aria-label="Chọn ảnh">
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto" tabIndex={-1} ref={(el) => el?.focus()}>
-              <h3 className="text-xl font-bold mb-4 text-black dark:text-white">Chọn ảnh đã tải lên</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-96 overflow-y-auto">
-                {cloudinaryImages.map((src, index) => (
-                  <img
-                    key={index}
-                    src={src}
-                    alt={`Cloudinary image ${index + 1}`}
-                    className="w-full h-32 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={() => handleSelectImage(src)}
-                  />
-                ))}
-              </div>
-              <div className="mt-4 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="btn btn-secondary"
-                  aria-label="Đóng"
-                >
-                  ❌ Đóng
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Cloudflare R2 Image Modal */}
+        <R2ImageModal
+          visible={showR2Modal}
+          onClose={() => setShowR2Modal(false)}
+          onSelect={handleR2Select}
+          initialFolder="courses"
+          initialTab={r2InitialTab}
+        />
         <ToastContainer />
       </div>
 

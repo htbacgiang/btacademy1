@@ -4,9 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { HiOutlineMenu } from "react-icons/hi";
-import { Search, ArrowRight, ChevronDown, X } from "lucide-react";
+import { Search, ArrowRight, ChevronDown, ExternalLink } from "lucide-react";
 import ResponsiveNavbarV2 from "./ResponsiveNavbarV2";
 import RegistrationPopup from "../common/RegistrationPopup";
+import { DEFAULT_NAV_MENU_ITEMS } from "../../data/defaultNavMenuItems";
 
 const NavbarV2 = () => {
   const router = useRouter();
@@ -16,6 +17,31 @@ const NavbarV2 = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [menuItems, setMenuItems] = useState(DEFAULT_NAV_MENU_ITEMS);
+
+  // Fetch dynamic menu from API with fallback
+  useEffect(() => {
+    let isMounted = true;
+    const fetchNavItems = async () => {
+      try {
+        const res = await fetch("/api/navbars");
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data?.success && Array.isArray(data.items) && data.items.length > 0) {
+            setMenuItems(data.items);
+          }
+        }
+      } catch (err) {
+        // Fallback to default items on failure
+        console.warn("Could not load dynamic navbars, using default fallback:", err);
+      }
+    };
+
+    fetchNavItems();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleOpenPopup = () => {
     if (typeof window !== "undefined" && typeof window.gtag === "function") {
@@ -54,78 +80,36 @@ const NavbarV2 = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const currentPath = router.pathname;
+  const currentPath = router.pathname || "";
 
-  const isCourseActive = currentPath.startsWith("/khoa-hoc");
-  const isBlogActive = currentPath.startsWith("/bai-viet") || currentPath.startsWith("/video-hoc-vien");
-  const isAboutActive = currentPath === "/gioi-thieu" || currentPath === "/nha-sang-lap";
+  // Check if current route matches menu or any of its sub-items
+  const checkIsItemActive = (item) => {
+    if (item.href === "/" && (currentPath === "/" || router.asPath === "/")) {
+      return true;
+    }
 
-  const navigationItems = [
-    {
-      name: "Trang chủ",
-      href: "/",
-      isActive: currentPath === "/",
-      hasDropdown: false,
-    },
-    {
-      name: "Khóa học",
-      href: "/khoa-hoc",
-      isActive: isCourseActive,
-      hasDropdown: true,
-      dropdownItems: [
-        { name: "Làm chủ giọng nói (Cơ bản)", href: "/khoa-hoc/khoa-hoc-mc-co-ban", desc: "Sửa ngọng, luyện hơi, phát âm chuẩn" },
-        { name: "MC Nâng cao", href: "/khoa-hoc/mc-nang-cao", desc: "Kỹ năng sân khấu, xử lý tình huống" },
-        { name: "Giao tiếp & Thuyết trình", href: "/khoa-hoc/giao-tiep-thuyet-trinh", desc: "Tự tin đàm phán, trình bày trước đám đông" },
-        { name: "MC Nhí Cơ bản", href: "/khoa-hoc/mc-nhi-co-ban", desc: "Ươm mầm tài năng, rèn luyện sự tự tin" },
-        { name: "MC Nhí Nâng cao", href: "/khoa-hoc/mc-nhi-nang-cao", desc: "Kỹ năng chuyên sâu cho bé tỏa sáng" },
-        { name: "Xem tất cả khóa học →", href: "/khoa-hoc", isHighlight: true },
-      ],
-    },
-    {
-      name: "Giảng viên",
-      href: "/#giang-vien",
-      isActive: false,
-      hasDropdown: false,
-    },
-    {
-      name: "Lịch khai giảng",
-      href: "/lich-khai-giang",
-      isActive: currentPath === "/lich-khai-giang",
-      hasDropdown: false,
-    },
-    {
-      name: "Blog",
-      href: "/bai-viet",
-      isActive: isBlogActive,
-      hasDropdown: true,
-      dropdownItems: [
-        { name: "Bài viết & Tin tức", href: "/bai-viet", desc: "Kiến thức MC, luyện giọng và kỹ năng mềm" },
-        { name: "Video học viên", href: "/video-hoc-vien", desc: "Xem quá trình lột xác và thực hành của học viên" },
-      ],
-    },
-    {
-      name: "Giới thiệu",
-      href: "/gioi-thieu",
-      isActive: isAboutActive,
-      hasDropdown: true,
-      dropdownItems: [
-        { name: "Giới thiệu BT Academy", href: "/gioi-thieu", desc: "Tầm nhìn, sứ mệnh và phương pháp đào tạo" },
-        { name: "Nhà sáng lập", href: "/nha-sang-lap", desc: "BTV/MC Bích Thủy và ban cố vấn chuyên môn" },
-      ],
-    },
-    {
-      name: "Liên hệ",
-      href: "/lien-he",
-      isActive: currentPath === "/lien-he",
-      hasDropdown: false,
-    },
-  ];
+    if (item.href && item.href !== "/" && item.href !== "#" && !item.href.startsWith("/#")) {
+      if (currentPath === item.href || currentPath.startsWith(item.href + "/")) {
+        return true;
+      }
+    }
+
+    if (item.hasDropdown && Array.isArray(item.dropdownItems)) {
+      return item.dropdownItems.some((sub) => {
+        if (!sub.href || sub.href === "#" || sub.href.startsWith("/#")) return false;
+        return currentPath === sub.href || currentPath.startsWith(sub.href + "/");
+      });
+    }
+
+    return false;
+  };
 
   return (
     <>
       <header
-        className={`sticky top-0 z-[9990] w-full bg-white transition-all duration-200 ${isScrolled ? "border-b border-gray-100 shadow-sm" : ""
-          }`}
+        className={`sticky top-0 z-[9990] w-full bg-white transition-all duration-200 ${
+          isScrolled ? "border-b border-gray-100 shadow-sm" : ""
+        }`}
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-[76px]">
@@ -145,79 +129,105 @@ const NavbarV2 = () => {
 
             {/* 2. Center — Desktop Navigation Menu */}
             <nav className="hidden lg:flex items-center space-x-7" aria-label="Main Navigation">
-              {navigationItems.map((item) => (
-                <div
-                  key={item.name}
-                  className="relative group py-6"
-                  onMouseEnter={() => {
-                    if (item.hasDropdown) setActiveDropdown(item.name);
-                  }}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  {item.hasDropdown ? (
-                    <button
-                      type="button"
-                      className={`relative flex items-center gap-1 text-[15px] font-semibold transition-colors duration-200 ${item.isActive ? "text-[#22c55e]" : "text-[#111827] hover:text-[#22c55e]"
-                        }`}
-                      aria-expanded={activeDropdown === item.name}
-                    >
-                      <span>{item.name}</span>
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === item.name ? "rotate-180 text-[#22c55e]" : "text-gray-400 group-hover:text-[#22c55e]"
-                          }`}
-                      />
-                      {/* Active Indicator Underline */}
-                      {item.isActive && (
-                        <span className="absolute -bottom-2 left-0 w-full h-[2.5px] bg-[#22c55e] rounded-full" />
-                      )}
-                    </button>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className={`relative flex items-center text-[15px] font-semibold transition-colors duration-200 ${item.isActive ? "text-[#22c55e]" : "text-[#111827] hover:text-[#22c55e]"
-                        }`}
-                    >
-                      <span>{item.name}</span>
-                      {/* Active Indicator Underline */}
-                      {item.isActive && (
-                        <span className="absolute -bottom-2 left-0 w-full h-[2.5px] bg-[#22c55e] rounded-full" />
-                      )}
-                    </Link>
-                  )}
+              {menuItems.map((item, index) => {
+                const isActive = checkIsItemActive(item);
+                const dropdownKey = item._id || item.name || `menu-${index}`;
+                const subItems = Array.isArray(item.dropdownItems)
+                  ? item.dropdownItems.filter((sub) => sub.isActive !== false)
+                  : [];
+                const hasValidDropdown = item.hasDropdown && subItems.length > 0;
 
-                  {/* Dropdown Menu */}
-                  {item.hasDropdown && activeDropdown === item.name && (
-                    <div
-                      className="absolute top-full left-0 mt-0 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 px-2 z-50 animate-in fade-in duration-150"
-                      onMouseEnter={() => setActiveDropdown(item.name)}
-                      onMouseLeave={() => setActiveDropdown(null)}
-                    >
-                      <div className="space-y-1">
-                        {item.dropdownItems.map((subItem) => (
-                          <Link
-                            key={subItem.href}
-                            href={subItem.href}
-                            className={`block px-4 py-2.5 rounded-xl transition-all duration-150 ${subItem.isHighlight
-                              ? "bg-[#f0fdf4] text-[#15803d] font-semibold text-sm hover:bg-[#dcfce7] mt-1"
-                              : "hover:bg-[#f0fdf4] text-gray-800 hover:text-[#16a34a]"
+                return (
+                  <div
+                    key={dropdownKey}
+                    className="relative group py-6"
+                    onMouseEnter={() => {
+                      if (hasValidDropdown) setActiveDropdown(dropdownKey);
+                    }}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    {hasValidDropdown ? (
+                      <button
+                        type="button"
+                        className={`relative flex items-center gap-1 text-[15px] font-semibold transition-colors duration-200 ${
+                          isActive ? "text-[#22c55e]" : "text-[#111827] hover:text-[#22c55e]"
+                        }`}
+                        aria-expanded={activeDropdown === dropdownKey}
+                      >
+                        <span>{item.name}</span>
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform duration-200 ${
+                            activeDropdown === dropdownKey
+                              ? "rotate-180 text-[#22c55e]"
+                              : "text-gray-400 group-hover:text-[#22c55e]"
+                          }`}
+                        />
+                        {/* Active Indicator Underline */}
+                        {isActive && (
+                          <span className="absolute -bottom-2 left-0 w-full h-[2.5px] bg-[#22c55e] rounded-full" />
+                        )}
+                      </button>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        target={item.openInNewTab ? "_blank" : undefined}
+                        rel={item.openInNewTab ? "noopener noreferrer" : undefined}
+                        className={`relative flex items-center gap-1 text-[15px] font-semibold transition-colors duration-200 ${
+                          isActive ? "text-[#22c55e]" : "text-[#111827] hover:text-[#22c55e]"
+                        }`}
+                      >
+                        <span>{item.name}</span>
+                        {item.openInNewTab && <ExternalLink className="w-3.5 h-3.5 text-gray-400" />}
+                        {/* Active Indicator Underline */}
+                        {isActive && (
+                          <span className="absolute -bottom-2 left-0 w-full h-[2.5px] bg-[#22c55e] rounded-full" />
+                        )}
+                      </Link>
+                    )}
+
+                    {/* Dropdown Menu */}
+                    {hasValidDropdown && activeDropdown === dropdownKey && (
+                      <div
+                        className="absolute top-full left-0 mt-0 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 py-3 px-2 z-50 animate-in fade-in duration-150"
+                        onMouseEnter={() => setActiveDropdown(dropdownKey)}
+                        onMouseLeave={() => setActiveDropdown(null)}
+                      >
+                        <div className="space-y-1">
+                          {subItems.map((subItem, sIdx) => (
+                            <Link
+                              key={subItem._id || subItem.href || sIdx}
+                              href={subItem.href}
+                              target={subItem.openInNewTab ? "_blank" : undefined}
+                              rel={subItem.openInNewTab ? "noopener noreferrer" : undefined}
+                              className={`block px-4 py-2.5 rounded-xl transition-all duration-150 ${
+                                subItem.isHighlight
+                                  ? "bg-[#f0fdf4] text-[#15803d] font-semibold text-sm hover:bg-[#dcfce7] mt-1"
+                                  : "hover:bg-[#f0fdf4] text-gray-800 hover:text-[#16a34a]"
                               }`}
-                          >
-                            <div className="text-sm font-semibold">{subItem.name}</div>
-                            {subItem.desc && (
-                              <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{subItem.desc}</p>
-                            )}
-                          </Link>
-                        ))}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-semibold">{subItem.name}</span>
+                                {subItem.openInNewTab && (
+                                  <ExternalLink className="w-3 h-3 text-gray-400" />
+                                )}
+                              </div>
+                              {subItem.desc && (
+                                <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
+                                  {subItem.desc}
+                                </p>
+                              )}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                );
+              })}
             </nav>
 
             {/* 3. Right — Action Area */}
             <div className="flex items-center gap-3">
-
               {/* Main Desktop CTA Button */}
               <button
                 type="button"
@@ -250,6 +260,7 @@ const NavbarV2 = () => {
         toggleMenu={handleToggleMobileMenu}
         onRegisterClick={handleOpenPopup}
         onOpenSearch={() => setIsSearchOpen(true)}
+        menuItems={menuItems}
       />
 
       {/* Course Registration Popup */}
@@ -265,4 +276,3 @@ const NavbarV2 = () => {
 };
 
 export default NavbarV2;
-

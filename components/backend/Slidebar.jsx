@@ -21,6 +21,8 @@ import {
   PanelLeftOpen,
   ChevronRight,
   Sparkles,
+  Images,
+  Menu as MenuIcon,
 } from "lucide-react";
 
 import { useRouter } from "next/router";
@@ -38,6 +40,7 @@ const NAV_GROUPS = [
       { title: "Bài viết", icon: Notebook, href: "/dashboard/bai-viet" },
       { title: "Thêm bài viết", icon: SquarePen, href: "/dashboard/them-bai-viet" },
       { title: "Quản lý Video", icon: Video, href: "/dashboard/video" },
+      { title: "Quản lý Gallery", icon: Images, href: "/dashboard/gallery" },
       { title: "Quản lý Tác giả", icon: Users2, href: "/dashboard/tac-gia" },
     ],
   },
@@ -67,6 +70,7 @@ const NAV_GROUPS = [
     label: "Cấu hình",
     items: [
       { title: "Cài đặt Popup", icon: Sparkles, href: "/dashboard/popup" },
+      { title: "Quản lý Menu Navbar", icon: MenuIcon, href: "/dashboard/menu-navbar" },
     ],
   },
 ];

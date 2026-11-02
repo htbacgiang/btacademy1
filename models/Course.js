@@ -61,9 +61,8 @@ const courseSchema = new mongoose.Schema(
     },
   
     sessions: {
-      type: Number,
+      type: mongoose.Schema.Types.Mixed,
       required: [true, "Số buổi học là bắt buộc"],
-      min: 1,
     },
     level: {
       type: String,
@@ -168,6 +167,9 @@ courseSchema.pre('save', function (next) {
   next();
 });
 
-let Course = mongoose.models.Course || mongoose.model("Course", courseSchema);
+if (mongoose.models && mongoose.models.Course) {
+  delete mongoose.models.Course;
+}
+const Course = mongoose.models.Course || mongoose.model("Course", courseSchema);
 export default Course;
 

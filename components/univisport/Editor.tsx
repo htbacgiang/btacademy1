@@ -13,6 +13,7 @@ import { BubbleMenu as BubbleMenuExtension } from "@tiptap/extension-bubble-menu
 import ToolBar from "../editor/ToolBar";
 import EditLink from "../editor/Link/EditLink";
 import GalleryModal, { ImageSelectionResult } from "../editor/GalleryModal";
+import R2ImageModal, { R2ImageSelectionResult } from "../editor/R2ImageModal";
 import axios from "axios";
 
 interface Props {
@@ -23,6 +24,7 @@ interface Props {
 const Editor: FC<Props> = ({ content, onChange }): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
   const [showGallery, setShowGallery] = useState(false);
+  const [showR2Modal, setShowR2Modal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<{ src: string }[]>([]);
   const [hasDropdownOpen, setHasDropdownOpen] = useState(false);
@@ -112,6 +114,17 @@ const Editor: FC<Props> = ({ content, onChange }): JSX.Element => {
       .run();
   };
 
+  const handleR2ImageSelection = (result: R2ImageSelectionResult) => {
+    if (result?.src) {
+      editor
+        ?.chain()
+        .focus()
+        .setImage({ src: result.src, alt: result.altText || "" })
+        .run();
+    }
+    setShowR2Modal(false);
+  };
+
   const handleDropdownToggle = (isOpen: boolean) => {
     setHasDropdownOpen(isOpen);
   };
@@ -174,6 +187,7 @@ const Editor: FC<Props> = ({ content, onChange }): JSX.Element => {
             <ToolBar
               editor={editor}
               onOpenImageClick={() => setShowGallery(true)}
+              onOpenR2ModalClick={() => setShowR2Modal(true)}
               onDropdownToggle={handleDropdownToggle}
             />
             
@@ -194,6 +208,13 @@ const Editor: FC<Props> = ({ content, onChange }): JSX.Element => {
         onFileSelect={handleImageUpload}
         uploading={uploading}
         images={images}
+      />
+
+      <R2ImageModal
+        visible={showR2Modal}
+        onClose={() => setShowR2Modal(false)}
+        onSelect={handleR2ImageSelection}
+        initialFolder="courses"
       />
     </>
   );
